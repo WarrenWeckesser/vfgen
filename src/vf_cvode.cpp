@@ -38,20 +38,20 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintCVODE(map<string,string> options)
-    {
+{
 
     int nc, np, nv, na, nf;
 
     if (options.count("version") > 0 && options["version"] != "2.3.0" && options["version"] != "2.4.0"
-            && options["version"] != "2.5.0" && options["version"] != "2.6.0")
-        {
+            && options["version"] != "2.5.0" && options["version"] != "2.6.0") {
         cerr << "vfgen CVODE command: unknown version specified: " << options["version"] << endl;
         cerr << "Versions of CVODE supported by VFGEN are 2.3.0, 2.4.0, 2.5.0 and 2.6.0. Default: version=2.6.0" << endl;
         exit(-1);
-        } 
-    if (options.count("version") == 0)
+    } 
+    if (options.count("version") == 0) {
         // Explicitly set the default value.
         options["version"] = "2.6.0";
+    }
 
     symbol t(IndependentVariable);
     nc = conname_list.nops();
@@ -92,26 +92,23 @@ void VectorField::PrintCVODE(map<string,string> options)
     pout << endl;
 
     fout << "#include <math.h>" << endl;
-    if (options["version"] == "2.3.0")
-        {
+    if (options["version"] == "2.3.0") {
         fout << "/* Include headers for SUNDIALS v2.1.1, CVODE v2.3.0 */" << endl;
         fout << "#include <sundialstypes.h>" << endl;
         fout << "#include <cvode.h>" << endl;
         fout << "#include <cvdense.h>" << endl;
         fout << "#include <nvector_serial.h>" << endl;
         fout << "#include <dense.h>" << endl;
-        }
-    else if (options["version"] == "2.4.0")
-        {
+    }
+    else if (options["version"] == "2.4.0") {
         fout << "/* Include headers for SUNDIALS v2.2.0, CVODE v2.4.0 */" << endl;
         fout << "#include <sundials/sundials_types.h>" << endl;
         fout << "#include <sundials/sundials_dense.h>" << endl;
         fout << "#include <cvode.h>" << endl;
         fout << "#include <cvode/cvode_dense.h>" << endl;
         fout << "#include <nvector_serial.h>" << endl;
-        }
-    else if (options["version"] == "2.5.0")
-        {
+    }
+    else if (options["version"] == "2.5.0") {
         fout << "/* Include headers for SUNDIALS v2.3.0, CVODE v2.5.0 */" << endl;
         fout << "#include <sundials/sundials_types.h>" << endl;
         fout << "#include <sundials/sundials_dense.h>" << endl;
@@ -119,14 +116,14 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << "#include <nvector/nvector_serial.h>" << endl;
         fout << "#include <cvode/cvode.h>" << endl;
         fout << "#include <cvode/cvode_dense.h>" << endl;
-        }
-    else // Default is version 2.6.0.
-        {
+    }
+    else {
+        // Default is version 2.6.0.
         fout << "/* Include headers for SUNDIALS v2.4.0, CVODE v2.6.0 */" << endl;
         fout << "#include <cvode/cvode.h>" << endl;
         fout << "#include <nvector/nvector_serial.h>" << endl;
         fout << "#include <cvode/cvode_dense.h>" << endl;
-        }
+    }
     fout << endl;
     //
     //  Print the vector field function.
@@ -136,19 +133,18 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << " */" << endl;
     fout << endl;
     string func_return_type = "int";
-    if (options["version"] == "2.3.0")
+    if (options["version"] == "2.3.0") {
         func_return_type = "void";
+    }
     fout << func_return_type << " " << Name() << "_vf(realtype t, N_Vector y_, N_Vector f_, void *params)" << endl;
     pout << func_return_type << " " << Name() << "_vf(realtype, N_Vector, N_Vector, void *);" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const realtype Pi = RCONST(M_PI);\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const realtype " << conname_list[i] << " = RCONST(" << convalue_list[i] << ");" << endl;
-        }
+    }
     CDeclare(fout,"realtype",varname_list);
     CDeclare(fout,"realtype",parname_list);
     CDeclare(fout,"realtype",exprname_list);
@@ -157,30 +153,29 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << "    p_ = (realtype *) params;" << endl;
     fout << endl;
     // GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    ";
         fout.width(10);
         fout << varname_list[i];
         fout.width(0);
         fout << " = NV_Ith_S(y_," << i << ");" << endl;
-        }
+    }
 
     fout << endl;
     GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
-    if (na > 0)
+    }
+    if (na > 0) {
         fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    }
+    for (int i = 0; i < nv; ++i) {
         fout << "    NV_Ith_S(f_," << i << ") = " << varvecfield_list[i] << ";" << endl;
-        }
-    if (options["version"] != "2.3.0")
+    }
+    if (options["version"] != "2.3.0") {
         fout << "    return 0;\n";
+    }
     fout << "    }" << endl;
     fout << endl;
     //
@@ -190,8 +185,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << " *  The Jacobian." << endl;
     fout << " */" << endl;
     fout << endl;
-    if (options["version"] == "2.6.0")
-        {
+    if (options["version"] == "2.6.0") {
         fout << func_return_type << " " << Name() << "_jac(int N_, realtype t, N_Vector y_, N_Vector fy_,";
         fout << " DlsMat jac_, void *params," << endl;
         fout << "                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)" << endl;
@@ -199,8 +193,8 @@ void VectorField::PrintCVODE(map<string,string> options)
         pout << func_return_type << " " << Name() << "_jac(int, realtype, N_Vector, N_Vector,";
         pout << " DlsMat, void *," << endl;
         pout << "                N_Vector, N_Vector, N_Vector);" << endl;
-        }
-    else{
+    }
+    else {
         fout << func_return_type << " " << Name() << "_jac(long int N_, DenseMat jac_, realtype t," << endl;
         fout << "                N_Vector y_, N_Vector fy_, void *params," << endl;
         fout << "                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)" << endl;
@@ -208,16 +202,14 @@ void VectorField::PrintCVODE(map<string,string> options)
         pout << func_return_type << " " << Name() << "_jac(long int, DenseMat, realtype," << endl;
         pout << "                N_Vector, N_Vector, void *," << endl;
         pout << "                N_Vector, N_Vector, N_Vector);" << endl;
-        }
+    }
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const realtype Pi = RCONST(M_PI);\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const realtype " << conname_list[i] << " = RCONST(" << convalue_list[i] << ");" << endl;
-        }
+    }
     CDeclare(fout,"realtype",varname_list);
     CDeclare(fout,"realtype",parname_list);
     fout << "    realtype *p_;" << endl;
@@ -225,35 +217,32 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << "    p_ = (realtype *) params;" << endl;
     fout << endl;
     // GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    ";
         fout.width(10);
         fout << varname_list[i];
         fout.width(0);
         fout << " = NV_Ith_S(y_," << i << ");" << endl;
-        }
+    }
     fout << endl;
     GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
     fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
             // Skip zero elements.  CVODE initializes jac_ to zero before calling the Jacobian function.
             if (df != 0)
                 fout << "    DENSE_ELEM(jac_, " << i << ", " << j << ") = " << f.diff(v) << ";" << endl;
-            }
         }
-    if (options["version"] != "2.3.0")
+    }
+    if (options["version"] != "2.3.0") {
         fout << "    return 0;\n";
+    }
     fout << "    }" << endl;
 
-    if (options["func"] == "yes" & nf > 0)
-        {
+    if (options["func"] == "yes" & nf > 0) {
         //
         // Print the user-defined functions.
         // A single function is created that puts all the
@@ -269,14 +258,12 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << func_return_type << " " << Name() << "_func(realtype t, N_Vector y_, realtype *func_, void *params)" << endl;
         pout << func_return_type << " " << Name() << "_func(realtype, N_Vector, realtype *, void *);" << endl;
         fout << "    {" << endl;
-        if (HasPi)
-            {
+        if (HasPi) {
             fout << "    const realtype Pi = RCONST(M_PI);\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             fout << "    const realtype " << conname_list[i] << " = RCONST(" << convalue_list[i] << ");" << endl;
-            }
+        }
         CDeclare(fout,"realtype",varname_list);
         CDeclare(fout,"realtype",parname_list);
         CDeclare(fout,"realtype",exprname_list);
@@ -285,36 +272,33 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << "    p_ = (realtype *) params;" << endl;
         fout << endl;
         // GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             fout << "    ";
             fout.width(10);
             fout << varname_list[i];
             fout.width(0);
             fout << " = NV_Ith_S(y_," << i << ");" << endl;
-            }
+        }
         fout << endl;
         GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
         fout << endl;
-        for (int i = 0; i < na; ++i)
-            {
+        for (int i = 0; i < na; ++i) {
             fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-            }
-        if (na > 0)
+        }
+        if (na > 0) {
             fout << endl;
-        for (int n = 0; n < nf; ++n)
-            {
+        }
+        for (int n = 0; n < nf; ++n) {
             fout << "    /* " << funcname_list[n] << ":  */" << endl;
             fout << "    func_[" << n << "] = " << funcformula_list[n] << ";" << endl;
-            }
+        }
         fout << "    return 0;\n";
         fout << "    }" << endl;
-        }
+    }
     fout.close();
     pout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         //  Create a self-contained ODE solver for this vector field
         //  that allows the user to give the initial conditions,
@@ -339,26 +323,23 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "#include <stdlib.h>" << endl;
         tout << "#include <string.h>" << endl;
         tout << "#include <math.h>" << endl;
-        if (options["version"] == "2.3.0")
-            {
+        if (options["version"] == "2.3.0") {
             tout << "/* Include headers for SUNDIALS v2.1.1, CVODE v2.3.0 */" << endl;
             tout << "#include <sundialstypes.h>" << endl;
             tout << "#include <cvode.h>" << endl;
             tout << "#include <cvdense.h>" << endl;
             tout << "#include <nvector_serial.h>" << endl;
             tout << "#include <dense.h>" << endl;
-            }
-        else if (options["version"] == "2.4.0")
-            {
+        }
+        else if (options["version"] == "2.4.0") {
             tout << "/* Include headers for SUNDIALS v2.2.0, CVODE v2.4.0 */" << endl;
             tout << "#include <sundials/sundials_types.h>" << endl;
             tout << "#include <sundials/sundials_dense.h>" << endl;
             tout << "#include <cvode.h>" << endl;
             tout << "#include <cvode/cvode_dense.h>" << endl;
             tout << "#include <nvector_serial.h>" << endl;
-            }
-        else if (options["version"] == "2.5.0")
-            {
+        }
+        else if (options["version"] == "2.5.0") {
             tout << "/* Include headers for SUNDIALS v2.3.0, CVODE v2.5.0 */" << endl;
             tout << "#include <sundials/sundials_types.h>" << endl;
             tout << "#include <sundials/sundials_dense.h>" << endl;
@@ -366,14 +347,14 @@ void VectorField::PrintCVODE(map<string,string> options)
             tout << "#include <nvector/nvector_serial.h>" << endl;
             tout << "#include <cvode/cvode.h>" << endl;
             tout << "#include <cvode/cvode_dense.h>" << endl;
-            }
-        else // Default is CVODE v2.6.0
-            {
+        }
+        else {
+            // Default is CVODE v2.6.0
             tout << "/* Include headers for SUNDIALS v2.4.0, CVODE v2.6.0 */" << endl;
             tout << "#include <cvode/cvode.h>" << endl;
             tout << "#include <nvector/nvector_serial.h>" << endl;
             tout << "#include <cvode/cvode_dense.h>" << endl;
-            }
+        }
 
         tout << endl;
         tout << "#include \"" << pfilename << "\"\n";
@@ -422,45 +403,45 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "    int flag;\n";
         tout << "    const int N_ = " << nv << ";\n" ;
         tout << "    const int P_ = " << np << ";\n" ;
-        if (HasPi)
-            {
+        if (HasPi) {
             tout << "    const realtype Pi = RCONST(M_PI);\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             tout << "    const realtype " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+        }
         tout << "    const realtype def_p_[" << np << "] = \n" ;
         tout << "        {\n";
-        for (int i = 0; i < np; ++i)
-            {
+        for (int i = 0; i < np; ++i) {
             tout << "        RCONST(" << pardefval_list[i] << ")" ;
-            if (i != np-1)
+            if (i != np-1) {
                 tout << "," ;
-            tout << endl;
             }
+            tout << endl;
+        }
         tout << "        };\n" ;
         // CDeclare(tout,"realtype",parname_list);
         GetFromVector(tout,"    const realtype ",parname_list,"def_p_","[]",0,";");
         tout << "    realtype def_y_[" << nv << "] = {";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             // tout << def_var_value.at(i) ;
             // tout << "RCONST(0.0)" ;
             tout << "RCONST(" << vardefic_list[i] << ")";
-            if (i != nv-1)
+            if (i != nv-1) {
                 tout << ", " ;
             }
+        }
         tout << "};\n" ;
         tout << "    realtype y_[" << nv << "];\n" ;
 
         tout << "    realtype p_[" << np << "];\n" ;
         tout << "    realtype solver_param_[3] = {RCONST(1.0e-6),RCONST(0.0),RCONST(10.0)};\n" ;
         MakeCArrayOfStrings(tout,"varnames_",varname_list);
-        if (np > 0)
+        if (np > 0) {
             MakeCArrayOfStrings(tout,"parnames_",parname_list);
-        else
+        }
+        else {
             tout << "    char *parnames_[] = {\"\"};\n";
+        }
         tout << "    char *solver_param_names_[3] = {\"abserr\",\"relerr\",\"stoptime\"};\n" ;
         tout << endl;
         tout << "    for (i = 0; i < N_; ++i)\n" ;
@@ -506,48 +487,46 @@ void VectorField::PrintCVODE(map<string,string> options)
 
         tout << "    realtype t = RCONST(0.0);\n";
 
-        if (options["version"] == "2.6.0")
-            {
+        if (options["version"] == "2.6.0") {
             tout << "    flag = CVodeInit(cvode_mem," << Name() << "_vf, t, y0_);\n";
             tout << "    flag = CVodeSStolerances(cvode_mem, solver_param_[1], solver_param_[0]);\n";
             tout << "    flag = CVodeSetUserData(cvode_mem, &(p_[0]));\n";
-            }
-        else
-            {
+        }
+        else {
             tout << "    flag = CVodeMalloc(cvode_mem," << Name() << "_vf, t, y0_, CV_SS, solver_param_[1], &(solver_param_[0]));\n";
             tout << "    flag = CVodeSetFdata(cvode_mem, &(p_[0]));\n";
-            }
+        }
         tout << "    flag = CVDense(cvode_mem, N_);\n";
-        if (options["version"] == "2.6.0")
-            {
+        if (options["version"] == "2.6.0") {
             tout << "    flag = CVDlsSetDenseJacFn(cvode_mem, " << Name() << "_jac);\n";
-            }
-        else
-            {
+        }
+        else {
             tout << "    flag = CVDenseSetJacFn(cvode_mem, " << Name() << "_jac, &(p_[0]));\n";
-            }
+        }
         tout << endl;
         tout << "    realtype t1 = solver_param_[2];\n" ;
         tout << "    /* Print the initial condition  */\n";
         tout << "    printf(\"%.8e\", t);\n" ;
         tout << "    for (j = 0; j < N_; ++j)\n" ;
         tout << "        printf(\" %.8e\", NV_Ith_S(y0_,j));\n" ;
-        if (options["func"] == "yes" & nf > 0)
-            {
+        if (options["func"] == "yes" & nf > 0) {
             tout << "    realtype funcval[" << nf << "];\n";
             tout << "    " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
-            for (int i = 0; i < nf; ++i)
+            for (int i = 0; i < nf; ++i) {
                  tout << "    printf(\" %.8e\",funcval[" << i << "]);\n";
             }
+        }
         tout << "    printf(\"\\n\");\n";
         tout << "    flag = CVodeSetStopTime(cvode_mem, t1);\n";
         tout << "    while (t < t1)\n";
         tout << "        {\n" ;
         tout << "        /* Advance the solution */\n";
-        if (options["version"] == "2.6.0")
+        if (options["version"] == "2.6.0") {
             tout << "        flag = CVode(cvode_mem, t1, y0_, &t, CV_ONE_STEP);\n";
-        else
-            tout << "        flag = CVode(cvode_mem, t1, y0_, &t, CV_ONE_STEP_TSTOP);\n";        
+        }
+        else {
+            tout << "        flag = CVode(cvode_mem, t1, y0_, &t, CV_ONE_STEP_TSTOP);\n";
+        }        
         tout << "        if (flag != CV_SUCCESS && flag != CV_TSTOP_RETURN)\n";
         tout << "            {\n" ;
         tout << "            fprintf(stderr, \"flag=%d\\n\", flag);\n" ;
@@ -558,20 +537,22 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "        for (j = 0; j < N_; ++j)\n" ;
         tout << "            printf(\" %.8e\", NV_Ith_S(y0_,j));\n" ;
 
-        if (options["func"] == "yes" & nf > 0)
-            {
+        if (options["func"] == "yes" & nf > 0) {
             tout << "        " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
-            for (int i = 0; i < nf; ++i)
+            for (int i = 0; i < nf; ++i) {
                  tout << "        printf(\" %.8e\", funcval[" << i << "]);\n";
             }
+        }
         tout << "        printf(\"\\n\");\n";
         tout << "        }\n" ;
         tout << endl;
         tout << "    N_VDestroy_Serial(y0_);\n";
-        if (options["version"] == "2.3.0")
+        if (options["version"] == "2.3.0") {
             tout << "    CVodeFree(cvode_mem);\n";
-        else
+        }
+        else {
             tout << "    CVodeFree(&cvode_mem);\n";
+        }
         tout << "    }\n" ;
         tout.close();
         //
@@ -584,12 +565,16 @@ void VectorField::PrintCVODE(map<string,string> options)
         mout << "# " << mfilename << endl;
         mout << "#\n";
         mout << "# This is the Makefile for the " << Name() << "_cvdemo program.\n";
-        if (options["version"] == "2.3.0")
+        if (options["version"] == "2.3.0") {
             mout << "# This file is configured for SUNDIALS v2.1.1, CVODE v2.3.0.\n";
-        else if (options["version"] == "2.4.0")
+        }
+        else if (options["version"] == "2.4.0") {
             mout << "# This file is configured for SUNDIALS v2.2.0, CVODE v2.4.0.\n";
-        else // Default is CVODE v2.5.0
+        }
+        else {
+            // Default is CVODE v2.5.0
             mout << "# This file is configured for SUNDIALS v2.3.0, CVODE v2.5.0.\n";
+        }
         mout << "#\n";
         PrintVFGENComment(mout,"# ");
         mout << "#\n";
@@ -600,14 +585,19 @@ void VectorField::PrintCVODE(map<string,string> options)
         mout << "SUNDIALS_DIR=/usr/local\n";
         mout << "SUNDIALS_LIB_DIR=$(SUNDIALS_DIR)/lib\n";
         mout << "SUNDIALS_INC_DIR=$(SUNDIALS_DIR)/include\n";
-        if (options["version"] == "2.3.0")
+        if (options["version"] == "2.3.0") {
             mout << "SUNDIALS_LIBS=-lsundials_cvode -lsundials_nvecserial -lsundials_shared\n";
-        else
+        }
+        else {
             mout << "SUNDIALS_LIBS=-lsundials_cvode -lsundials_nvecserial\n";
-        if (options["version"] == "2.4.0")
+        }
+        if (options["version"] == "2.4.0") {
             mout << "SUNDIALS_INCS=-I$(SUNDIALS_INC_DIR) -I$(SUNDIALS_INC_DIR)/cvode -I$(SUNDIALS_INC_DIR)/sundials\n";
-        else // CVODE v2.3.0 and v2.5.0
+        }
+        else {
+            // CVODE v2.3.0 and v2.5.0
             mout << "SUNDIALS_INCS=-I$(SUNDIALS_INC_DIR)\n";
+        }
         mout << "LIBS=-lm\n";
         mout << endl;
         mout << "all: " << Name() << "_cvdemo" << endl;
@@ -626,6 +616,6 @@ void VectorField::PrintCVODE(map<string,string> options)
         mout << "\trm -f " << Name() << "_cvdemo " << Name() << "_cvdemo.o " << Name() << "_cv.o" << endl;
         mout << endl;
         mout.close();
-        }
     }
+}
 
