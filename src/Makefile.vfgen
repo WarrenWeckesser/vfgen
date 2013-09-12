@@ -1,0 +1,58 @@
+#
+#  File:   Makefile.vfgen
+#  Author: Warren Weckesser, www.warrenweckesser.net
+#
+#  This is a Makefile for VFGEN.  To use this file, enter the command
+#     make -f Makefile.vfgen
+#  in the VFGEN source directory.
+#
+#  VFGEN uses the libraries:
+#      GiNaC    http://www.ginac.de
+#      Mini-XML http://www.minixml.org
+#  This Makefile assumes that the compiling and linking options
+#  for these libraries are provided by the pkg-config program.
+#
+#
+#  Copyright (C) 2008 Warren Weckesser
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License, Version 2, as
+#  published by the Free Software Foundation.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along
+#  with this program.  The file LICENSE-GPL2 in the VFGEN source directory
+#  contains a copy. You may also obtain a copy by writing to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+#
+# This is not an optimal Makefile; here all the object files depend on all the
+# headers, but that is not the actual case. 
+#
+
+OBJ_FILES = vfgen.o vf.o MyVec.o vf_adolc.o vf_auto.o vf_cvode.o vf_dde23.o    \
+            vf_ddebiftool.o vf_dde_solver.o vf_delay2ode.o vf_differentials.o  \
+            vf_dstool.o vf_evf.o vf_gsl.o vf_javascript.o vf_latex.o           \
+            vf_lsoda.o vf_matcont.o                                            \
+            vf_matlab.o vf_octave.o vf_pddecont.o vf_pydstool.o  vf_pygsl.o    \
+            vf_radau5.o vf_scilab.o vf_scipy.o vf_taylor.o vf_xml.o vf_xpp.o   \
+            ginac_aux_functions.o strutils.o codegen_utils.o
+HEADERS = vf.h MyVec.h codegen_utils.h strutils.h     \
+          ginac_aux_functions.h ginac_declare_funcs.h
+
+# Note that pkg-config is used to get the compiling and linking options
+# required for the ginac and mxml (Mini-XML) libraries.
+
+vfgen:	$(OBJ_FILES) 
+	$(CXX) $(OBJ_FILES) `pkg-config --libs ginac mxml` -o vfgen
+
+%.o: %.cpp $(HEADERS)
+	$(CXX) -c -O2 -o $@ `pkg-config --cflags ginac mxml` -DVERSION=\"2.5.0\" $<
+
+clean:
+	rm -f *.o
