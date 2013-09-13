@@ -24,51 +24,56 @@
 
 using namespace std;
 
-bool MyVectorCmpClass::operator()(const vector<int> *a1, const vector<int> *a2) const
-    {
-    if (a1->size() > a2->size())
+bool MyVectorCmpClass::operator()(const vector<int> *a1, const vector<int> *a2) const {
+    if (a1->size() > a2->size()) {
         return true;
-    if (a1->size() < a2->size())
+    }
+    if (a1->size() < a2->size()) {
         return false;
-    for (size_t k = 0; k < a1->size(); ++k)
-        {
-        if ((*a1)[k] < (*a2)[k])
+    }
+    for (size_t k = 0; k < a1->size(); ++k) {
+        if ((*a1)[k] < (*a2)[k]) {
             return true;
-        if ((*a1)[k] > (*a2)[k])
+        }
+        if ((*a1)[k] > (*a2)[k]) {
             return false;
         }
-    return false;
     }
+    return false;
+}
 
 
 
 typedef map< vector<int> *, double, MyVectorCmpClass> vectormap;
 
 void PrintMyVec(ofstream &out, vector<int> *a)
-    {
-    for (size_t j = 0; j < a->size(); ++j)
+{
+    for (size_t j = 0; j < a->size(); ++j) {
         out << " " << (*a)[j];
     }
+}
 
 //
 // Copy from a to b
 //
 
 void CopyMyVec(vector<int> *a, vector<int> *b)
-    {
-    for (size_t k = 0; k < a->size(); ++k)
+{
+    for (size_t k = 0; k < a->size(); ++k) {
         b->push_back((*a)[k]);
     }
+}
 
 int SumVec(vector<int> *a)
-    {
+{
     int sum = 0;
-    for (vector<int>::iterator ai = a->begin(); ai != a->end(); ++ai)
+    for (vector<int>::iterator ai = a->begin(); ai != a->end(); ++ai) {
         sum = sum + *ai;
-    return sum;
     }
+    return sum;
+}
 
 void MyVecExtend1(vector<int> *a)
-    {
+{
     a->push_back(1);
-    }
+}

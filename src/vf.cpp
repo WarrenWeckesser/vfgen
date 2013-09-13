@@ -35,77 +35,69 @@ using namespace GiNaC;
 // Symbol Methods
 //
 
-Symbol::Symbol()
-    {
-    }
+Symbol::Symbol() {}
 
 Symbol::Symbol(string n)
-    {
+{
     name = n;
-    }
+}
 
 Symbol::Symbol(string n, string descr)
-    {
+{
     name = n;
     description = descr;
-    }
+}
 
 void Symbol::Name(string n)
-    {
+{
     name = n;
-    }
+}
 
 string Symbol::Name(void)
-    {
+{
     return name;
-    }
+}
 
 void Symbol::Description(string descr)
-    {
+{
     description = descr;
-    }
+}
 
 string Symbol::Description(void)
-    {
+{
     return description;
-    }
+}
 
 
 void Symbol::Latex(string l)
-    {
+{
     latex = l;
-    }
+}
 
 string Symbol::Latex(void)
-    {
+{
     return latex;
-    }
+}
 
 //
 // FormulaSymbol Methods
 //
 
-FormulaSymbol::FormulaSymbol() : Symbol()
-    {
-    }
+FormulaSymbol::FormulaSymbol() : Symbol() {}
 
-FormulaSymbol::FormulaSymbol(string name) : Symbol(name)
-    {
-    }
+FormulaSymbol::FormulaSymbol(string name) : Symbol(name) {}
 
-FormulaSymbol::FormulaSymbol(string name, string descr) : Symbol(name,descr)
-    {
-    }
+FormulaSymbol::FormulaSymbol(string name, string descr) : Symbol(name,descr) {}
 
 void FormulaSymbol::Formula(string f)
-    {
+{
     formula = f;
-    }
+}
 
 string FormulaSymbol::Formula(void)
-    {
+{
     return formula;
-    }
+}
 
 
 //
@@ -113,24 +105,24 @@ string FormulaSymbol::Formula(void)
 //
 
 Constant::Constant(string name) : Symbol(name)
-    {
+{
     value = "";
-    }
+}
 
 Constant::Constant(string name, string descr) : Symbol(name,descr)
-    {
+{
     value = "";
-    }
+}
 
 void Constant::Value(string val)
-    {
+{
     value = val;
-    }
+}
 
 string Constant::Value(void)
-    {
+{
     return value;
-    }
+}
 
 
 //
@@ -138,111 +130,103 @@ string Constant::Value(void)
 //
 
 Parameter::Parameter(string name) : Symbol(name)
-    {
+{
     defaultvalue = "";
-    }
+}
 
 Parameter::Parameter(string name, string descr) : Symbol(name,descr)
-    {
+{
     defaultvalue = "";
-    }
+}
 
 void Parameter::DefaultValue(string val)
-    {
+{
     defaultvalue = val;
-    }
+}
 
 string Parameter::DefaultValue(void)
-    {
+{
     return defaultvalue;
-    }
+}
 
 //
 // Expression Methods
 //
-Expression::Expression(string name) : FormulaSymbol(name)
-    {
-    }
+Expression::Expression(string name) : FormulaSymbol(name) {}
 
-Expression::Expression(string name, string descr) : FormulaSymbol(name,descr)
-    {
-    }
+Expression::Expression(string name, string descr) : FormulaSymbol(name,descr) {}
 
 
 //
 // StateVariable Methods
 //
 StateVariable::StateVariable(string name) : FormulaSymbol(name)
-    {
+{
     periodicfrom = "";
     periodicto   = "";
     default_ic   = "";
-    }
+}
 
 StateVariable::StateVariable(string name, string descr) : FormulaSymbol(name, descr)
-    {
+{
     periodicfrom = "";
     periodicto   = "";
     default_ic   = "";
-    }
+}
 
 
 void StateVariable::PeriodicFrom(string pfrom)
-    {
+{
     periodicfrom = pfrom;
-    }
+}
 
 string StateVariable::PeriodicFrom(void)
-    {
+{
     return periodicfrom;
-    }
+}
 
 
 void StateVariable::PeriodicTo(string pto)
-    {
+{
     periodicto = pto;
-    }
+}
 
 string StateVariable::PeriodicTo(void)
-    {
+{
     return periodicto;
-    }
+}
 
 bool StateVariable::IsPeriodic(void)
-    {
+{
     return periodicfrom != "";
-    }
+}
 
 void StateVariable::DefaultInitialCondition(string ic)
-    {
+{
     default_ic = ic;
-    }
+}
 
 string StateVariable::DefaultInitialCondition(void)
-    {
+{
     return default_ic;
-    }
+}
 
 void StateVariable::DefaultHistory(string hist)
-    {
+{
     default_history = hist;
-    }
+}
 
 string StateVariable::DefaultHistory()
-    {
+{
     return default_history;
-    }
+}
 
 //
 // Function Methods
 //
-Function::Function(string name) : FormulaSymbol(name)
-    {
-    }
+Function::Function(string name) : FormulaSymbol(name) {}
 
-Function::Function(string name, string descr) : FormulaSymbol(name, descr)
-    {
-    }
+Function::Function(string name, string descr) : FormulaSymbol(name, descr) {}
 
 
 //
@@ -250,143 +234,144 @@ Function::Function(string name, string descr) : FormulaSymbol(name, descr)
 //
 
 VectorField::VectorField(void)
-    {
+{
     IndependentVariable = "t";
     IsAutonomous = true;
-    }
+}
 
 VectorField::VectorField(string name, string descr) : Symbol(name,descr)
-    {
+{
     IndependentVariable = "t";
     IsAutonomous = true;
-    }
+}
 
 VectorField::VectorField(string name, string descr, string indvar) : Symbol(name,descr)
-    {
+{
     IndependentVariable = indvar;
     IsAutonomous = true;
-    }
+}
 
 // TO DO: Create the destructor; it must delete the memory used
 //        by the vector<>s in VectorField.
 
 
 void VectorField::AddConstant(Constant *p)
-    {
+{
     Constants.push_back(p);
-    }
+}
 
 void VectorField::AddParameter(Parameter *p)
-    {
+{
     Parameters.push_back(p);
-    }
+}
 
 void VectorField::AddExpression(Expression *e)
-    {
+{
     Expressions.push_back(e);
-    }
+}
 
 void VectorField::AddStateVariable(StateVariable *sv)
-    {
+{
     StateVariables.push_back(sv);
-    }
+}
 
 int VectorField::FindVar(const symbol &var)
-    {
+{
     bool found = false;
     unsigned k;
-    for (k = 0; k < varname_list.nops(); ++k)
-        if (varname_list[k] == var)
-            {
+    for (k = 0; k < varname_list.nops(); ++k) {
+        if (varname_list[k] == var) {
             // cerr << "Found the variable " << var << " at varname_list[" << k << "]\n";
             found = true;
             break;
-            }
-    int vindex;
-    if (found == false)
-        vindex = -1;
-    else
-        vindex = k;
-    return vindex;
+        }
     }
+    int vindex;
+    if (found == false) {
+        vindex = -1;
+    }
+    else {
+        vindex = k;
+    }
+    return vindex;
+}
 
 GiNaC::lst VectorField::FindVarsInEx(const GiNaC::ex &e)
-    {
+{
     unsigned k;
     GiNaC::lst vlist;
-    for (k = 0; k < varname_list.nops(); ++k)
-        {
-        if (e.has(varname_list[k]))
+    for (k = 0; k < varname_list.nops(); ++k) {
+        if (e.has(varname_list[k])) {
             vlist.append(varname_list[k]);
         }
-    return vlist;
     }
+    return vlist;
+}
 
 void VectorField::AddFunction(Function *f)
-    {
+{
     Functions.push_back(f);
-    }
+}
 
 
 ex VectorField::SubsAllExpressions(const ex& e)
-    {
+{
     int na = exprname_list.nops();
     ex s = e;
-    for (int k = na-1; k >= 0; --k)
-        {
+    for (int k = na-1; k >= 0; --k) {
         s = s.subs( ex_to<symbol>(exprname_list[k]) == exprformula_list[k] );
-        }
-    return s;
     }
+    return s;
+}
 
 int VectorField::FindDelay(ex &del)
-    {
+{
     bool found = false;
     unsigned k;
-    for (k = 0; k < Delays.size(); ++k)
-        {
+    for (k = 0; k < Delays.size(); ++k) {
         // cerr << "FindDelay: Delays[" << k << "] = " << Delays[k] << endl;
-        if (Delays[k] == del)
-            {
+        if (Delays[k] == del) {
             // cerr << "FindDelay: Found the delay " << del << " at Delays[" << k << "]\n";
             found = true;
             break;
-            }
-         }
-    int dindex;
-    if (found == false)
-        dindex = -1;
-    else
-        dindex = k;
-    return dindex;
+        }
     }
+    int dindex;
+    if (found == false) {
+        dindex = -1;
+    }
+    else {
+        dindex = k;
+    }
+    return dindex;
+}
 
 
 int VectorField::AddDelay(ex &del)
-    {
-    if (FindDelay(del) != -1)
+{
+    if (FindDelay(del) != -1) {
         return 1;
+    }
     Delays.push_back(del);
 
     ex s = SubsAllExpressions(del);
     ex delayedtime = IndVar - s;
     bool nonconstant = false;
     // cout << "AddDelay: del=" << del << "  s=" << s << "  delayedtime=" << delayedtime << endl;
-    if (s.has(IndVar))
+    if (s.has(IndVar)) {
         nonconstant = true;
+    }
     int nv = varname_list.nops();
-    for (int i = 0; i < nv; ++i)
-        {
-        if (delayedtime.has(varname_list[i]))
-            {
+    for (int i = 0; i < nv; ++i) {
+        if (delayedtime.has(varname_list[i])) {
             nonconstant = true;
             break;
-            }
         }
+    }
     // if (nonconstant)
     //     cout << "AddDelay: " << del << " = " << s << " is a nonconstant delay.\n";
     return 0;
-    }
+}
 
 //
 // CheckForDelay(const ex& f)
@@ -400,29 +385,28 @@ int VectorField::AddDelay(ex &del)
 //
 
 void VectorField::CheckForDelay(const ex& f)
-    {
+{
     exset occurrences;
-    if (f.find(delay(wild(1),wild(2)),occurrences))
-        {
+    if (f.find(delay(wild(1),wild(2)),occurrences)) {
         IsDelay = true;
-        for (exset::const_iterator iter = occurrences.begin(); iter != occurrences.end(); ++iter)
-            {
+        for (exset::const_iterator iter = occurrences.begin(); iter != occurrences.end(); ++iter) {
             ex del = iter->op(1);
             AddDelay(del);
-            if (del.has(IndVar))
+            if (del.has(IndVar)) {
                 HasNonconstantDelay = true;  // time-dependent delay
-            for (lst::const_iterator viter = varname_list.begin(); viter != varname_list.end(); ++viter)
-                {
-                if (del.has(*viter))
+            }
+            for (lst::const_iterator viter = varname_list.begin(); viter != varname_list.end(); ++viter) {
+                if (del.has(*viter)) {
                     HasNonconstantDelay = true; // state-dependent delay
                 }
             }
         }
     }
+}
 
 
 int VectorField::ProcessSymbols(void)
-    {
+{
     int rval = 0;
     
     IsDelay = false;
@@ -431,33 +415,30 @@ int VectorField::ProcessSymbols(void)
 
     // Process the constants
     vector<Constant *>::iterator c;
-    for (c = Constants.begin(); c != Constants.end(); ++c)
-        {
+    for (c = Constants.begin(); c != Constants.end(); ++c) {
         symbol con( (*c)->Latex() != ""
                ? symbol( (*c)->Name(),(*c)->Latex() )
                : symbol( (*c)->Name() ) );
         conname_list.append(con);
         allsymbols.append(con);
         string val = (*c)->Value();
-        try
-            {
+        try {
             ex e(val,allsymbols);
             convalue_list.append(e);
-            if (has(e,Pi))
+            if (has(e,Pi)) {
                 HasPi = true;
             }
-        catch (exception &p)
-            {
+        }
+        catch (exception &p) {
             // cerr << "VectorField:ProcessSymbols: exception while processing constants\n";
             cerr << "The Value \"" << (*c)->Value() << "\" for the Constant " << (*c)->Name() << " has an error: " << p.what() << endl;
             rval = -1;
-            }
         }
+    }
 
     // Process the parameters
     vector<Parameter *>::iterator p;
-    for (p = Parameters.begin(); p != Parameters.end(); ++p)
-        {
+    for (p = Parameters.begin(); p != Parameters.end(); ++p) {
         symbol par( (*p)->Latex() != ""
                ? symbol( (*p)->Name(),(*p)->Latex() )
                : symbol( (*p)->Name() ) );
@@ -465,22 +446,22 @@ int VectorField::ProcessSymbols(void)
         parname_list.append(par);
         allsymbols.append(par);
         string defval = (*p)->DefaultValue();
-        if (defval == "")
+        if (defval == "") {
             defval = "0";
-        try
-            {
+        }
+        try {
             ex e(defval,allsymbols);
             pardefval_list.append(e);
-            if (has(e,Pi))
+            if (has(e,Pi)) {
                 HasPi = true;
             }
-        catch (exception &ep)
-            {
+        }
+        catch (exception &ep) {
             // cerr << "VectorField:ProcessSymbols: exception while processing parameters\n";
             cerr << "The DefaultValue \"" << (*p)->DefaultValue() << "\" for the Parameter " << (*p)->Name() << " has an error: " << ep.what() << endl;
             rval = -1;
-            }
         }
+    }
 
     // At this point, allsymbols is a list of the ginac
     // symbols of the constants and parameters.
@@ -496,47 +477,46 @@ int VectorField::ProcessSymbols(void)
     //   (but not the formulas for the vector field)
     int nv = 0;
     vector<StateVariable *>::iterator sv;
-    for (sv = StateVariables.begin(); sv != StateVariables.end(); ++sv, ++nv)
-        {
+    for (sv = StateVariables.begin(); sv != StateVariables.end(); ++sv, ++nv) {
         symbol var( (*sv)->Latex() != ""
                ? symbol( (*sv)->Name(),(*sv)->Latex() )
                : symbol( (*sv)->Name() ) );
         varname_list.append(var);
         string defic = (*sv)->DefaultInitialCondition();
-        if (defic == "")
+        if (defic == "") {
             defic = "0";
-        try
-            {
+        }
+        try {
             ex e(defic,allsymbols);
             vardefic_list.append(e);
-            if (has(e,Pi))
+            if (has(e,Pi)) {
                 HasPi = true;
             }
-        catch (exception &p)
-            {
+        }
+        catch (exception &p) {
             // cerr << "VectorField::ProcessSymbols: exception while processing DefaultInitialCondition " << (*sv)->DefaultInitialCondition() << endl;
             cerr << "The DefaultInitialCondition \"" << (*sv)->DefaultInitialCondition() << "\" for the StateVariable " << (*sv)->Name() << " has an error: " << p.what() << endl;
             rval = -1;
-            }
+        }
         string defhist = (*sv)->DefaultHistory();
-        if (defhist == "")
+        if (defhist == "") {
             defhist = "0";  // The default DefaultHistory.  Shouldn't this be DefaultInitialCondition?
                             // (And only be 0 if DefaultInitialCondition was also not given.)
-        try
-            {
+        }
+        try {
             ex e(defhist,allsymbols);
             vardefhist_list.append(e);
-            if (has(e,Pi))
+            if (has(e,Pi)) {
                 HasPi = true;
             }
-        catch (exception &p)
-            {
+        }
+        catch (exception &p) {
             // cerr << "VectorField::ProcessSymbols: exception while processing DefaultHistory " << (*sv)->DefaultHistory() << endl;
             cerr << "The DefaultHistory \"" << (*sv)->DefaultHistory() << "\" for the StateVariable " << (*sv)->Name() << " has an error: " << p.what() << endl;
             rval = -1;
-            }
-
         }
+
+    }
     //
     // Now add the state variable symbols to allsymbols.
     // We didn't do this in the above loop because we don't want
@@ -546,43 +526,39 @@ int VectorField::ProcessSymbols(void)
     // constants, parameters, and the independent variable [for
     // delay equations].)
     //
-    for (int j = 0; j < nv; ++j)
-        {
+    for (int j = 0; j < nv; ++j) {
         allsymbols.append(varname_list.op(j));
-        }
+    }
 
     // Process the expressions
     vector<Expression *>::iterator e;
-    for (e = Expressions.begin(); e != Expressions.end(); ++e)
-        {
+    for (e = Expressions.begin(); e != Expressions.end(); ++e) {
         symbol auxe( (*e)->Latex() != ""
                ? symbol( (*e)->Name(),(*e)->Latex() )
                : symbol( (*e)->Name() ) );
         exprname_list.append(auxe);
         allsymbols.append(auxe);
-        try
-            {
+        try {
             ex f((*e)->Formula(),allsymbols);
             exprformula_list.append(f);
             expreqn_list.append( auxe==f );
             CheckForDelay(f);
-            if (has(f,Pi))
+            if (has(f,Pi)) {
                 HasPi = true;
             }
-        catch (exception &p)
-            {
+        }
+        catch (exception &p) {
             // cerr << "VectorField:ProcessSymbols: exception while processing expressions\n";
             cerr << "The Formula \"" << (*e)->Formula() << "\" for the Expression " << (*e)->Name() << " has an error: " << p.what() << endl;
             rval = -1;
-            }
         }
+    }
     /*
     cerr << "*** Delays = { ";
     vector<ex>::iterator pos;
-    for (pos = Delays.begin(); pos != Delays.end(); ++pos)
-        {
+    for (pos = Delays.begin(); pos != Delays.end(); ++pos) {
         cerr << *pos << ' ';
-        }
+    }
     cerr << "}" << endl;
     */
 
@@ -594,51 +570,48 @@ int VectorField::ProcessSymbols(void)
     //
 
     // Process the vector field formulas
-    for (sv = StateVariables.begin(); sv != StateVariables.end(); ++sv)
-        {
-        try
-            {
+    for (sv = StateVariables.begin(); sv != StateVariables.end(); ++sv) {
+        try {
             ex f((*sv)->Formula(),allsymbols);
             varvecfield_list.append(f);
             CheckForDelay(f);
-            if (has(f,Pi))
+            if (has(f,Pi)) {
                 HasPi = true;
-            if (has(f,IndVar))
+            }
+            if (has(f,IndVar)) {
                 IsAutonomous = false;
             }
-        catch (exception &p)
-            {
+        }
+        catch (exception &p) {
             // cerr << "VectorField:ProcessSymbols: exception while processing vector field formulas\n";
             cerr << "The Formula \"" << (*sv)->Formula() << "\" for the StateVariable " << (*sv)->Name() << " has an error: " << p.what() << endl;
             rval = -1;
-            }
         }
+    }
 
     // Functions
     vector<Function *>::iterator f;
-    for (f = Functions.begin(); f != Functions.end(); ++f)
-        {
+    for (f = Functions.begin(); f != Functions.end(); ++f) {
         symbol funcname((*f)->Name());
         funcname_list.append(funcname);
-        try
-            {
+        try {
             ex funcexpr((*f)->Formula(),allsymbols);
             funcformula_list.append(funcexpr);
-            if (has(funcexpr,Pi))
+            if (has(funcexpr,Pi)) {
                 HasPi = true;
             }
-        catch (exception &p)
-            {
+        }
+        catch (exception &p) {
             // cerr << "VectorField:ProcessSymbols: exception while processing function formulas\n";
             cerr << "The Formula \"" << (*f)->Formula() << "\" for the  Function " << (*f)->Name() << " has an error: " << p.what() << endl;
             rval = -1;
-            }
         }
-    return rval;
     }
+    return rval;
+}
 
 void VectorField::Print(void)
-    {
+{
     cout << "Name:       " << Name();
     cout << "   Independent Variable: " << IndependentVariable << endl;
     cout << "Constants:  " << conname_list;
@@ -653,28 +626,24 @@ void VectorField::Print(void)
 
     cout << "Expressions: " << endl;
 
-    for (unsigned i = 0; i < exprname_list.nops(); ++i)
-        {
+    for (unsigned i = 0; i < exprname_list.nops(); ++i) {
         cout << "   " << exprname_list[i] << "=" << exprformula_list[i] << endl;
-        }
+    }
 
     cout << "Expressions (equation list): " ;
     cout << expreqn_list << endl;
 
     cout << "Vector field: " << endl;
-    for (unsigned i = 0; i < varvecfield_list.nops(); ++i)
-        {
+    for (unsigned i = 0; i < varvecfield_list.nops(); ++i) {
         cout << "   " << varvecfield_list[i] << endl;
-        }
+    }
     cout << "Functions: " << endl;
-    for (unsigned i = 0; i < funcname_list.nops(); ++i)
-        {
+    for (unsigned i = 0; i < funcname_list.nops(); ++i) {
         cout << "   " << funcname_list[i] << "=" << funcformula_list[i] << endl;
-        }
+    }
     string tf[2] = {"false","true"};
     cout << "IsDelay: " << tf[IsDelay] << endl;
     cout << "HasNonconstantDelay: " << tf[HasNonconstantDelay] << endl;
     cout << "IsAutonomous: " << tf[IsAutonomous] << endl;
     cout << "HasPi: " << tf[HasPi] << endl;
-    }
-
+}
