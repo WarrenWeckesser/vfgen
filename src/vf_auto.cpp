@@ -272,7 +272,7 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "int func(integer ndim_, const doublereal *u_, const integer *icp_," << endl;
         fout << "         const doublereal *par_, integer ijac_," << endl;
         fout << "         doublereal *f_, doublereal *dfdu_, doublereal *dfdp_)" << endl;
-        fout << "    {" << endl;
+        fout << "{" << endl;
         fout << "    integer dfdu__dim1, dfdp__dim1;" << endl;
         if (HasPi) {
             fout << "    const double Pi = M_PI;\n";
@@ -303,8 +303,9 @@ void VectorField::PrintAUTO(map<string,string> options)
             fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
         }
         fout << endl;
-        fout << "    if (ijac_ == 0)" << endl;
+        fout << "    if (ijac_ == 0) {" << endl;
         fout << "        return 0;" << endl;
+        fout << "    }" << endl;
         fout << endl;
         //
         // The Jacobian section...
@@ -325,8 +326,9 @@ void VectorField::PrintAUTO(map<string,string> options)
         //
         // The Jacobian with respect to the parameters
         //
-        fout << "    if (ijac_ == 1)" << endl;
+        fout << "    if (ijac_ == 1) {" << endl;
         fout << "        return 0;" << endl;
+        fout << "    }" << endl;
         fout << endl;
         fout << "    /*" << endl;
         fout << "     *  The Jacobian with respect to the parameters." << endl;
@@ -341,14 +343,14 @@ void VectorField::PrintAUTO(map<string,string> options)
         }
         fout << endl;
         fout << "    return 0;" << endl;
-        fout << "    }" << endl;
+        fout << "}" << endl;
         fout << endl;
         fout << "/*" << endl;
         fout << " *  STPNT  Gives a starting point" << endl;
         fout << " */" << endl;
         fout << endl;
         fout << "int stpnt(integer ndim_, doublereal t_, doublereal *u_, doublereal *par_)" << endl;
-        fout << "    {" << endl;
+        fout << "{" << endl;
         if (HasPi) {
             fout << "    const double Pi = M_PI;\n";
         }
@@ -378,7 +380,7 @@ void VectorField::PrintAUTO(map<string,string> options)
         }
         fout << endl;
         fout << "    return 0;" << endl;
-        fout << "    }" << endl;
+        fout << "}" << endl;
         fout << endl;
         fout << "/*" << endl;
         fout << " *  The remaining functions are just stubs." << endl;
@@ -392,9 +394,9 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "int bcnd(integer ndim_, const doublereal *par_, const integer *icp_," << endl;
         fout << "         integer nbc_, const doublereal *u0_, const doublereal *u1_, integer ijac_," << endl;
         fout << "         doublereal *fb_, doublereal *dbc_)" << endl;
-        fout << "    {" << endl;
+        fout << "{" << endl;
         fout << "    return 0;" << endl;
-        fout << "    }" << endl;
+        fout << "}" << endl;
         fout << endl; 
         fout << "/*" << endl;
         fout << " *  ICND  Defines the integral conditions" << endl;
@@ -404,9 +406,9 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "         integer nint_, const doublereal *u_, const doublereal *uold_," << endl;
         fout << "         const doublereal *udot_, const doublereal *upold_, integer ijac_," << endl;
         fout << "         doublereal *fi_, doublereal *dint_)" << endl;
-        fout << "    {" << endl;
+        fout << "{" << endl;
         fout << "    return 0;" << endl;
-        fout << "    }" << endl;
+        fout << "}" << endl;
         fout << endl; 
         fout << "/*" << endl;
         fout << " *  FOPT" << endl;
@@ -415,18 +417,18 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "int fopt(integer ndim_, const doublereal *u_, const integer *icp_," << endl;
         fout << "         const doublereal *par_, integer ijac_," << endl;
         fout << "         doublereal *fs_, doublereal *dfdu_, doublereal *dfdp_)" << endl;
-        fout << "    {" << endl;
+        fout << "{" << endl;
         fout << "    return 0;" << endl;
-        fout << "    }" << endl;
+        fout << "}" << endl;
         fout << endl;
         fout << "/*" << endl;
         fout << " *  PVLS" << endl;
         fout << " */" << endl;
         fout << endl;
         fout << "int pvls(integer ndim_, const doublereal *u_, doublereal *par_)" << endl;
-        fout << "    {" << endl;
+        fout << "{" << endl;
         fout << "    return 0;" << endl;
-        fout << "    }" << endl; 
+        fout << "}" << endl; 
         fout.close();
     }
 }
