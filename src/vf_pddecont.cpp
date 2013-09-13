@@ -102,12 +102,10 @@ void VectorField::PDDEC_PrintParDerivs(ofstream &dout, const vector<ex> &vf0)
 
     for (int j = 0; j < np; ++j) {
         if (j == 0) {    
-            dout << "    if (j == 1)\n";
-            dout << "        {\n";
+            dout << "    if (j == 1) {\n";
         }
         else {
-            dout << "    else if (j == " << j+1 << ")\n";
-            dout << "        {\n";
+            dout << "    else if (j == " << j+1 << ") {\n";
         }
         dout << "        // Derivative wrt " << parname_list[j] << endl;
         for (int i = 0; i < nv; ++i) {
@@ -115,7 +113,7 @@ void VectorField::PDDEC_PrintParDerivs(ofstream &dout, const vector<ex> &vf0)
             ex df = vf0[i].diff(p);
             dout << "        jac_(" << i << ",0)" << " = " << df << ";" << endl;
         }
-        dout << "        }\n";
+        dout << "    }\n";
     }
 }
     
@@ -131,13 +129,11 @@ void VectorField::PDDEC_PrintJacobians(ofstream &dout, const vector<ex> &vf0)
     int nd = Delays.size();
     for (int k = 0; k < nd+1; ++k) {
         if (k == 0) {
-            dout << "    if (k == 0)\n";
-            dout << "        {\n";
+            dout << "    if (k == 0) {\n";
             dout << "        // Derivatives wrt the state variables\n";
         }
         else {
-            dout << "    else if (k == " << k << ")\n";
-            dout << "        {\n";
+            dout << "    else if (k == " << k << ") {\n";
             dout << "        // Derivatives wrt state variables with delay " << Delays[k-1] << endl;
         }
         for (int i = 0; i < nv; ++i) {
@@ -150,7 +146,7 @@ void VectorField::PDDEC_PrintJacobians(ofstream &dout, const vector<ex> &vf0)
                 dout << "        jac_(" << i << "," << j << ")" << " = " << df << ";" << endl;
             }
         }
-        dout << "        }\n";
+        dout << "    }\n";
     }
 }
 
@@ -166,24 +162,20 @@ void VectorField::PDDEC_PrintXandParJacobians(ofstream &dout, const vector<ex> &
     int nd = Delays.size();
     for (int k = 0; k < nd+1; ++k) {
         if (k == 0) {
-            dout << "    if (k == 0)\n";
-            dout << "        {\n";
+            dout << "    if (k == 0) {\n";
             dout << "        // Derivatives wrt the state variables\n";
         }
         else {
-            dout << "        }\n";
-            dout << "    else if (k == " << k << ")\n";
-            dout << "        {\n";
+            dout << "    }\n";
+            dout << "    else if (k == " << k << ") {\n";
             dout << "        // Derivatives wrt state variables with delay " << Delays[k-1] << endl;
         }
         for (int m = 0; m < np; ++m) {
             if (m == 0) {
-                dout << "        if (j == " << m+1 << ")\n";
-                dout << "            {\n";
+                dout << "        if (j == " << m+1 << ") {\n";
             }
             else {
-                dout << "        else if (j == " << m+1 << ")\n";
-                dout << "            {\n";
+                dout << "        else if (j == " << m+1 << ") {\n";
             }
             dout << "            // Derivative wrt " << parname_list[m] << "\n";
             for (int i = 0; i < nv; ++i) {
@@ -199,10 +191,10 @@ void VectorField::PDDEC_PrintXandParJacobians(ofstream &dout, const vector<ex> &
                     dout << "            jac_(" << i << "," << j << ")" << " = " << df << ";" << endl;
                 }
             }
-            dout << "            }\n";
+            dout << "        }\n";
         }
     }
-    dout << "        }\n";
+    dout << "    }\n";
 }
 
 
@@ -230,26 +222,22 @@ void VectorField::PDDEC_PrintHessiansTimesV(ofstream &dout, const vector<ex> &vf
     int nd = Delays.size();
     for (int k1 = 0; k1 < nd+1; ++k1) {
         if (k1 == 0) {
-            dout << "    if (k1 == 0)\n";
-            dout << "        {\n";
+            dout << "    if (k1 == 0) {\n";
             dout << "        // Derivatives wrt the state variables\n";
         }
         else {
-            dout << "        }\n";
-            dout << "    else if (k1 == " << k1 << ")\n";
-            dout << "        {\n";
+            dout << "    }\n";
+            dout << "    else if (k1 == " << k1 << ") {\n";
             dout << "        // Derivatives wrt state variables with delay " << Delays[k1-1] << endl;
         }
 
         for (int k2 = 0; k2 < nd+1; ++k2) {
             if (k2 == 0) {
-                dout << "        if (k2 == 0)\n";
-                dout << "            {\n";
+                dout << "        if (k2 == 0) {\n";
                 dout << "            // Derivatives wrt the state variables\n";
             }
             else {
-                dout << "        else if (k2 == " << k2 << ")\n";
-                dout << "            {\n";
+                dout << "        else if (k2 == " << k2 << ") {\n";
                 dout << "            // Derivatives wrt state variables with delay " << Delays[k2-1] << endl;
             }
 
@@ -276,12 +264,12 @@ void VectorField::PDDEC_PrintHessiansTimesV(ofstream &dout, const vector<ex> &vf
                 }
 
             }
-            dout << "            }\n";
+            dout << "        }\n";
         }
     }
-    dout << "        }\n";
+    dout << "    }\n";
 }
-    
+
 //
 // PrintPDDECONT -- The PDDE-CONT code generator.
 //
@@ -353,7 +341,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     // Function definition starts here.
     sys_out << "//" << endl;
     sys_out << "void sys_rhs(Vector& out, double t, const Matrix& Zlags_, const Vector& par_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -404,7 +392,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     }
     sys_out << endl;
     sys_out << "    return;\n";
-    sys_out << "    }\n";
+    sys_out << "}\n";
 
     //
     //  Create the derivative functions to be used in sys_deri(...)
@@ -418,7 +406,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     sys_out << "//\n";
     sys_out << endl;
     sys_out << "static inline void " << Name() << "_jacx(Matrix& jac_, double t, int k, const Matrix& Zlags_, const Vector& par_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -454,7 +442,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
         vf0.push_back(f);
     }
     PDDEC_PrintJacobians(sys_out,vf0);
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
     
     sys_out << endl;
@@ -466,7 +454,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     sys_out << "//\n";
     sys_out << endl;
     sys_out << "static inline void " << Name() << "_jacp(Matrix& jac_, double t, int j, const Matrix& Zlags_, const Vector& par_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -487,7 +475,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
         sys_out << endl;
     }
     PDDEC_PrintParDerivs(sys_out,vf0);
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
 
     sys_out << endl;
@@ -499,7 +487,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     sys_out << "//\n";
     sys_out << endl;
     sys_out << "static inline void " << Name() << "_jacxp(Matrix& jac_, double t, int k, int j, const Matrix& Zlags_, const Vector& par_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -520,9 +508,8 @@ void VectorField::PrintPDDECONT(map<string,string> options)
         sys_out << endl;
     }
     PDDEC_PrintXandParJacobians(sys_out,vf0);
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
-
 
     sys_out << endl;
     sys_out << "//\n";
@@ -534,7 +521,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     sys_out << "//\n";
     sys_out << endl;
     sys_out << "static inline void " << Name() << "_hess_times_v(Matrix& jac_, double t, int k1, int k2, int m, const Matrix& v_, const Matrix& Zlags_, const Vector& par_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -555,7 +542,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
         sys_out << endl;
     }
     PDDEC_PrintHessiansTimesV(sys_out,vf0);
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
 
     //
@@ -591,22 +578,25 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     // Function definition starts here.
     sys_out << "//" << endl;
     sys_out << "void sys_deri(Matrix& jac_, double t, const Matrix& Zlags_, const Vector& par_, int nx_, const int* vx_, int np_, const int* vp_, const Matrix& v_)\n";
-    sys_out << "    {\n";
-    sys_out << "    if (nx_ == 1 & np_ == 0)\n";
-    sys_out << "        " << Name() << "_jacx(jac_, t, vx_[0], Zlags_, par_);\n"; 
-    sys_out << "    else if (nx_ == 0 & np_ == 1)\n";
-    sys_out << "        " << Name() << "_jacp(jac_, t, vp_[0], Zlags_, par_);\n"; 
-    sys_out << "    else if (nx_ == 1 & np_ == 1)\n";
-    sys_out << "        " << Name() << "_jacxp(jac_,t,vx_[0],vp_[0],Zlags_,par_);\n";
-    sys_out << "    else if (nx_ == 2 & np_ == 0)\n";
-    sys_out << "        " << Name() << "_hess_times_v(jac_,t,vx_[0],vx_[1],vx_[0],v_,Zlags_,par_);\n";
-    sys_out << "    else\n";
-    sys_out << "        {\n";
+    sys_out << "{\n";
+    sys_out << "    if (nx_ == 1 & np_ == 0) {\n";
+    sys_out << "        " << Name() << "_jacx(jac_, t, vx_[0], Zlags_, par_);\n";
+    sys_out << "    }\n"; 
+    sys_out << "    else if (nx_ == 0 & np_ == 1) {\n";
+    sys_out << "        " << Name() << "_jacp(jac_, t, vp_[0], Zlags_, par_);\n";
+    sys_out << "    }\n"; 
+    sys_out << "    else if (nx_ == 1 & np_ == 1) {\n";
+    sys_out << "        " << Name() << "_jacxp(jac_, t, vx_[0], vp_[0], Zlags_, par_);\n";
+    sys_out << "    }\n";
+    sys_out << "    else if (nx_ == 2 & np_ == 0) {\n";
+    sys_out << "        " << Name() << "_hess_times_v(jac_, t, vx_[0], vx_[1], vx_[0], v_, Zlags_, par_);\n";
+    sys_out << "    }\n";
+    sys_out << "    else {\n";
     sys_out << "        std::cerr << \"sys_deri: Requested derivative has not been implemented.\\n\";\n";
     sys_out << "        exit(-1);\n";
-    sys_out << "        }\n";
-    sys_out << "    return;\n";
     sys_out << "    }\n";
+    sys_out << "    return;\n";
+    sys_out << "}\n";
 
     //
     // Create sys_tau()
@@ -617,7 +607,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     sys_out << "//" << endl;
     sys_out << endl;
     sys_out << "void sys_tau(Vector& out, double t, const Vector& par_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -656,7 +646,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
         }
         ++j;
     }
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
     //
     // Create sys_dtau()
@@ -675,7 +665,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     sys_out << "//\n";
     sys_out << endl;
     sys_out << "void sys_dtau(Vector& out, double t, const Vector& par_, int p_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -690,29 +680,27 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
     sys_out << endl;
     sys_out << "    out(0) = 0.0;\n";
-    sys_out << "    if (p_ == 0)\n";
-    sys_out << "        {\n";
+    sys_out << "    if (p_ == 0) {\n";
     for (unsigned k = 0; k < Delays.size(); ++k) {
         sys_out << "        out(" << k+1 << ") = 0.0;\n";
     }
-    sys_out << "        }\n";
+    sys_out << "    }\n";
     for (int j = 0; j < np; ++j) {
-        sys_out << "    else if (p_ == " << j+1 << ")\n";
-        sys_out << "        {\n";
+        sys_out << "    else if (p_ == " << j+1 << ") {\n";
         sys_out << "        // Derivative wrt " << parname_list[j] << endl;
         for (unsigned k = 0; k < Delays.size(); ++k) {
             symbol p = ex_to<symbol>(parname_list[j]);
             ex df = Delays[k].diff(p);
             sys_out << "        out(" << k+1 << ") = " << df << ";\n";
         }
-        sys_out << "        }\n";
+        sys_out << "    }\n";
     }
 
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
     
     sys_out << "void sys_stpar(Vector& par_)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -722,10 +710,10 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     for (int j = 0; j < np; ++j) {
         sys_out << "    par_(" << j+1 << ") = " << pardefval_list[j] << ";\n";
     }
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
     sys_out << "void sys_stsol(Vector& out, double t)\n";
-    sys_out << "    {\n";
+    sys_out << "{\n";
     if (HasPi) {
         sys_out << "    const double Pi = M_PI;\n";
     }
@@ -734,7 +722,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     for (int j = 0; j < nv; ++j) {
         sys_out << "    out(" << j << ") = " << vardefic_list[j] << ";\n";
     }
-    sys_out << "    }\n";
+    sys_out << "}\n";
     sys_out << endl;
     sys_out << "}  // extern \"C\"\n";
     sys_out.close();
