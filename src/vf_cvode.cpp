@@ -198,7 +198,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << " DlsMat jac_, void *params," << endl;
         fout << "                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)" << endl;
 
-        pout << func_return_type << " " << Name() << "_jac(int, realtype, N_Vector, N_Vector,";
+        pout << func_return_type << " " << Name() << "_jac(" << aux_type << "int, realtype, N_Vector, N_Vector,";
         pout << " DlsMat, void *," << endl;
         pout << "                N_Vector, N_Vector, N_Vector);" << endl;
     }
@@ -331,8 +331,9 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "#include <stdlib.h>" << endl;
         tout << "#include <string.h>" << endl;
         tout << "#include <math.h>" << endl;
+        tout << endl;
         if (options["version"] == "2.3.0") {
-            tout << "/* Include headers for SUNDIALS v2.1.1, CVODE v2.3.0 */" << endl;
+            tout << "/* Include headers for CVODE v2.3.0 */" << endl;
             tout << "#include <sundialstypes.h>" << endl;
             tout << "#include <cvode.h>" << endl;
             tout << "#include <cvdense.h>" << endl;
@@ -340,7 +341,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             tout << "#include <dense.h>" << endl;
         }
         else if (options["version"] == "2.4.0") {
-            tout << "/* Include headers for SUNDIALS v2.2.0, CVODE v2.4.0 */" << endl;
+            tout << "/* Include headers for CVODE 2.4.0 */" << endl;
             tout << "#include <sundials/sundials_types.h>" << endl;
             tout << "#include <sundials/sundials_dense.h>" << endl;
             tout << "#include <cvode.h>" << endl;
@@ -348,7 +349,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             tout << "#include <nvector_serial.h>" << endl;
         }
         else if (options["version"] == "2.5.0") {
-            tout << "/* Include headers for SUNDIALS v2.3.0, CVODE v2.5.0 */" << endl;
+            tout << "/* Include headers for CVODE 2.5.0 */" << endl;
             tout << "#include <sundials/sundials_types.h>" << endl;
             tout << "#include <sundials/sundials_dense.h>" << endl;
             tout << "#include <sundials/sundials_nvector.h>" << endl;
@@ -357,8 +358,8 @@ void VectorField::PrintCVODE(map<string,string> options)
             tout << "#include <cvode/cvode_dense.h>" << endl;
         }
         else {
-            // Default is CVODE v2.6.0
-            tout << "/* Include headers for SUNDIALS v2.4.0, CVODE v2.6.0 */" << endl;
+            // CVODE >= 2.6.0
+            tout << "/* Include headers for CVODE " << options["version"] << " */" << endl;
             tout << "#include <cvode/cvode.h>" << endl;
             tout << "#include <nvector/nvector_serial.h>" << endl;
             tout << "#include <cvode/cvode_dense.h>" << endl;
@@ -495,7 +496,7 @@ void VectorField::PrintCVODE(map<string,string> options)
 
         tout << "    realtype t = RCONST(0.0);\n";
 
-        if (options["version"] == "2.6.0") {
+        if (options["version"] == "2.6.0" || options["version"] == "2.7.0") {
             tout << "    flag = CVodeInit(cvode_mem," << Name() << "_vf, t, y0_);\n";
             tout << "    flag = CVodeSStolerances(cvode_mem, solver_param_[1], solver_param_[0]);\n";
             tout << "    flag = CVodeSetUserData(cvode_mem, &(p_[0]));\n";
@@ -505,7 +506,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             tout << "    flag = CVodeSetFdata(cvode_mem, &(p_[0]));\n";
         }
         tout << "    flag = CVDense(cvode_mem, N_);\n";
-        if (options["version"] == "2.6.0") {
+        if (options["version"] == "2.6.0" || options["version"] == "2.7.0") {
             tout << "    flag = CVDlsSetDenseJacFn(cvode_mem, " << Name() << "_jac);\n";
         }
         else {
@@ -529,7 +530,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "    while (t < t1)\n";
         tout << "        {\n" ;
         tout << "        /* Advance the solution */\n";
-        if (options["version"] == "2.6.0") {
+        if (options["version"] == "2.6.0" || options["version"] == "2.7.0") {
             tout << "        flag = CVode(cvode_mem, t1, y0_, &t, CV_ONE_STEP);\n";
         }
         else {
@@ -574,14 +575,14 @@ void VectorField::PrintCVODE(map<string,string> options)
         mout << "#\n";
         mout << "# This is the Makefile for the " << Name() << "_cvdemo program.\n";
         if (options["version"] == "2.3.0") {
-            mout << "# This file is configured for SUNDIALS v2.1.1, CVODE v2.3.0.\n";
+            mout << "# This file is configured for CVODE 2.3.0.\n";
         }
         else if (options["version"] == "2.4.0") {
-            mout << "# This file is configured for SUNDIALS v2.2.0, CVODE v2.4.0.\n";
+            mout << "# This file is configured for CVODE 2.4.0.\n";
         }
         else {
-            // Default is CVODE v2.5.0
-            mout << "# This file is configured for SUNDIALS v2.3.0, CVODE v2.5.0.\n";
+            // CVODE >= 2.5.0
+            mout << "# This file is configured for CVODE " << options["version"] << ".\n";
         }
         mout << "#\n";
         PrintVFGENComment(mout,"# ");
@@ -603,7 +604,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             mout << "SUNDIALS_INCS=-I$(SUNDIALS_INC_DIR) -I$(SUNDIALS_INC_DIR)/cvode -I$(SUNDIALS_INC_DIR)/sundials\n";
         }
         else {
-            // CVODE v2.3.0 and v2.5.0
+            // CVODE >= 2.5.0
             mout << "SUNDIALS_INCS=-I$(SUNDIALS_INC_DIR)\n";
         }
         mout << "LIBS=-lm\n";
@@ -626,4 +627,3 @@ void VectorField::PrintCVODE(map<string,string> options)
         mout.close();
     }
 }
-
