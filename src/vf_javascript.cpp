@@ -118,7 +118,7 @@ void VectorField::PrintJavascript(map<string,string> options)
     fout << " */" << endl;
     fout << endl;
     fout << "function " << Name() << "_vf(t, y_, params)" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     for (int i = 0; i < nc; ++i) {
         fout << "    var " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
@@ -138,7 +138,7 @@ void VectorField::PrintJavascript(map<string,string> options)
     }
     fout << endl;
     fout << "    return f_;\n";
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
 
     //
@@ -208,7 +208,7 @@ void VectorField::PrintJavascript(map<string,string> options)
     fout << " */\n";
     fout << endl;
     fout << "function " << Name() << "_derivs" << Order << "(X, params)\n";
-    fout << "    {\n";
+    fout << "{\n";
     fout << "    var i;\n";
     fout << "    var s;\n";
     fout << "    var Q = [];\n";
@@ -218,8 +218,9 @@ void VectorField::PrintJavascript(map<string,string> options)
     for (int k  = 0; k < Order-1; ++k) {
         fout << endl;
         fout << "    Xderiv[" << k+1 << "] = []\n";
-        fout << "    for (i = 0; i < " << nv << "; ++i)\n";
+        fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
         fout << "        Xderiv[" << k+1 << "][i] = 0.0;\n";
+        fout << "    }\n";
         for (vectormap::iterator v = table[k].begin(); v != table[k].end(); ++v) {
             vector<int> *a = v->first;
             double coeff = v->second;
@@ -228,26 +229,27 @@ void VectorField::PrintJavascript(map<string,string> options)
             fout << "]  coeff = " << coeff << "  */\n";
             // int r = a->size();
             int r = SumVec(a);
-            fout << "    Q = " << Name() << "_diff" << r << "(X,params";
+            fout << "    Q = " << Name() << "_diff" << r << "(X, params";
             int i = 0;
             for (vector<int>::iterator iter = a->begin(); iter != a->end(); ++iter) {
                 for (int j = 0; j < *iter; ++j) {
-                    fout << ",Xderiv[" << i << "]";
+                    fout << ", Xderiv[" << i << "]";
                 }
                 ++i;
             }
             fout << ");\n";
-            fout << "    for (i = 0; i < " << nv << "; ++i)\n";
+            fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
             fout << "        Xderiv[" << k+1 << "][i] += ";
             if (coeff > 1) {
                 fout << coeff << "*";
             }
             fout << "Q[i];\n";
+            fout << "    }\n";
         }
     }
     fout << endl;
     fout << "    return Xderiv;\n";
-    fout << "    }\n";
+    fout << "}\n";
     fout << endl;
     delete [] table;
     fout << "/*\n";
@@ -259,7 +261,7 @@ void VectorField::PrintJavascript(map<string,string> options)
     fout << " */\n";
     fout << endl;
     fout << "function " << Name() << "_evaltaylor" << Order << "(h, X, Xderiv)\n";
-    fout << "    {\n";
+    fout << "{\n";
     fout << "    var i;\n";
     fout << "    var s;\n";
     fout << "    var Xnew = X\n";
@@ -273,11 +275,12 @@ void VectorField::PrintJavascript(map<string,string> options)
             fout << "    s = s * h;\n";
         }
         fout << "    /* Add order " << k << " term to Xnew */\n";
-        fout << "    for (i = 0; i < " << nv << "; ++i)\n";
+        fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
         fout << "        Xnew[i] += (1.0/" << factorial(k) << ")*Xderiv[" << k-1 << "][i]*s;" << endl;
+        fout << "    }\n";
     }
     fout << "    return Xnew;\n";
-    fout << "    }\n";
+    fout << "}\n";
 
     fout.close();
     
@@ -436,13 +439,13 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "var intervalID = \"none\"\n";
         dout << endl;
         dout << "function clear_canvas()\n";
-        dout << "    {\n";
+        dout << " {\n";
         dout << "    var ctx = document.getElementById('canvas').getContext('2d')\n";
         dout << "    ctx.clearRect(0,0,500,500)\n";
-        dout << "    }\n";
+        dout << " }\n";
         dout << endl;
         dout << "function init()\n";
-        dout << "    {\n";
+        dout << " {\n";
         dout << "    clear_canvas()\n";
         dout << "    t = 0.0\n";
         for (int i = 0; i < nv; ++i) {
@@ -456,55 +459,58 @@ void VectorField::PrintJavascript(map<string,string> options)
             dout << "    document.getElementById('" << varname_list[i] << "_t').value = document.getElementById('" << varname_list[i] << "0').value\n";
         }
         dout << "    document.getElementById('t').value = t\n";
-        dout << "    }\n";
+        dout << " }\n";
         dout << endl;
         dout << "function start_animation()\n";
-        dout << "    {\n";
-        dout << "    if (intervalID == \"none\")\n";
+        dout << " {\n";
+        dout << "    if (intervalID == \"none\") {\n";
         dout << "        intervalID = setInterval(advance,0)\n";
         dout << "    }\n";
+        dout << " }\n";
         dout << endl;
         dout << "function stop_animation()\n";
-        dout << "    {\n";
-        dout << "    if (intervalID != \"none\")\n";
-        dout << "        {\n";
+        dout << "{\n";
+        dout << "    if (intervalID != \"none\") {\n";
         dout << "        clearInterval(intervalID)\n";
         dout << "        intervalID = \"none\"\n";
-        dout << "        }\n";
         dout << "    }\n";
+        dout << "}\n";
         dout << endl;
         dout << "function pw6(x)\n";
-        dout << "    {\n";
+        dout << "{\n";
         dout << "    var x1 = x-6*Math.floor(x/6.0)\n";
-        dout << "    if (x1 < 1.0)\n";
+        dout << "    if (x1 < 1.0) {\n";
         dout << "        return x1\n";
-        dout << "    if (x1 < 3.0)\n";
-        dout << "        return 1.0\n";
-        dout << "    if (x1 < 4.0)\n";
-        dout << "        return 1.0-(x1-3.0)\n";
-        dout << "    return 0.0\n";
         dout << "    }\n";
+        dout << "    if (x1 < 3.0) {\n";
+        dout << "        return 1.0\n";
+        dout << "    }\n";
+        dout << "    if (x1 < 4.0) {\n";
+        dout << "        return 1.0-(x1-3.0)\n";
+        dout << "    }\n";
+        dout << "    return 0.0\n";
+        dout << "}\n";
         dout << endl;
         dout << "function displayX()\n";
-        dout << "    {\n";
+        dout << "{\n";
         dout << "    return ";
         for (int i = 0; i < nv; ++i) {
             dout << "document.getElementById('" << varname_list[i] << "_xscale').value*state[" << i << "] + ";
         }
         dout << "1.0*document.getElementById('xoffset').value\n";
-        dout << "    }\n";
+        dout << "}\n";
         dout << endl;
         dout << "function displayY()\n";
-        dout << "    {\n";
+        dout << "{\n";
         dout << "    return ";
         for (int i = 0; i < nv; ++i) {
             dout << "- document.getElementById('" << varname_list[i] << "_yscale').value*state[" << i << "] ";
         }
         dout << "- document.getElementById('yoffset').value\n";        
-        dout << "    }\n";
+        dout << "}\n";
         dout << endl;
         dout << "function advance()\n";
-        dout << "    {\n";
+        dout << "{\n";
         dout << "    var params = [";
         for (int i = 0; i < np; ++i) {
             dout << "parseFloat(document.getElementById('" << parname_list[i] << "_value').value)" << ((i == np-1) ? "]\n" : ",");
@@ -520,56 +526,51 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "    ctx.save()\n";
         dout << "    ctx.translate(250,250)\n";
         dout << "    ctx.beginPath()\n";
-        dout << "    if (palette_black)\n";
-        dout << "        {\n";
+        dout << "    if (palette_black) {\n";
         dout << "        var red = 0.0\n";
         dout << "        var green = 0.0\n";
         dout << "        var blue = 0.0\n";
-        dout << "        }\n";
-        dout << "    else if (palette_blue_green)\n";
-        dout << "        {\n";
+        dout << "    }\n";
+        dout << "    else if (palette_blue_green) {\n";
         dout << "        var red = 0.0\n";
         dout << "        var green = 255*pw6(t)\n";
         dout << "        var blue = 255*pw6(t+7.0)\n";
-        dout << "        }\n";
-        dout << "    else if (palette_black_red)\n";
-        dout << "        {\n";
+        dout << "    }\n";
+        dout << "    else if (palette_black_red) {\n";
         dout << "        var red = 255*pw6(t)\n";
         dout << "        var green = 0.0\n";
         dout << "        var blue = 0.0\n";
-        dout << "        }\n";
+        dout << "    }\n";
         dout << "    ctx.strokeStyle = \"rgb(\"+parseInt(red)+\",\"+parseInt(green)+\",\"+parseInt(blue)+\")\"\n";
         dout << "    ctx.moveTo(displayX(),displayY())\n";
-        dout << "    for (var i = 0; i < numsteps; ++i)\n";
-        dout << "        {\n";
+        dout << "    for (var i = 0; i < numsteps; ++i) {\n";
         dout << "        var Xderiv = " << Name() << "_derivs" << Order << "(state,params)\n";
         dout << "        var m = 0.0\n";
-        dout << "        for (var j = 0; j < " << nv << "; ++j)\n";
-        dout << "            {\n";
+        dout << "        for (var j = 0; j < " << nv << "; ++j) {\n";
         dout << "            var a = Xderiv[" << Order-1 << "][j]\n";
         dout << "            m += a*a\n";
-        dout << "            }\n";
+        dout << "        }\n";
         dout << "        m = Math.sqrt(m)/" << 1.0*factorial(Order) << endl;
         dout << "        var stepsize = Math.min(hmax,Math.pow(tol/m," << 1.0/(1.0*Order) << "))\n";
-        dout << "        if (t + stepsize > stoptime)\n";
+        dout << "        if (t + stepsize > stoptime) {\n";
         dout << "            stepsize = stoptime - t\n";
+        dout << "        }\n";
         dout << "        state = " << Name() << "_evaltaylor" << Order << "(stepsize,state,Xderiv)\n";
         dout << "        t += stepsize\n";
 
         dout << "        ctx.lineTo(displayX(),displayY())\n";
-        dout << "        if (t >= stoptime)\n";
-        dout << "            {\n";
+        dout << "        if (t >= stoptime) {\n";
         dout << "            stop_animation()\n";
         dout << "            break\n";
-        dout << "            }\n";
         dout << "        }\n";
+        dout << "    }\n";
         dout << "    ctx.stroke()\n";
         dout << "    ctx.restore()\n";
         for (int i = 0; i < nv; ++i) {
             dout << "    document.getElementById('" << varname_list[i] << "_t').value = state[" << i << "]\n";
         }
         dout << "    document.getElementById('t').value = t\n";
-        dout << "    }\n";
+        dout << "}\n";
 
         dout.close();
     }

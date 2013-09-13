@@ -231,7 +231,7 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
     }
     fout << " */\n";
     if (lang == "c") {
-        fout << "void " << name << "_diff" << r << "(double deriv[],double x_[], double p_[],";
+        fout << "void " << name << "_diff" << r << "(double deriv[], double x_[], double p_[],";
         pout << "void " << name << "_diff" << r << "(double deriv[], double x_[], double p_[],";
     }
     else {
@@ -256,7 +256,7 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
     if (lang == "c") {
         pout << ");\n";
     }
-    fout << "    {\n";
+    fout << "{\n";
     if (lang == "c") {
         CDeclare(fout,"double",vars);
         CDeclare(fout,"double",params);
@@ -287,7 +287,7 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
     int *p = new int[n];
     for (int i = 0; i < n; ++i) {
         if (lang == "c") {
-            fout << "    {\n";
+            fout << "{\n";
         }
         // ex f = vf[i];
         ex f = iterated_subs(vf[i],expreqn_list);
@@ -348,7 +348,7 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
             }
         }
         if (lang == "c") {
-            fout << "    }\n";
+            fout << "}\n";
         }
         delete [] q;
         delete [] sq;
@@ -361,5 +361,5 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
     else {
         fout << "    return deriv;\n";
     }
-    fout << "    }\n";
+    fout << "}\n";
 }

@@ -121,7 +121,7 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << endl;
     fout << "void " << Name() << "_vf(double t, const double y_[], double f_[], double params[])" << endl;
     pout << "void " << Name() << "_vf(double, const double [], double [], double []);" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
@@ -146,7 +146,7 @@ void VectorField::PrintTaylor(map<string,string> options)
         fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
     }
     fout << endl;
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
 
 
@@ -218,17 +218,18 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << endl;
     fout << "void " << Name() << "_derivs" << Order << "(double Xderiv[" << Order << "][" << nv << "], double X[], double params[])\n";
     pout << "void " << Name() << "_derivs" << Order << "(double Xderiv[" << Order << "][" << nv << "], double X[], double params[]);\n";
-    fout << "    {\n";
+    fout << "{\n";
     fout << "    int i;\n";
     fout << "    double s;\n";
     // fout << "    double Xderiv[" << Order << "][" << nv << "];\n";
     fout << "    double Q[" << nv << "];\n";
     fout << endl;
-    fout << "    " << Name() << "_vf(0.0,X,Xderiv[0],params);\n";
+    fout << "    " << Name() << "_vf(0.0, X, Xderiv[0], params);\n";
     for (int k  = 0; k < Order-1; ++k) {
         fout << endl;
-        fout << "    for (i = 0; i < " << nv << "; ++i)\n";
+        fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
         fout << "        Xderiv[" << k+1 << "][i] = 0.0;\n";
+        fout << "    }\n";
         for (vectormap::iterator v = table[k].begin(); v != table[k].end(); ++v) {
             vector<int> *a = v->first;
             double coeff = v->second;
@@ -237,23 +238,24 @@ void VectorField::PrintTaylor(map<string,string> options)
             fout << "]  coeff = " << coeff << "  */\n";
             // int r = a->size();
             int r = SumVec(a);
-            fout << "    " << Name() << "_diff" << r << "(Q,X,params";
+            fout << "    " << Name() << "_diff" << r << "(Q, X, params";
             int i = 0;
             for (vector<int>::iterator iter = a->begin(); iter != a->end(); ++iter) {
                 for (int j = 0; j < *iter; ++j)
-                    fout << ",Xderiv[" << i << "]";
+                    fout << ", Xderiv[" << i << "]";
                 ++i;
             }
             fout << ");\n";
-            fout << "    for (i = 0; i < " << nv << "; ++i)\n";
+            fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
             fout << "        Xderiv[" << k+1 << "][i] += ";
             if (coeff > 1) {
                 fout << coeff << "*";
             }
             fout << "Q[i];\n";
+            fout << "    }\n";
         }
     }
-    fout << "    }\n";
+    fout << "}\n";
     fout << endl;
     delete [] table;
     fout << "/*\n";
@@ -266,12 +268,13 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << endl;
     fout << "void " << Name() << "_evaltaylor" << Order << "(double Xnew[], double h, double X[], double Xderiv[" << Order << "][" << nv << "])\n";
     pout << "void " << Name() << "_evaltaylor" << Order << "(double Xnew[], double h, double X[], double Xderiv[" << Order << "][" << nv << "]);\n";
-    fout << "    {\n";
+    fout << "{\n";
     fout << "    int i;\n";
     fout << "    double s;\n";
     fout << "    /*  Xnew = X  */\n";
-    fout << "    for (i = 0; i < " << nv << "; ++i)\n";
+    fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
     fout << "        Xnew[i] = X[i];\n";
+    fout << "    }\n";
     for (int k = 1; k <= Order; ++k) {
         if (k == 1) {
             fout << "    s = h;\n";
@@ -280,10 +283,11 @@ void VectorField::PrintTaylor(map<string,string> options)
             fout << "    s = s * h;\n";
         }
         fout << "    /* Add order " << k << " term to Xnew */\n";
-        fout << "    for (i = 0; i < " << nv << "; ++i)\n";
+        fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
         fout << "        Xnew[i] += (1.0/" << factorial(k) << ")*Xderiv[" << k-1 << "][i]*s;" << endl;
+        fout << "    }\n";
     }
-    fout << "    }\n";
+    fout << "}\n";
 
     fout.close();
     pout.close();
