@@ -51,7 +51,7 @@
 //
 
 class Symbol
-    {
+{
     private:
 
     std::string name;
@@ -72,11 +72,11 @@ class Symbol
     std::string Description(void);
     void Latex(std::string l);
     std::string Latex(void);
-    };
+};
 
 
 class FormulaSymbol : public Symbol
-    {
+{
     private:
 
     std::string formula;
@@ -91,10 +91,11 @@ class FormulaSymbol : public Symbol
     // Get/Set methods
     void Formula(std::string f);
     std::string Formula(void);
-    };
+};
+
 
 class Constant : public Symbol
-    {
+{
     private:
 
     std::string value;
@@ -108,10 +109,11 @@ class Constant : public Symbol
     // Get/Set methods
     void Value(std::string val);
     std::string Value(void);
-    };
+};
+
 
 class Parameter : public Symbol
-    {
+{
     private:
 
     std::string defaultvalue;
@@ -125,21 +127,22 @@ class Parameter : public Symbol
     // Get/Set methods
     void DefaultValue(std::string val);
     std::string DefaultValue(void);
-    };
+};
+
 
 class Expression : public FormulaSymbol
-    {
+{
     public:
 
     // Constructors
     Expression(std::string name);
     Expression(std::string name, std::string descr);
 
-    };
+};
 
 
 class StateVariable : public FormulaSymbol
-    {
+{
     private:
 
     std::string periodicfrom;
@@ -163,21 +166,21 @@ class StateVariable : public FormulaSymbol
     std::string DefaultInitialCondition(void);
     void DefaultHistory(std::string hist);
     std::string DefaultHistory(void);
-    };
+};
 
 
 class Function : public FormulaSymbol
-    {
+{
     public:
 
     // Constructors
     Function(std::string name);
     Function(std::string name, std::string descr);
-    };
+};
 
 
 class VectorField : public Symbol
-    {
+{
     private:
 
     // There is no implementation of the copy constructor.
@@ -290,6 +293,6 @@ class VectorField : public Symbol
     void PDDEC_PrintXandParJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PDDEC_PrintHessiansTimesV(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PrintPDDECONT(std::map<std::string,std::string> options);
-    };
+};
 
 #endif

@@ -23,9 +23,9 @@
 #include <map>
 
 struct MyVectorCmpClass
-    {
+{
     bool operator()(const std::vector<int> *a1, const std::vector<int> *a2) const;
-    };
+};
 
 
 typedef std::map< std::vector<int> *, double, MyVectorCmpClass> vectormap;
