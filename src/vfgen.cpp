@@ -209,7 +209,7 @@ int help(char *command)
         cout << "[name]_jac().\n";
         cout << endl;
         cout << "Options: (default is listed first)\n";
-        cout << "version=2.6.0|2.5.0|2.4.0|2.3.0\n";
+        cout << "version=2.7.0|2.6.0|2.5.0|2.4.0|2.3.0\n";
         cout << "    This option determines of version of CVODE for which code is generated.\n";
         cout << "func=no|yes\n";
         cout << "    By default, any user function defined in the vector field file is not\n";

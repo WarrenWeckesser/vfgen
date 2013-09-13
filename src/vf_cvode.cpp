@@ -43,14 +43,14 @@ void VectorField::PrintCVODE(map<string,string> options)
     int nc, np, nv, na, nf;
 
     if (options.count("version") > 0 && options["version"] != "2.3.0" && options["version"] != "2.4.0"
-            && options["version"] != "2.5.0" && options["version"] != "2.6.0") {
+            && options["version"] != "2.5.0" && options["version"] != "2.6.0" && options["version"] != "2.7.0") {
         cerr << "vfgen CVODE command: unknown version specified: " << options["version"] << endl;
         cerr << "Versions of CVODE supported by VFGEN are 2.3.0, 2.4.0, 2.5.0 and 2.6.0. Default: version=2.6.0" << endl;
         exit(-1);
     } 
     if (options.count("version") == 0) {
         // Explicitly set the default value.
-        options["version"] = "2.6.0";
+        options["version"] = "2.7.0";
     }
 
     symbol t(IndependentVariable);
@@ -92,8 +92,9 @@ void VectorField::PrintCVODE(map<string,string> options)
     pout << endl;
 
     fout << "#include <math.h>" << endl;
+    fout << endl;
     if (options["version"] == "2.3.0") {
-        fout << "/* Include headers for SUNDIALS v2.1.1, CVODE v2.3.0 */" << endl;
+        fout << "/* Include headers for CVODE 2.3.0 */" << endl;
         fout << "#include <sundialstypes.h>" << endl;
         fout << "#include <cvode.h>" << endl;
         fout << "#include <cvdense.h>" << endl;
@@ -101,7 +102,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << "#include <dense.h>" << endl;
     }
     else if (options["version"] == "2.4.0") {
-        fout << "/* Include headers for SUNDIALS v2.2.0, CVODE v2.4.0 */" << endl;
+        fout << "/* Include headers for CVODE 2.4.0 */" << endl;
         fout << "#include <sundials/sundials_types.h>" << endl;
         fout << "#include <sundials/sundials_dense.h>" << endl;
         fout << "#include <cvode.h>" << endl;
@@ -109,7 +110,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << "#include <nvector_serial.h>" << endl;
     }
     else if (options["version"] == "2.5.0") {
-        fout << "/* Include headers for SUNDIALS v2.3.0, CVODE v2.5.0 */" << endl;
+        fout << "/* Include headers for CVODE 2.5.0 */" << endl;
         fout << "#include <sundials/sundials_types.h>" << endl;
         fout << "#include <sundials/sundials_dense.h>" << endl;
         fout << "#include <sundials/sundials_nvector.h>" << endl;
@@ -118,8 +119,8 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << "#include <cvode/cvode_dense.h>" << endl;
     }
     else {
-        // Default is version 2.6.0.
-        fout << "/* Include headers for SUNDIALS v2.4.0, CVODE v2.6.0 */" << endl;
+        // CVODE 2.6.0 or 2.7.0
+        fout << "/* Include headers for CVODE " << options["version"] << " */" << endl;
         fout << "#include <cvode/cvode.h>" << endl;
         fout << "#include <nvector/nvector_serial.h>" << endl;
         fout << "#include <cvode/cvode_dense.h>" << endl;
@@ -185,8 +186,15 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << " *  The Jacobian." << endl;
     fout << " */" << endl;
     fout << endl;
-    if (options["version"] == "2.6.0") {
-        fout << func_return_type << " " << Name() << "_jac(int N_, realtype t, N_Vector y_, N_Vector fy_,";
+    if (options["version"] == "2.6.0" || options["version"] == "2.7.0") {
+        string aux_type;
+        if (options["version"] == "2.7.0") {
+            aux_type = "long ";
+        }
+        else {
+            aux_type = "";
+        }
+        fout << func_return_type << " " << Name() << "_jac(" << aux_type << "int N_, realtype t, N_Vector y_, N_Vector fy_,";
         fout << " DlsMat jac_, void *params," << endl;
         fout << "                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)" << endl;
 
