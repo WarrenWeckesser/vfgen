@@ -93,7 +93,7 @@ void VectorField::PrintADOLC(map<string,string> options)
     fout << endl;
     fout << "void " << Name() << "_vf(short int tag, double *y_, double *f_, double *params_)" << endl;
     pout << "void " << Name() << "_vf(short int, double *, double *, double *);" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     fout << "    adouble ay_[" << nv << "];" << endl;
     fout << "    adouble af_[" << nv << "];" << endl;
     fout << endl;
@@ -108,8 +108,9 @@ void VectorField::PrintADOLC(map<string,string> options)
     CDeclare(fout, "adouble", exprname_list);
     fout << endl;
     fout << "    trace_on(tag);" << endl;
-    fout << "    for (int i = 0; i < " << nv << "; i++)" << endl;
+    fout << "    for (int i = 0; i < " << nv << "; i++) {" << endl;
     fout << "        ay_[i] <<= y_[i];" << endl;
+    fout << "    }" << endl;
     GetFromVector(fout,"    ", varname_list, "ay_", "[]", 0, ";");
     fout << endl;
     GetFromVector(fout,"    ", parname_list, "params_", "[]", 0, ";");
@@ -123,11 +124,11 @@ void VectorField::PrintADOLC(map<string,string> options)
     for (int i = 0; i < nv; ++i) {
         fout << "    af_[" << i << "] = " << varvecfield_list[i] << ";" << endl;
     }
-    fout << "    for (int i = 0; i < " << nv << "; i++)" << endl; {
-        fout << "        af_[i] >>= f_[i];" << endl;
-    }
-    fout << "    trace_off(tag);" << endl;
+    fout << "    for (int i = 0; i < " << nv << "; i++) {" << endl;
+    fout << "        af_[i] >>= f_[i];" << endl;
     fout << "    }" << endl;
+    fout << "    trace_off(tag);" << endl;
+    fout << "}" << endl;
     fout << endl;
 }
 
