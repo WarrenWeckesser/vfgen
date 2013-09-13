@@ -42,20 +42,23 @@ using namespace GiNaC;
 // Zlags_(1.0,2.0).
 //
 
-static void Zlags_print(const ex& arg1, const ex& arg2, const print_context& c)
-    {
+static void Zlags_print(const ex& arg1, const ex& arg2, const print_context& c) {
     c.s << "Zlags_(";
-    if (is_a<numeric>(arg1))
+    if (is_a<numeric>(arg1)) {
         c.s << ex_to<numeric>(arg1).to_int();
-    else
-        arg1.print(c);
-    c.s << ",";
-    if (is_a<numeric>(arg2))
-        c.s << ex_to<numeric>(arg2).to_int();
-    else
-        arg2.print(c);
-    c.s << ")";
     }
+    else {
+        arg1.print(c);
+    }
+    c.s << ",";
+    if (is_a<numeric>(arg2)) {
+        c.s << ex_to<numeric>(arg2).to_int();
+    }
+    else {
+        arg2.print(c);
+    }
+    c.s << ")";
+}
 
 //
 // Add a function called "delay" to the functions known by ginac.
@@ -104,58 +107,60 @@ const char *commands[] = {
 map<string,vector<string> > command_options;
 
 int checkcommand(const char *s)
-    {
+{
     int i;
 
     i = 0;
-    while (strcmp(commands[i],"end") != 0)
-        if (strcmp(s,commands[i]) == 0)
+    while (strcmp(commands[i],"end") != 0) {
+        if (strcmp(s,commands[i]) == 0) {
             return i;
-        else
+        }
+        else {
             i = i + 1;
-    return -1;
+        }
     }
+    return -1;
+}
     
 void printcommands(ostream &c)
-    {
+{
     int i = 0;
     c << "    ";
-    while (strcmp(commands[i],"end") != 0)
-        {
-        if (i > 0)
+    while (strcmp(commands[i],"end") != 0) {
+        if (i > 0) {
             c << ", ";
-        if (i > 0 && i % 8 == 0)
+        }
+        if (i > 0 && i % 8 == 0) {
             c << "\n    ";
+        }
         c << commands[i];
         i = i + 1;
-        }
-    c << endl;
     }
+    c << endl;
+}
 
 
 void printuse()
-    {
+{
     cerr << "VFGEN (Version:" << VERSION << ")" << endl;
     cerr << "Use: vfgen command  vector-field-file.vf" << endl;
     cerr << "or:  vfgen command:option=value,...,option=value vector-field-file.vf" << endl;
     cerr << "or:  vfgen help command\n";
     cerr << "where command is one of:\n";
     printcommands(cerr);
-    }
+}
 
 int help(char *command)
-    {
+{
     int m;
     m = checkcommand(command);
-    if (m < 0)
-        {
+    if (m < 0) {
         cout << "VFGEN error: \"" << command << "\" is not a valid command.\n";
         cout << "VFGEN commands are:\n";
         printcommands(cout);
         return -1;
-        }
-    if (strcmp(command,"adolc") == 0)
-        {
+    }
+    if (strcmp(command,"adolc") == 0) {
         cout << "use: vfgen adolc vector_field_file.vf\n";
         cout << endl;
         cout << "This command creates a C++ function that can be used with the ADOL-C library.\n";
@@ -169,9 +174,8 @@ int help(char *command)
         cout << "and trace_off(tag) statement.\n";
         cout << endl;
         cout << "Options: none.\n";
-        }
-    else if (strcmp(command,"auto") == 0)
-        {
+    }
+    else if (strcmp(command,"auto") == 0) {
         cout << "use:  vfgen auto vector_field_file.vf\n";
         cout << endl;
         cout << "This command generates a C or FORTRAN file to be used with the AUTO\n";
@@ -184,18 +188,16 @@ int help(char *command)
         cout << "    Specify the language in which to write the AUTO equations file.\n";
         cout << "    For AUTO2000, use C (the default).  For AUTO07p, either C or FORTRAN\n";
         cout << "    may be used.\n";
-        }
-    else if (strcmp(command,"check") == 0)
-        {
+    }
+    else if (strcmp(command,"check") == 0) {
         cout << "use: vfgen check vector_field_file.vf\n";
         cout << endl;
         cout << "This command prints information from the vector field file.  It can be used to\n";
         cout << "to check for errors before using another command.\n";
         cout << endl;
         cout << "Options: none.\n";
-        }
-    else if (strcmp(command,"cvode") == 0)
-        {
+    }
+    else if (strcmp(command,"cvode") == 0) {
         cout << "use: vfgen cvode vector_field_file.vf\n";
         cout << "     vfgen cvode:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -227,9 +229,8 @@ int help(char *command)
         cout << "    of a parameter), or one of abserr, relerr or stoptime, to control the ODE\n";
         cout << "    solver.  The output of the program consists of columns of numbers; the\n";
         cout << "    first column is the time, and the rest are the state variables.\n";
-        }
-    else if (strcmp(command,"dde23") == 0)
-        {
+    }
+    else if (strcmp(command,"dde23") == 0) {
         cout << "use: vfgen dde23 vector_field_file.vf\n";
         cout << "     vfgen dde23:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -248,9 +249,8 @@ int help(char *command)
         cout << "    This defines the MATLAB function [name]_dde23_demo(stoptime), which uses\n";
         cout << "    the DDE23 function with the default parameter values and initial conditions\n";
         cout << "    to plot a solution to the system.\n";
-        }
-    else if (strcmp(command,"ddebiftool") == 0)
-        {
+    }
+    else if (strcmp(command,"ddebiftool") == 0) {
         cout << "use: vfgen ddebiftool vector_field_file.vf\n";
         cout << "     vfgen ddebiftool:path=/path/to/ddebiftool vector_field_file.vf\n";
         cout << endl;
@@ -263,9 +263,8 @@ int help(char *command)
         cout << "path=/path/to/ddebiftool\n";
         cout << "    The 'path' option allows the user to specify a directory that is added to\n";
         cout << "    the MATLAB search path in the file sys_init.m.\n";  
-        }
-    else if (strcmp(command,"dde_solver") == 0)
-        {
+    }
+    else if (strcmp(command,"dde_solver") == 0) {
         cout << "use: vfgen dde_solver vector_field_file.vf\n";
         cout << "     vfgen dde_solver:demo=yes vector_field_file.vf\n";
         cout << endl;
@@ -277,9 +276,8 @@ int help(char *command)
         cout << "    If the option demo=yes is given, the file [name]_demo.f90 is created.\n";
         cout << "    This program will use [name].f90 to generate a solution to the delay\n";
         cout << "    equations.\n";
-        }
-    else if (strcmp(command,"delay2ode") == 0)
-        {
+    }
+    else if (strcmp(command,"delay2ode") == 0) {
         cout << "use: vfgen delay2ode vector_field_file.vf\n";
         cout << "     vfgen delay2ode:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -299,18 +297,16 @@ int help(char *command)
         cout << "N=integer\n";
         cout << "    The number of fractional delay steps into which each delay is split.\n";
         cout << "    The default is N=10.\n";
-        }
-    else if (strcmp(command,"dstool") == 0)
-        {
+    }
+    else if (strcmp(command,"dstool") == 0) {
         cout << "use: vfgen dstool vector_field_file.vf\n";
         cout << endl;
         cout << "This command creates a C definition file for the vector field to be used\n";
         cout << "with DSTOOL. The name of the file is [name]_def.c.\n";
         cout << endl;
         cout << "Options: none.\n";
-        }
-    else if (strcmp(command,"evf") == 0)
-        {
+    }
+    else if (strcmp(command,"evf") == 0) {
         cout << "use: vfgen evf vector_field_file.vf\n";
         cout << endl;
         cout << "This command generates a new vector field file, in which the original vector\n";
@@ -331,9 +327,8 @@ int help(char *command)
         cout << "    with respect to a parameter.\n";
         cout << "    If this option is not given, the vector field is simply extended with\n";
         cout << "        v' = (DF(x)/dx)v\n";
-        }
-    else if (strcmp(command,"gsl") == 0)
-        {
+    }
+    else if (strcmp(command,"gsl") == 0) {
         cout << "use: vfgen gsl vector_field_file.vf\n";
         cout << "     vfgen gsl:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -364,18 +359,16 @@ int help(char *command)
         cout << "    of a parameter), or one of abserr, relerr or stoptime, to control the ODE\n";
         cout << "    solver.  The output of the program consists of columns of numbers; the\n";
         cout << "    first column is the time, and the rest are the state variables.\n";
-        }
-    else if (strcmp(command,"help") == 0)
-        {
+    }
+    else if (strcmp(command,"help") == 0) {
         cout << "use: vfgen help <command>\n";
         cout << endl;
         cout << "The help command will print a short description of the given <command>.\n";
         cout << "For example,\n";
         cout << "    vfgen help cvode\n";
         cout << "prints a description of the cvode command.\n";
-        }
-    else if (strcmp(command,"javascript") == 0)
-        {
+    }
+    else if (strcmp(command,"javascript") == 0) {
         cout << "use: vfgen javascript vector_field_file.vf\n";
         cout << "     vfgen javascript:option=value,... vector_field_file.vf\n";
         cout << endl;
@@ -403,9 +396,8 @@ int help(char *command)
         cout << "    and that supports the <canvas> tag in HTML.\n";
         cout << "order=[integer]\n";
         cout << "    The order of the Taylor polynomial. The default is order=5.\n";
-        }
-    else if (strcmp(command,"latex") == 0)
-        {
+    }
+    else if (strcmp(command,"latex") == 0) {
         cout << "use: vfgen latex vector_field_file.vf\n";
         cout << endl;
         cout << "This command generate a LaTeX fragment for the vector field, in a file called\n";
@@ -415,9 +407,8 @@ int help(char *command)
         cout << "by the AMSMATH LaTeX package.)\n";
         cout << endl;
         cout << "Options: none.\n";
-        }
-    else if (strcmp(command,"lsoda") == 0)
-        {
+    }
+    else if (strcmp(command,"lsoda") == 0) {
         cout << "use: vfgen lsoda vector_field_file.vf\n";
         cout << "     vfgen lsoda:option=value,option=value,... vector_field_file.vf\n";
         cout << endl;
@@ -448,9 +439,8 @@ int help(char *command)
         cout << "    [name] is the name of the vector field. If the option parstyle=after is\n";
         cout << "    given, the parameters are included in the state variable vector, beginning\n";
         cout << "    just after the last state variable.\n";
-        }
-    else if (strcmp(command,"matcont") == 0)
-        {
+    }
+    else if (strcmp(command,"matcont") == 0) {
         cout << "use: vfgen matcont vector_field_file.vf\n";
         cout << endl;
         cout << "This command generates a MATLAB file to be used with the MATCONT and\n";
@@ -458,9 +448,8 @@ int help(char *command)
         cout << "is the Name attribute of the VectorField entity in the vector field file.\n";
         cout << endl;
         cout << "Options: none.\n";
-        }
-    else if (strcmp(command,"matlab") == 0)
-        {
+    }
+    else if (strcmp(command,"matlab") == 0) {
         cout << "use: vfgen matlab vector_field_file.vf\n";
         cout << "     vfgen matlab:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -497,9 +486,8 @@ int help(char *command)
         cout << "    2N dimensional column vector. (Note: The EVF command is probably a better\n";
         cout << "    alternative, because you can then use VFGEN to create the Jacobian of the\n";
         cout << "     extended vector field.)\n";
-        }
-    else if (strcmp(command,"octave") == 0)
-        {
+    }
+    else if (strcmp(command,"octave") == 0) {
         cout << "use: vfgen octave vector_field_file.vf\n";
         cout << "     vfgen octave:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -517,9 +505,8 @@ int help(char *command)
         cout << "func=no|yes\n";
         cout << "    If the option func=yes is given, the file [name].m will define a\n";
         cout << "    function for each user function given in the vector field file.\n";
-        }
-    else if (strcmp(command,"pddecont") == 0)
-        {
+    }
+    else if (strcmp(command,"pddecont") == 0) {
         cout << "use: vfgen pddecont vector_field_file.vf\n";
         cout << endl;
         cout << "This command creates the file sys-[name].cpp to be used with the PDDE-CONT\n";
@@ -527,9 +514,8 @@ int help(char *command)
         cout << "for delay differential equations.\n";
         cout << endl;
         cout << "Options: none.\n";
-        }
-	else if (strcmp(command,"pydstool") == 0)
-	    {
+    }
+	else if (strcmp(command,"pydstool") == 0) {
 		cout << "use: vfgen pydstool vector_field_file.vf\n";
 		cout << "     vfgen pydstool:demo=yes vector_field_file.vf\n";
 		cout << endl;
@@ -542,9 +528,8 @@ int help(char *command)
 		cout << "    If the option demo=yes is given, the file [name]_dst.py is also created.\n";
 		cout << "    This file contains a script that uses the function defined in [name].py\n";
 	    cout << "    to generate and plot a solution to the differential equation.\n";
-		}
-    else if (strcmp(command,"pygsl") == 0)
-        {
+	}
+    else if (strcmp(command,"pygsl") == 0) {
         cout << "use: vfgen pygsl vector_field_file.vf\n";
         cout << "     vfgen pygsl:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -566,9 +551,8 @@ int help(char *command)
         cout << "    Python script for a command-line ODE solver for the vector field. The\n";
         cout << "    initial conditions and parameters can be specified on the command line.\n";
         cout << "    The program will print the solution data to the console.\n";
-        }
-	else if (strcmp(command,"radau5") == 0)
-	    {
+    }
+	else if (strcmp(command,"radau5") == 0) {
 		cout << "use: vfgen radau5 vector_field_file.vf\n";
 		cout << "     vfgen radau5:demo=yes vector_field_file.vf\n";
 		cout << endl;
@@ -585,9 +569,8 @@ int help(char *command)
 		cout << "    This program provides a driver that will generated a solution to equations\n";
 		cout << "    by calling RADAU5.  The initial conditions and parameters of the solution\n";
 	    cout << "    are the default values given in the vector field file.\n";
-		}
-    else if (strcmp(command,"scilab") == 0)
-        {
+	}
+    else if (strcmp(command,"scilab") == 0) {
         cout << "use: vfgen scilab vector_field_file.vf\n";
         cout << "     vfgen scilab:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -616,9 +599,8 @@ int help(char *command)
         cout << "    solver parameters. It will call the odeint function and plot the\n";
         cout << "    solution. Run the script in Scilab with the command\n";
         cout << "        -->exec [name]_demo.sce;\n"; 
-        }
-    else if (strcmp(command,"scipy") == 0)
-        {
+    }
+    else if (strcmp(command,"scipy") == 0) {
         cout << "use: vfgen scipy vector_field_file.vf\n";
         cout << "     vfgen scipy:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -639,9 +621,8 @@ int help(char *command)
         cout << "    Python script for a command-line ODE solver for the vector field. The\n";
         cout << "    initial conditions and parameters can be specified on the command line.\n";
         cout << "    The program will print the solution data to the console.\n";         
-        }
-    else if (strcmp(command,"taylor") == 0)
-        {
+    }
+    else if (strcmp(command,"taylor") == 0) {
         cout << "use: vfgen taylor vector_field_file.vf\n";
         cout << "     vfgen taylor:order=[integer] vector_field_file.vf\n";
         cout << endl;
@@ -660,9 +641,8 @@ int help(char *command)
         cout << "Options:\n";
         cout << "order=[integer]\n";
         cout << "    The order of the Taylor polynomial. The default is order=5.\n";
-        }
-    else if (strcmp(command,"xpp") == 0)
-        {
+    }
+    else if (strcmp(command,"xpp") == 0) {
         cout << "use: vfgen xpp vector_field_file.vf\n";
         cout << "     vfgen xpp:option=value,...,option=value vector_field_file.vf\n";
         cout << endl;
@@ -681,26 +661,26 @@ int help(char *command)
         cout << "        @ maxstor=10000\n";
         cout << "    to the ODE file. (A final semi-colon in text is optional.)\n";
         cout << "    Note: Currently, text must not contain any commas!\n";
-        }
-    else
-        cout << "Sorry, help for \"" << command << "\" is not available yet!" << endl;
-    return 0;
     }
+    else {
+        cout << "Sorry, help for \"" << command << "\" is not available yet!" << endl;
+    }
+    return 0;
+}
 
 ///////////////////////////////////////////////////////////
 //  main
 ///////////////////////////////////////////////////////////
 
 int main(int argc, char **argv)
-    {
+{
     VectorField vf;
     string s, extrastr;
 
-    if (argc != 3)
-        {
+    if (argc != 3) {
         printuse();
         exit(-1);
-        }
+    }
 
     //
     //  Allowed command options:
@@ -745,11 +725,9 @@ int main(int argc, char **argv)
     //
     // Check for the help command.
     //
-    if (commandstr == "help")
-        {
+    if (commandstr == "help") {
         exit(help(argv[2]));
-        }
-
+    }
 
     //
     //  Check for any options appended to the command.
@@ -757,53 +735,47 @@ int main(int argc, char **argv)
     map<string,string> options;
 
     string::size_type loccolon = commandstr.find(":",0);
-    if (loccolon != string::npos)
-        {
+    if (loccolon != string::npos) {
         // extrastr holds all the options given after the :
         extrastr = commandstr.substr(loccolon+1,commandstr.length()-loccolon-1);
         commandstr.erase(loccolon,commandstr.length()-loccolon);
         // cerr << "Options \"" << extrastr << "\"" << endl;
         string::size_type pos = 0;
-        do
-            {
+        do {
             string::size_type locsep = extrastr.find(",",pos);
             string current_option, option_name, option_value;
-            if (locsep == string::npos)
+            if (locsep == string::npos) {
                 locsep = extrastr.length();
+            }
             current_option = extrastr.substr(pos,locsep-pos);
             // cerr << "current_option = \"" << current_option << "\"\n";
             string::size_type loceq = current_option.find("=",0);
-            if (loceq == string::npos)
-                {
+            if (loceq == string::npos) {
                 // No "=" given in the option.
                 option_name = current_option;
                 option_value = "";
-                }
-            else
-                {
-                if (loceq == 0)
-                    {
+            }
+            else {
+                if (loceq == 0) {
                     // The option was "=something"; not valid
                     printuse();
                     exit(-1);
-                    }
+                }
                 option_name = current_option.substr(0,loceq);
                 option_value = current_option.substr(loceq+1,current_option.length()-loceq);
-                }
+            }
             options[option_name] = option_value;
             pos = locsep+1;
-            }
-        while (pos < extrastr.length());
-        }
+        } while (pos < extrastr.length());
+    }
         
         
     int command = checkcommand(commandstr.c_str());
-    if (command == -1)
-        {
+    if (command == -1) {
         cout << "vfgen: unknown command: " << commandstr << endl;
         printuse();
         exit(-1);
-        }
+    }
 
     //
     //  Check that any options given are known options.
@@ -813,8 +785,7 @@ int main(int argc, char **argv)
     //
     bool bad_opt = false;        
     map<string,string>::const_iterator opt;
-    for (opt = options.begin(); opt != options.end(); ++opt)
-        {
+    for (opt = options.begin(); opt != options.end(); ++opt) {
         string optstr = opt->first;
         // cerr << "Option: " << optstr;
         // if (opt->second != "")
@@ -822,25 +793,21 @@ int main(int argc, char **argv)
         // cerr << endl;
         bool validopt = false;
         vector<string>::const_iterator w;
-        for (w = command_options[commandstr].begin(); w != command_options[commandstr].end(); ++w)
-            {
-            if (optstr == *w)
-                {
+        for (w = command_options[commandstr].begin(); w != command_options[commandstr].end(); ++w) {
+            if (optstr == *w) {
                 validopt = true;
                 break;
-                }
             }
-        if (!validopt)
-            {
+        }
+        if (!validopt) {
             cerr << "Errror: \"" << optstr << "\" is not a valid option for the " << commandstr << " command.\n";
             bad_opt = true;
-            }
         }
-    if (bad_opt)
-        {
+    }
+    if (bad_opt) {
         printuse();
         exit(-1);
-        }
+    }
 
     //
     //  Read the vector field file.  This just puts the strings into the
@@ -852,145 +819,217 @@ int main(int argc, char **argv)
     //  Process the strings to create the GiNaC symbolic expressions in the object.
     //
     int pserr = vf.ProcessSymbols();
-    if (pserr == -1)
-        {
+    if (pserr == -1) {
         exit(-1);
-        }
+    }
 
     //
     // Call the appropriate output function based on the first
     // command line argument.
     //
-    if (commandstr == "check")
+    if (commandstr == "check") {
         vf.Print();
-    else if (commandstr == "xpp")
+    }
+    else if (commandstr == "xpp") {
         vf.PrintXPP(options);
-    else if (commandstr == "xml")
+    }
+    else if (commandstr == "xml") {
         vf.PrintXML("xml");
-    else if (commandstr == "delay2ode")
-        if (vf.IsDelay == true)
+    }
+    else if (commandstr == "delay2ode") {
+        if (vf.IsDelay == true) {
             vf.PrintDelay2ODE(options);
-        else
+        }
+        else {
             cerr << "This system is not a delay equation.\n";
-    else if (commandstr == "dde23")
-        if (vf.IsDelay == true)
-            if (vf.HasNonconstantDelay)
+        }
+    }
+    else if (commandstr == "dde23") {
+        if (vf.IsDelay == true) {
+            if (vf.HasNonconstantDelay) {
                 cerr << "This system has nonconstant delays.  DDE23 can only be used with constant delays.\n";
-            else
+            }
+            else {
                 vf.PrintDDE23(options);
-        else
+            }
+        }
+        else {
             cerr << "This system is not a delay equation.\n";
-    else if (commandstr == "ddebiftool")
-        if (vf.IsDelay == true)
-            if (vf.HasNonconstantDelay)
+        }
+    }
+    else if (commandstr == "ddebiftool") {
+        if (vf.IsDelay == true) {
+            if (vf.HasNonconstantDelay) {
                 cerr << "This system has nonconstant delays. VFGEN does not (yet) generate DDE-BIFTOOL files for such systems.\n";
-            else
+            }
+            else {
                 vf.PrintDDEBIFTOOL(options);
-        else
+            }
+        }
+        else {
             cerr << "This system is not a delay equation.\n";
-    else if (commandstr == "pddecont")
-        if (vf.HasNonconstantDelay)
+        }
+    }
+    else if (commandstr == "pddecont") {
+        if (vf.HasNonconstantDelay) {
             cerr << "This system has nonconstant delays. PDDE-CONT is for systems with constant delays.\n";
-        else
-                vf.PrintPDDECONT(options);
-    else if (commandstr == "dde_solver")
-        if (vf.IsDelay == true)
+        }
+        else {
+            vf.PrintPDDECONT(options);
+        }
+    }
+    else if (commandstr == "dde_solver") {
+        if (vf.IsDelay == true) {
             vf.PrintDDE_SOLVER(options);
-        else
+        }
+        else {
             cerr << "This system is not a delay equation.\n";
-    else if (commandstr == "matlab")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "matlab") {
+        if (vf.IsDelay == false) {
             vf.PrintMATLAB(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "octave")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "octave") {
+        if (vf.IsDelay == false) {
             vf.PrintOctave(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "scilab")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "scilab") {
+        if (vf.IsDelay == false) {
             vf.PrintScilab(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "matcont")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "matcont") {
+        if (vf.IsDelay == false) {
             vf.PrintMATCONT(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "dstool")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "dstool") {
+        if (vf.IsDelay == false) {
             vf.PrintDSTool();
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "auto")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "auto") {
+        if (vf.IsDelay == false) {
             vf.PrintAUTO(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "gsl")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "gsl") {
+        if (vf.IsDelay == false) {
             vf.PrintGSL(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "cvode")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "cvode") {
+        if (vf.IsDelay == false) {
             vf.PrintCVODE(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "adolc")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "adolc") {
+        if (vf.IsDelay == false) {
             vf.PrintADOLC(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "radau5")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "radau5") {
+        if (vf.IsDelay == false) {
             vf.PrintRadau5(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "lsoda")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "lsoda") {
+        if (vf.IsDelay == false) {
             vf.PrintLSODA(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "scipy")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "scipy") {
+        if (vf.IsDelay == false) {
             vf.PrintSciPy(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "pydstool")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "pydstool") {
+        if (vf.IsDelay == false) {
             vf.PrintPyDSTool(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "taylor")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "taylor") {
+        if (vf.IsDelay == false) {
             vf.PrintTaylor(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "latex")
+        }
+    }
+    else if (commandstr == "latex") {
         vf.PrintLatex(options);
-    else if (commandstr == "pygsl")
-        if (vf.IsDelay == false)
+    }
+    else if (commandstr == "pygsl") {
+        if (vf.IsDelay == false) {
             vf.PrintPyGSL(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "evf")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "evf") {
+        if (vf.IsDelay == false) {
             vf.PrintEVF(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else if (commandstr == "javascript")
-        if (vf.IsDelay == false)
+        }
+    }
+    else if (commandstr == "javascript") {
+        if (vf.IsDelay == false) {
             vf.PrintJavascript(options);
-        else
+        }
+        else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-    else
-        {
+        }
+    }
+    else {
         // This should not happen!!!
         cerr << "vfgen: Unknown command: " << argv[1] << endl;
         printuse();
         exit(-1);
-        }
+    }
     return(0);
-    }  // end main()
+}  // end main()
