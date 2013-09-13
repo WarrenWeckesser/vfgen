@@ -41,7 +41,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintRadau5(map<string,string> options)
-    {
+{
     int nc, np, nv, na, nf;
 
     nc = conname_list.nops();
@@ -76,46 +76,49 @@ void VectorField::PrintRadau5(map<string,string> options)
     fout << "      integer n_, ipar_\n";
     fout << "      double precision t_, y_, f_, rpar_\n";
     fout << "      dimension y_(" << nv << "), f_(" << nv << "), rpar_(" << np << ")\n";
-    if (nc > 0)
+    if (nc > 0) {
         F77Declare(fout,conname_list);
-    if (np > 0)
+    }
+    if (np > 0) {
         F77Declare(fout,parname_list);
-    if (na > 0)
+    }
+    if (na > 0) {
         F77Declare(fout,exprname_list);
+    }
     F77Declare(fout,varname_list);
     fout << endl;
-    if (nc > 0)
+    if (nc > 0) {
         fout << "c     --- Constants ---\n";
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         ostringstream os;
         os << left << csrc;
         os << conname_list[i] << " = " << convalue_list[i];
         F77Write(fout, os.str());
-        }
-    if (np > 0)
+    }
+    if (np > 0) {
         fout << "c     --- Parameters ---\n";
+    }
     GetFromVector(fout,"      ",parname_list,"rpar_","()",1,"");
     fout << "c     --- State variables ---\n";
     GetFromVector(fout,"      ",varname_list,"y_","()",1,"");
-    if (na > 0)
+    if (na > 0) {
         fout << "c     --- Expressions ---\n";
-    for (int i = 0; i < na; ++i)
-        {
+    }
+    for (int i = 0; i < na; ++i) {
         ostringstream os;
         os << left << csrc;
         os << exprname_list[i] << " = " << exprformula_list[i];
         F77Write(fout,os.str());
-        }
+    }
     fout << "c     --- The vector field ---\n";
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i];
         ostringstream os;
         os << left << csrc;
         os << "f_(" << (i+1) << ")" << " = " << f;
         F77Write(fout,os.str());
-        }
+    }
     fout << endl;
     fout << "      return\n";
     fout << "      end\n";
@@ -129,39 +132,40 @@ void VectorField::PrintRadau5(map<string,string> options)
     fout << "      integer n_, ldfy_, ipar_\n";
     fout << "      double precision t_, y_, dfy_, rpar_\n";
     fout << "      dimension y_(" << nv << "), dfy_(ldfy_," << nv << "), rpar_(" << np << ")\n";
-    if (nc > 0)
+    if (nc > 0) {
         F77Declare(fout,conname_list);
-    if (np > 0)
+    }
+    if (np > 0) {
         F77Declare(fout,parname_list);
+    }
     F77Declare(fout,varname_list);
     fout << endl;
-    if (nc > 0)
+    if (nc > 0) {
         fout << "c     --- Constants ---\n";
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         ostringstream os;
         os << left << csrc;
         os << conname_list[i] << " = " << convalue_list[i];
         F77Write(fout,os.str());
-        }
-    if (np > 0)
+    }
+    if (np > 0) {
         fout << "c     --- Parameters ---\n";
+    }
     GetFromVector(fout,"      ",parname_list,"rpar_","()",1,"");
     fout << "c     --- State variables ---\n";
     GetFromVector(fout,"      ",varname_list,"y_","()",1,"");
     fout << "c     --- Jacobian ---\n";
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ostringstream os;
             os << left << csrc;
             os << "dfy_(" << i+1 << ", " << j+1 << ") = " << f.diff(v);
             F77Write(fout,os.str());
-            }
         }
+    }
     fout << endl;
     fout << "      return\n";
     fout << "      end\n";
@@ -183,8 +187,7 @@ void VectorField::PrintRadau5(map<string,string> options)
     fout << "      end\n";
     fout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         // Create the demo function.
         //
@@ -214,13 +217,16 @@ void VectorField::PrintRadau5(map<string,string> options)
         fout << "      integer i_\n";
         fout << "      double precision t_, tstop_\n";
         fout << "      double precision atol_, rtol_, h_\n";
-        if (nc > 0)
+        if (nc > 0) {
             F77Declare(fout,conname_list);
-        if (np > 0)
+        }
+        if (np > 0) {
             F77Declare(fout,parname_list);
+        }
         F77Declare(fout,varname_list);
-        if (HasPi)
+        if (HasPi) {
             fout << "      double precision Pi\n";
+        }
         fout << "      external " << Name() << "_rhs\n";
         fout << "      external " << Name() << "_jac\n";
         fout << "      external " << Name() << "_out\n";
@@ -230,41 +236,43 @@ void VectorField::PrintRadau5(map<string,string> options)
         fout << "      mljac_ = n_\n";
         fout << "      imas_ = 0\n";
         fout << "      iout_ = 1\n";
-        if (HasPi)
+        if (HasPi) {
             fout << "      Pi = 3.1415926535897932385D0\n";
+        }
         fout << "c     --- t range ---\n";
         fout << "      t_ = 0.0D0\n";
         fout << "      tstop_  = 10.0D0\n";
-        if (nc > 0)
+        if (nc > 0) {
             fout << "c     --- Constants ---\n";
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             ostringstream os;
             os << left << csrc;
             os << conname_list[i] << " = " << convalue_list[i];
             F77Write(fout,os.str());
-            }
-        if (np > 0)
+        }
+        if (np > 0) {
             fout << "c     --- Parameters ---\n";
-        for (int i = 0; i < np; ++i)
-            {
+        }
+        for (int i = 0; i < np; ++i) {
             ostringstream os;
             os << left << csrc;
             os << parname_list[i] << " = " << pardefval_list[i];
             F77Write(fout,os.str()); 
-            }
-        for (int i = 0; i < np; ++i)
+        }
+        for (int i = 0; i < np; ++i) {
             fout << "      rpar_(" << i+1 << ") = " << parname_list[i] << endl;
+        }
         fout << "c     --- Initial conditions ---\n";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ostringstream os;
             os << left << csrc;
             os << varname_list[i] << " = " << vardefic_list[i];
             F77Write(fout,os.str());
-            }
-        for (int i = 0; i < nv; ++i)
+        }
+        for (int i = 0; i < nv; ++i) {
             fout << "      y_(" << i+1 << ") = " << varname_list[i] << endl;
+        }
         fout << "c     --- Solver tolerances ---\n";
         fout << "      rtol_ = 1.0D-6\n";
         fout << "      atol_ = 1.0D-8\n";
@@ -289,5 +297,5 @@ void VectorField::PrintRadau5(map<string,string> options)
         fout << "      end\n";
         fout << endl;
         fout.close();
-        }
     }
+}

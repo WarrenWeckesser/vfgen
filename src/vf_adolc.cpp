@@ -39,7 +39,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintADOLC(map<string,string> options)
-    {
+{
 
     int nc, np, nv, na, nf;
 
@@ -97,43 +97,37 @@ void VectorField::PrintADOLC(map<string,string> options)
     fout << "    adouble ay_[" << nv << "];" << endl;
     fout << "    adouble af_[" << nv << "];" << endl;
     fout << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const adouble Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare(fout, "adouble", varname_list);
     CDeclare(fout, "adouble", parname_list);
     CDeclare(fout, "adouble", exprname_list);
     fout << endl;
     fout << "    trace_on(tag);" << endl;
     fout << "    for (int i = 0; i < " << nv << "; i++)" << endl;
-        {
-        fout << "        ay_[i] <<= y_[i];" << endl;
-        }
+    fout << "        ay_[i] <<= y_[i];" << endl;
     GetFromVector(fout,"    ", varname_list, "ay_", "[]", 0, ";");
     fout << endl;
     GetFromVector(fout,"    ", parname_list, "params_", "[]", 0, ";");
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
-    if (na > 0)
+    }
+    if (na > 0) {
         fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    }
+    for (int i = 0; i < nv; ++i) {
         fout << "    af_[" << i << "] = " << varvecfield_list[i] << ";" << endl;
-        }
-    fout << "    for (int i = 0; i < " << nv << "; i++)" << endl;
-        {
+    }
+    fout << "    for (int i = 0; i < " << nv << "; i++)" << endl; {
         fout << "        af_[i] >>= f_[i];" << endl;
-        }        
+    }
     fout << "    trace_off(tag);" << endl;
     fout << "    }" << endl;
     fout << endl;
-    }
+}
 

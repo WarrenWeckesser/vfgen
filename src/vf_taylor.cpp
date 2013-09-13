@@ -53,7 +53,7 @@ long int factorial(long int);
 //
 
 void VectorField::PrintTaylor(map<string,string> options)
-    {
+{
     int nc, np, nv, na, nf;
 
     symbol t(IndependentVariable);
@@ -64,21 +64,18 @@ void VectorField::PrintTaylor(map<string,string> options)
     nf = funcname_list.nops();
 
     int Order;
-    if (options.find("order") == options.end())
-        {
+    if (options.find("order") == options.end()) {
         Order = 5;
         cerr << "The order option was not specified; the default order=" << Order << " will be used.\n";
         options["order"] = "5";
-        }
-    else
-        {
+    }
+    else {
         Order = string_to_int(options["order"]);
-        if (Order < 1)
-            {
+        if (Order < 1) {
             cerr << "Error: Bad value for the order parameter: " << Order << "; this must be a positive integer.\n";
             exit(-1);  // Should handle this in a better way?
-            }
         }
+    }
 
     string filename = Name()+"_taylor" + options["order"] + ".c";
     ofstream fout;
@@ -125,10 +122,9 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << "void " << Name() << "_vf(double t, const double y_[], double f_[], double params[])" << endl;
     pout << "void " << Name() << "_vf(double, const double [], double [], double []);" << endl;
     fout << "    {" << endl;
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     CDeclare_double(fout,exprname_list);
@@ -140,16 +136,15 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << endl;
     GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
-    if (na > 0)
+    }
+    if (na > 0) {
         fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    }
+    for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
-        }
+    }
     fout << endl;
     fout << "    }" << endl;
     fout << endl;
@@ -159,9 +154,10 @@ void VectorField::PrintTaylor(map<string,string> options)
     // Call generate_deriv for each integer from 1 to Order-1.
     //
 
-    for (int i = 1; i < Order; ++i)
+    for (int i = 1; i < Order; ++i) {
         generate_deriv("c",fout, pout, Name(), i, varvecfield_list, expreqn_list,
                                        varname_list, parname_list);
+    }
 
     //
     // Create the Taylor series function.
@@ -176,10 +172,8 @@ void VectorField::PrintTaylor(map<string,string> options)
 
     // cout << "Generating table of coefficients\n";
     // clock_t tgen = clock();
-    for (int k = 1; k < Order-1; ++k)
-        {
-        for (vectormap::iterator v = table[k-1].begin(); v != table[k-1].end(); ++v)
-            {
+    for (int k = 1; k < Order-1; ++k) {
+        for (vectormap::iterator v = table[k-1].begin(); v != table[k-1].end(); ++v) {
             vector<int> *a = v->first;
             double coeff = v->second;
 
@@ -188,23 +182,23 @@ void VectorField::PrintTaylor(map<string,string> options)
             ++(*a1)[0];
             table[k][a1] = table[k][a1] + coeff;
 
-            for (size_t i = 0; i < a->size(); ++i)
-                {
+            for (size_t i = 0; i < a->size(); ++i) {
                 int m = (*a)[i];
-                if (m > 0)
-                    {
+                if (m > 0) {
                     vector<int> *a2 = new vector<int>;
                     CopyMyVec(a,a2);
                     --(*a2)[i];
-                    if (i == a->size()-1)
+                    if (i == a->size()-1) {
                         a2->push_back(1);
-                    else
-                        ++(*a2)[i+1];               
-                    table[k][a2] = table[k][a2] + m*coeff;
                     }
+                    else {
+                        ++(*a2)[i+1];
+                    }               
+                    table[k][a2] = table[k][a2] + m*coeff;
                 }
             }
         }
+    }
     // tgen = clock()-tgen;
     // double tgen_secs = ((double) tgen)/CLOCKS_PER_SEC;
     // cerr << "Coeff gen time: " << tgen_secs << " seconds\n";
@@ -231,13 +225,11 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << "    double Q[" << nv << "];\n";
     fout << endl;
     fout << "    " << Name() << "_vf(0.0,X,Xderiv[0],params);\n";
-    for (int k  = 0; k < Order-1; ++k)
-        {
+    for (int k  = 0; k < Order-1; ++k) {
         fout << endl;
         fout << "    for (i = 0; i < " << nv << "; ++i)\n";
         fout << "        Xderiv[" << k+1 << "][i] = 0.0;\n";
-        for (vectormap::iterator v = table[k].begin(); v != table[k].end(); ++v)
-            {
+        for (vectormap::iterator v = table[k].begin(); v != table[k].end(); ++v) {
             vector<int> *a = v->first;
             double coeff = v->second;
             fout << "    /*    [";
@@ -247,20 +239,20 @@ void VectorField::PrintTaylor(map<string,string> options)
             int r = SumVec(a);
             fout << "    " << Name() << "_diff" << r << "(Q,X,params";
             int i = 0;
-            for (vector<int>::iterator iter = a->begin(); iter != a->end(); ++iter)
-                {
+            for (vector<int>::iterator iter = a->begin(); iter != a->end(); ++iter) {
                 for (int j = 0; j < *iter; ++j)
                     fout << ",Xderiv[" << i << "]";
                 ++i;
-                }
+            }
             fout << ");\n";
             fout << "    for (i = 0; i < " << nv << "; ++i)\n";
             fout << "        Xderiv[" << k+1 << "][i] += ";
-            if (coeff > 1)
+            if (coeff > 1) {
                 fout << coeff << "*";
-            fout << "Q[i];\n";
             }
+            fout << "Q[i];\n";
         }
+    }
     fout << "    }\n";
     fout << endl;
     delete [] table;
@@ -280,18 +272,19 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << "    /*  Xnew = X  */\n";
     fout << "    for (i = 0; i < " << nv << "; ++i)\n";
     fout << "        Xnew[i] = X[i];\n";
-    for (int k = 1; k <= Order; ++k)
-        {
-        if (k == 1)
+    for (int k = 1; k <= Order; ++k) {
+        if (k == 1) {
             fout << "    s = h;\n";
-        else
+        }
+        else {
             fout << "    s = s * h;\n";
+        }
         fout << "    /* Add order " << k << " term to Xnew */\n";
         fout << "    for (i = 0; i < " << nv << "; ++i)\n";
         fout << "        Xnew[i] += (1.0/" << factorial(k) << ")*Xderiv[" << k-1 << "][i]*s;" << endl;
-        }
+    }
     fout << "    }\n";
 
     fout.close();
     pout.close();
-    }
+}

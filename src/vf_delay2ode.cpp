@@ -42,13 +42,13 @@ using namespace GiNaC;
 //
 
 void VectorField::Delay2ODE_ConvertExprToDefHist(ex& f)
-    {
-    for (unsigned k = 0; k < varname_list.nops(); ++k)
-        {
-        if (f.has(varname_list[k]))
+{
+    for (unsigned k = 0; k < varname_list.nops(); ++k) {
+        if (f.has(varname_list[k])) {
             f = f.subs(varname_list[k] == vardefhist_list[k]);
         }
     }
+}
 
 //
 // Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
@@ -57,13 +57,12 @@ void VectorField::Delay2ODE_ConvertExprToDefHist(ex& f)
 //
 
 void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
-    {
+{
     int k = 0;
     exset dlist;
     f.find(delay(wild(1),wild(2)),dlist);
     // dlist is now a ginac lst of expressions of the form delay(delayexpr,del)
-    for (exset::const_iterator diter = dlist.begin(); diter != dlist.end(); ++diter)
-        {
+    for (exset::const_iterator diter = dlist.begin(); diter != dlist.end(); ++diter) {
         // diter points to a ginac expression of the form delay(delayexpr,del).
         ex delayfunc = *diter;
         ostringstream symbol_name;
@@ -76,10 +75,8 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
         ostringstream os_N_over_delta;
         os_N_over_delta << "(" << N << "/(" << lag << "))";
         string N_over_delta = os_N_over_delta.str();
-        for (int k = 0; k < N; ++k)
-            {
-            if (p == 1)
-                {
+        for (int k = 0; k < N; ++k) {
+            if (p == 1) {
                 string vstr1, prev_vstr1;
                 ostringstream os;
                 os << k+1;
@@ -91,21 +88,23 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
                 StateVariable *var = new StateVariable(vstr1);
                 ostringstream os_varformula;
                 os_varformula << N_over_delta << "*(";
-                if (k == 0)
+                if (k == 0) {
                     os_varformula << delayfunc.op(0);
-                else
+                }
+                else {
                     os_varformula << prev_vstr1;
+                }
                 os_varformula << " - " << vstr1 << ")";
                 var->Formula(os_varformula.str());
                 ostringstream os_vardefic;
                 os_vardefic << hist.subs(IndVar==-(k+1)*lag/N);
                 var->DefaultInitialCondition(os_vardefic.str());
                 AddStateVariable(var);
-                if (k == N-1)
+                if (k == N-1) {
                     delayed_var_name = var->Name();
                 }
-            else if (p == 2)
-                {
+            }
+            else if (p == 2) {
                 string vstr1,vstr2, prev_vstr1;
                 ostringstream os;
                 os << k+1;
@@ -121,18 +120,21 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
                 os_vardefic << hist.subs(IndVar==-(k+1)*lag/N);
                 var->DefaultInitialCondition(os_vardefic.str());
                 AddStateVariable(var);
-                if (k == N-1)
+                if (k == N-1) {
                     delayed_var_name = var->Name();
+                }
                 //
                 var = new StateVariable(vstr2);
                 ostringstream os_varformula;
                 os_varformula << "2*" << N_over_delta << "*";
                 os_varformula << "( -" << vstr2 << " + " << N_over_delta << "*";
                 os_varformula << "(";
-                if (k == 0)
+                if (k == 0) {
                     os_varformula << delayfunc.op(0);
-                else
+                }
+                else {
                     os_varformula << prev_vstr1;
+                }
                 os_varformula << " - " << vstr1 << "))";
                 var->Formula(os_varformula.str());
                 ex icderiv = hist.diff(IndVar);
@@ -140,9 +142,9 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
                 os_vardefic_deriv << icderiv.subs(IndVar==-(k+1)*lag/N);
                 var->DefaultInitialCondition(os_vardefic_deriv.str());
                 AddStateVariable(var);
-                }
-            else // p == 3
-                {
+            }
+            else {
+                // p == 3
                 string vstr1,vstr2,vstr3, prev_vstr1;
                 ostringstream os;
                 os << k+1;
@@ -159,8 +161,9 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
                 os_vardefic << hist.subs(IndVar==-(k+1)*lag/N);
                 var->DefaultInitialCondition(os_vardefic.str());
                 AddStateVariable(var);
-                if (k == N-1)
+                if (k == N-1) {
                     delayed_var_name = var->Name();
+                }
                 //
                 var = new StateVariable(vstr2);
                 var->Formula(vstr3);
@@ -177,10 +180,12 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
                 os_varformula << " - 6*" << N_over_delta << "*";
                 os_varformula << "(" << vstr2 << " - " << N_over_delta << "*";
                 os_varformula << "(";
-                if (k == 0)
+                if (k == 0) {
                     os_varformula << delayfunc.op(0);
-                else
+                }
+                else {
                     os_varformula << prev_vstr1;
+                }
                 os_varformula << " - " << vstr1 << ")))";
                 var->Formula(os_varformula.str());
                 ex icderiv2 = icderiv.diff(IndVar);
@@ -188,12 +193,12 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
                 os_vardefic_deriv2 << icderiv2.subs(IndVar==-(k+1)*lag/N);
                 var->DefaultInitialCondition(os_vardefic_deriv2.str());
                 AddStateVariable(var);
-                }                    
-            } // end k loop
+            }                    
+        } // end k loop
         symbol s(delayed_var_name);
         f = f.subs(delayfunc == s);
-        } // end dlist loop
-    }
+    } // end dlist loop
+}
 
 
 //
@@ -201,7 +206,7 @@ void VectorField::Delay2ODE_ConvertAndExtend(ex& f, int N, int p)
 //
 
 void VectorField::PrintDelay2ODE(map<string,string> options)
-    {
+{
     //
     // Note that this function MODIFIES THE OBJECT!!!
     // It then calls PrintXML to output the extended vector field to the
@@ -212,63 +217,55 @@ void VectorField::PrintDelay2ODE(map<string,string> options)
     int nv = varname_list.nops();
     int N, p;
 
-    if (options.find("N") == options.end())
+    if (options.find("N") == options.end()) {
         N = 10;
-    else
-        {
+    }
+    else {
         N = string_to_int(options["N"]);
-        if (N < 1)
-            {
+        if (N < 1) {
             cerr << "N must be at least 1.\n";
             return;
-            }
         }
-    if (options.find("p") == options.end())
+    }
+    if (options.find("p") == options.end()) {
         p = 1;
-    else
-        {
+    }
+    else {
         p = string_to_int(options["p"]);
-        if (p < 1 || p > 3)
-            {
+        if (p < 1 || p > 3) {
             cerr << "Only p=1, p=2 or p=3 are supported.\n";
             return;
-            }
         }
+    }
 
-    for (int i = 0; i < ne; ++i)
-        {
+    for (int i = 0; i < ne; ++i) {
         ex f = exprformula_list[i];
-        if (f.has(delay(wild(1),wild(2))))
-            {
+        if (f.has(delay(wild(1),wild(2)))) {
             Delay2ODE_ConvertAndExtend(f,N,p);
             ostringstream os_newformula;
             os_newformula << f;
             Expressions[i]->Formula(os_newformula.str());
-            }
         }
+    }
 
-    for (int k = 0; k < nv; ++k)
-        {
+    for (int k = 0; k < nv; ++k) {
         ex f = varvecfield_list[k];
-        if (f.has(delay(wild(1),wild(2))))
-            {
+        if (f.has(delay(wild(1),wild(2)))) {
             Delay2ODE_ConvertAndExtend(f,N,p);
             ostringstream os_newformula;
             os_newformula << f;
             StateVariables[k]->Formula(os_newformula.str());
-            }
         }
+    }
 
-    for (unsigned k = 0; k < vardefic_list.nops(); ++k)
-        {
-        if (has(vardefic_list[k],IndVar))
-            {
+    for (unsigned k = 0; k < vardefic_list.nops(); ++k) {
+        if (has(vardefic_list[k],IndVar)) {
             vardefic_list[k] = vardefic_list[k].subs(IndVar==0);
             ostringstream os;
             os << vardefic_list[k];
             StateVariables[k]->DefaultInitialCondition(os.str());
-            }
         }
+    }
     Name(Name()+"_2ode");
     PrintXML("delay2ode");
-    }
+}

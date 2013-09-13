@@ -43,25 +43,23 @@ using namespace GiNaC;
 //
 
 void VectorField::DDEBT_ConvertDelaysToZlags(ex& f)
-    {
+{
     exset dlist;
     f.find(delay(wild(1),wild(2)),dlist);
-    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter)
-        {
+    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
         ex delayfunc = *iter;
         ex delayexpr = delayfunc.op(0);
         lst vars = FindVarsInEx(delayexpr);
         ex del = delayfunc.op(1);
         int dindex = FindDelay(del);
         assert(dindex != -1);
-        for (lst::const_iterator viter = vars.begin(); viter != vars.end(); ++viter)
-            {
+        for (lst::const_iterator viter = vars.begin(); viter != vars.end(); ++viter) {
             int vindex = FindVar(ex_to<symbol>(*viter));
             delayexpr = delayexpr.subs(*viter == Zlags_(vindex+1,dindex+2));
-            }
-        f = f.subs(delayfunc == delayexpr);
         }
+        f = f.subs(delayfunc == delayexpr);
     }
+}
 
 //
 // DDE23_ConvertStateToZlags(ex& f)
@@ -71,60 +69,59 @@ void VectorField::DDEBT_ConvertDelaysToZlags(ex& f)
 //
 
 void VectorField::DDEBT_ConvertStateToZlags(ex& f)
-    {
+{
     exset dlist;
     f.find(delay(wild(1),wild(2)),dlist);
-    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter)
-        {
+    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
         ex delayfunc = *iter;
         ex delayexpr = delayfunc.op(0);
         lst vars = FindVarsInEx(delayexpr);
         ex del = delayfunc.op(1);
         int dindex = FindDelay(del);
         assert(dindex != -1);
-        for (lst::const_iterator viter = vars.begin(); viter != vars.end(); ++viter)
-            {
+        for (lst::const_iterator viter = vars.begin(); viter != vars.end(); ++viter) {
             int vindex = FindVar(ex_to<symbol>(*viter));
             delayexpr = delayexpr.subs(*viter == Zlags_(vindex+1,dindex+2));
-            }
+        }
         f = f.subs(delayfunc == delayexpr);
-        }
-    int nv = varname_list.nops();    
-    for (int i = 0; i < nv; ++i)
-        {
-        f = f.subs(varname_list[i] == Zlags_(i+1,1));
-        }
     }
+    int nv = varname_list.nops();    
+    for (int i = 0; i < nv; ++i) {
+        f = f.subs(varname_list[i] == Zlags_(i+1,1));
+    }
+}
+
 
 void VectorField::DDEBT_PrintParDerivs(ofstream &dout, const vector<ex> &vf0)
-    {
+{
     // int nc = conname_list.nops();
     int nv = varname_list.nops();
     int np = parname_list.nops();
     // int na = exprname_list.nops();
     // int nf = funcname_list.nops();
 
-
-    for (int j = 0; j < np; ++j)
-        {
-        if (j == 0)
+    for (int j = 0; j < np; ++j) {
+        if (j == 0) {
             dout << "        if np_ == 1\n";
-        else
+        }
+        else {
             dout << "        elseif np_ == " << j+1 << endl;
+        }
         dout << "            % Derivative wrt " << parname_list[j] << endl;
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             symbol p = ex_to<symbol>(parname_list[j]);
             ex df = vf0[i].diff(p);
-            if (df != 0)
+            if (df != 0) {
                 dout << "            jac_(" << (i+1) << ")" << " = " << df << ";" << endl;
             }
         }
-    dout << "        end\n";
     }
+    dout << "        end\n";
+}
+
 
 void VectorField::DDEBT_PrintJacobians(ofstream &dout, const vector<ex> &vf0)
-    {
+{
     // int nc = conname_list.nops();
     int nv = varname_list.nops();
     // int np = parname_list.nops();
@@ -132,37 +129,34 @@ void VectorField::DDEBT_PrintJacobians(ofstream &dout, const vector<ex> &vf0)
     // int nf = funcname_list.nops();
 
     int nd = Delays.size();
-    for (int k = 0; k < nd+1; ++k)
-        {
-        if (k == 0)
-            {
+    for (int k = 0; k < nd+1; ++k) {
+        if (k == 0) {
             dout << "        if nx_ == 0\n";
             dout << "            % Derivatives wrt the state variables\n";
-            }
-        else
-            {
+        }
+        else {
             dout << "        elseif nx_ == " << k << endl;
             dout << "            % Derivatives wrt state variables with delay " << Delays[k-1] << endl;
-            }
-        for (int i = 0; i < nv; ++i)
-            {
+        }
+        for (int i = 0; i < nv; ++i) {
             ex f = vf0[i];
-            for (int j = 0; j < nv; ++j)
-                {
+            for (int j = 0; j < nv; ++j) {
                 symbol vtmp_("vtmp_");
                 ex fj = f.subs(Zlags_(j+1,k+1) == vtmp_);
                 ex df = fj.diff(vtmp_);
                 df = df.subs(vtmp_ == Zlags_(j+1,k+1));
-                if (df != 0)
+                if (df != 0) {
                     dout << "            jac_(" << (i+1) << "," << (j+1) << ")" << " = " << df << ";" << endl;
                 }
             }
         }
-    dout << "        end\n";
     }
+    dout << "        end\n";
+}
+
 
 void VectorField::DDEBT_PrintXandParJacobians(ofstream &dout, const vector<ex> &vf0)
-    {
+{
     // int nc = conname_list.nops();
     int nv = varname_list.nops();
     int np = parname_list.nops();
@@ -170,49 +164,46 @@ void VectorField::DDEBT_PrintXandParJacobians(ofstream &dout, const vector<ex> &
     // int nf = funcname_list.nops();
 
     int nd = Delays.size();
-    for (int k = 0; k < nd+1; ++k)
-        {
-        if (k == 0)
-            {
+    for (int k = 0; k < nd+1; ++k) {
+        if (k == 0) {
             dout << "        if nx_ == 0\n";
             dout << "            % Derivatives wrt the state variables\n";
-            }
-        else
-            {
+        }
+        else {
             dout << "        elseif nx_ == " << k << endl;
             dout << "            % Derivatives wrt state variables with delay " << Delays[k-1] << endl;
-            }
-        for (int m = 0; m < np; ++m)
-            {
-            if (m == 0)
+        }
+        for (int m = 0; m < np; ++m) {
+            if (m == 0) {
                 dout << "            if np_ == " << m+1 << "\n";
-            else
+            }
+            else {
                 dout << "            elseif np_ == " << m+1 << "\n";
+            }
             dout << "                % Derivative wrt " << parname_list[m] << "\n";
-            for (int i = 0; i < nv; ++i)
-                {
+            for (int i = 0; i < nv; ++i) {
                 ex f = vf0[i];
-                for (int j = 0; j < nv; ++j)
-                    {
+                for (int j = 0; j < nv; ++j) {
                     symbol vtmp_("vtmp_");
                     ex fj = f.subs(Zlags_(j+1,k+1) == vtmp_);
                     ex df = fj.diff(vtmp_);
                     df = df.subs(vtmp_ == Zlags_(j+1,k+1));
                     symbol p = ex_to<symbol>(parname_list[m]);
                     df = df.diff(p);
-                    if (df != 0)
+                    if (df != 0) {
                         dout << "                jac_(" << (i+1) << "," << (j+1) << ")" << " = " << df << ";" << endl;
                     }
                 }
             }
-        dout << "            end    % if np_ == ...\n";
         }
-    dout << "        end    % if nx_ == ...\n";
+        dout << "            end    % if np_ == ...\n";
     }
+    dout << "        end    % if nx_ == ...\n";
+}
 
 
 ex second_deriv(const ex &f, int lag1, int var1, int lag2, int var2)
-    {
+{
     symbol Z_("Z_");
     ex fj = f.subs(Zlags_(var1,lag1) == Z_);
     ex df = fj.diff(Z_);
@@ -221,10 +212,11 @@ ex second_deriv(const ex &f, int lag1, int var1, int lag2, int var2)
     df = df.diff(Z_);
     df = df.subs(Z_ == Zlags_(var2,lag2));
     return df;
-    }
+}
+
 
 void VectorField::DDEBT_PrintHessiansTimesV(ofstream &dout, const vector<ex> &vf0)
-    {
+{
     // int nc = conname_list.nops();
     int nv = varname_list.nops();
     // int np = parname_list.nops();
@@ -232,60 +224,49 @@ void VectorField::DDEBT_PrintHessiansTimesV(ofstream &dout, const vector<ex> &vf
     // int nf = funcname_list.nops();
 
     int nd = Delays.size();
-    for (int k1 = 0; k1 < nd+1; ++k1)
-        {
-        if (k1 == 0)
-            {
+    for (int k1 = 0; k1 < nd+1; ++k1) {
+        if (k1 == 0) {
             dout << "        if nx_(1) == 0\n";
             dout << "            % Derivatives wrt the state variables\n";
-            }
-        else
-            {
+        }
+        else {
             dout << "        elseif nx_(1) == " << k1 << endl;
             dout << "            % Derivatives wrt state variables with delay " << Delays[k1-1] << endl;
-            }
+        }
 
-        for (int k2 = 0; k2 < nd+1; ++k2)
-            {
-            if (k2 == 0)
-                {
+        for (int k2 = 0; k2 < nd+1; ++k2) {
+            if (k2 == 0) {
                 dout << "            if nx_(2) == 0\n";
                 dout << "                % Derivatives wrt the state variables\n";
-                }
-            else
-                {
+            }
+            else {
                 dout << "            elseif nx_(2) == " << k2 << endl;
                 dout << "                % Derivatives wrt state variables with delay " << Delays[k2-1] << endl;
-                }
+            }
 
-
-            for (int i = 0; i < nv; ++i)
-                {
+            for (int i = 0; i < nv; ++i) {
                 ex f = vf0[i];
-                for (int j = 0; j < nv; ++j)
-                    {
+                for (int j = 0; j < nv; ++j) {
                     ostringstream os;
-                    for (int h = 0; h < nv; ++h)
-                        {
+                    for (int h = 0; h < nv; ++h) {
                         ex d2f = second_deriv(f,k1+1,j+1,k2+1,h+1);
-                        if (d2f != 0)
-                            {
-                            if (os.str() != "")
+                        if (d2f != 0) {
+                            if (os.str() != "") {
                                 os << " + ";
-                            os << "(" << d2f << ")*v_(" << h+1 << ")";
                             }
+                            os << "(" << d2f << ")*v_(" << h+1 << ")";
                         }
-                    if (os.str() != "")
+                    }
+                    if (os.str() != "") {
                         dout << "                jac_(" << (i+1) << "," << (j+1) << ")" << " = " << os.str() << ";\n";
                     }
                 }
-
-
             }
-        dout << "            end % if nx_(2) == ...\n";
         }
-    dout << "        end  % if nx_(1) == ...\n";
+        dout << "            end % if nx_(2) == ...\n";
     }
+    dout << "        end  % if nx_(1) == ...\n";
+}
 
 
 //
@@ -293,7 +274,7 @@ void VectorField::DDEBT_PrintHessiansTimesV(ofstream &dout, const vector<ex> &vf
 //
 
 void VectorField::PrintDDEBIFTOOL(map<string,string> options)
-    {
+{
     int nc = conname_list.nops();
     int nv = varname_list.nops();
     // int np = parname_list.nops();
@@ -322,13 +303,13 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     si_out << "function [name,dim] = sys_init()\n";
     si_out << "    name = '" << Name() << "';\n";
     si_out << "    dim = " << nv << ";\n";
-    if (options["path"] != "")
+    if (options["path"] != "") {
         si_out << "    path(path,'" << options["path"] << "');\n";
-    else
-        {
+    }
+    else {
         si_out << "    % Add the DDE-BIFTOOL path here, if necessary.\n";
         si_out << "    % path(path,'" << options["path"] << "');\n";
-        }
+    }
     si_out << "    return;\n";
     si_out.close();
 
@@ -351,78 +332,73 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     fout << "%" << endl;
     // Include a list of the lags in the comments.
     fout << "% The lags are: {";
-    for (unsigned k = 0; k < Delays.size(); ++k)
-        {
+    for (unsigned k = 0; k < Delays.size(); ++k) {
         fout << Delays[k];
         if (k < Delays.size()-1)
             fout << ", "; 
-        }
+    }
     fout << "}" << endl;
     fout << "%\n";
     fout << "% If X(t) is the state vector at time t, then\n";
     fout << "%    Zlags_ = [ X(t) ";
-    for (unsigned k = 0; k < Delays.size(); ++k)
-        {
+    for (unsigned k = 0; k < Delays.size(); ++k) {
         fout << "X(t-" << Delays[k] << ")";
-        if (k < Delays.size()-1)
+        if (k < Delays.size()-1) {
             fout << " "; 
         }
+    }
     fout << " ]\n";
     // Function definition starts here.
     fout << "%" << endl;
     fout << "function vf_ = sys_rhs(Zlags_,par_)";
 
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = pi;\n";
-        }
+    }
     //
     // Constants...
     //
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     fout << endl;
     fout << "    % State variables\n";
     GetFromVector2(fout,"    ",varname_list,"Zlags_","(",",1)",1,";");
     //
     // Parameters...
     //
-    if (parname_list.nops() > 0)
-        {
+    if (parname_list.nops() > 0) {
         fout << "    % Parameters\n";
         GetFromVector(fout,"    ",parname_list,"par_","()",1,";");
         fout << endl;
-        }
+    }
     //
     // The following code assumes that the delays are single parameters,
     // and not mathematical expressions.
     //
     // Expressions...
     //
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         ex f = exprformula_list[i];
-        if (f.has(delay(wild(1),wild(2))))
+        if (f.has(delay(wild(1),wild(2)))) {
             DDEBT_ConvertDelaysToZlags(f);
-        fout << "    " << exprname_list[i] << " = " << f << ";" << endl;
         }
+        fout << "    " << exprname_list[i] << " = " << f << ";" << endl;
+    }
     //
     // StateVariables...
     //
     fout << "    vf_ = zeros(" << nv << ",1);" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i];
-        if (f.has(delay(wild(1),wild(2))))
+        if (f.has(delay(wild(1),wild(2)))) {
             DDEBT_ConvertDelaysToZlags(f);
-        fout << "    vf_(" << (i+1) << ")" << " = " << f << ";" << endl;
         }
+        fout << "    vf_(" << (i+1) << ")" << " = " << f << ";" << endl;
+    }
     fout << endl;
     fout << "    return\n";
     fout.close();
-
 
     //
     //  Create the derivatives file sys_deri.m
@@ -443,22 +419,22 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     dout << "%" << endl;
     // Include a list of the lags in the comments.
     dout << "% The lags are: {";
-    for (unsigned k = 0; k < Delays.size(); ++k)
-        {
+    for (unsigned k = 0; k < Delays.size(); ++k) {
         dout << Delays[k];
-        if (k < Delays.size()-1)
+        if (k < Delays.size()-1) {
             dout << ", "; 
         }
+    }
     dout << "}" << endl;
     dout << "%\n";
     dout << "% If X(t) is the state vector at time t, then\n";
     dout << "%    Zlags_ = [ X(t) ";
-    for (unsigned k = 0; k < Delays.size(); ++k)
-        {
+    for (unsigned k = 0; k < Delays.size(); ++k) {
         dout << "X(t-" << Delays[k] << ")";
-        if (k < Delays.size()-1)
+        if (k < Delays.size()-1) {
             dout << " "; 
         }
+    }
     dout << " ]\n";
     dout << "%\n";
     dout << "% The state vector:\n";
@@ -469,28 +445,25 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     dout << "%" << endl;
     dout << "function jac_ = sys_deri(Zlags_,par_,nx_,np_,v_)";
 
-    if (HasPi)
-        {
+    if (HasPi) {
         dout << "    Pi = pi;\n";
-        }
+    }
     //
     // Constants...
     //
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         dout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     dout << endl;
 
     //
     // Parameters...
     //
-    if (parname_list.nops() > 0)
-        {
+    if (parname_list.nops() > 0) {
         dout << "    % Parameters\n";
         GetFromVector(dout,"    ",parname_list,"par_","()",1,";");
         dout << endl;
-        }
+    }
     //
     // We do not print the Expressions, since the vector field formulas will
     // have all their Expressions replaced by their formulas.
@@ -503,14 +476,13 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     // to Zlags_(i,1).
     //
     vector<ex> vf0;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         // Get the i^th formula, and substitute all expressions.
         ex f = varvecfield_list[i].subs(expreqn_list);
         // Convert the state variables and delay expressions to Zlags_
         DDEBT_ConvertStateToZlags(f);
         vf0.push_back(f);
-        }
+    }
 
     dout << "    if length(nx_) == 1 & length(np_) == 0 & isempty(v_)\n";
     dout << "        jac_ = zeros(" << nv << "," << nv << ");\n";
@@ -554,28 +526,32 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     tout << "function tau = sys_tau()\n";
     tout << endl;
     tout << "tau = [ ";
-    for (vector<ex>::iterator p = Delays.begin(); p != Delays.end(); ++p)
-        {
-        if (!is_a<symbol>(*p))
+    for (vector<ex>::iterator p = Delays.begin(); p != Delays.end(); ++p) {
+        if (!is_a<symbol>(*p)) {
             cerr << "Error: the delay expression " << *p << " is not a single symbol.\n";
-        else
-            {
+        }
+        else {
             int k = 0;
             lst::const_iterator q;
-            for (q = parname_list.begin(); q != parname_list.end(); ++q)
-                if (*q == *p)
+            for (q = parname_list.begin(); q != parname_list.end(); ++q) {
+                if (*q == *p) {
                     break;
-                else
+                }
+                else {
                     ++k;
-            if (q == parname_list.end())
+                }
+            }
+            if (q == parname_list.end()) {
                 cerr << "Error: the delay expression " << *p << " is not a parameter.\n";
-            else
+            }
+            else {
                 tout << k+1 << " ";
             }
         }
+    }
     tout << "];\n";
     tout <<"return\n";
     tout.close();
 
     return;
-    }
+}

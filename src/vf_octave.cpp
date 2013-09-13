@@ -37,7 +37,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintOctave(map<string,string> options)
-    {
+{
     symbol t(IndependentVariable);
     int nc, np, nv, na, nf;
 
@@ -76,27 +76,24 @@ void VectorField::PrintOctave(map<string,string> options)
     fout << "#" << endl;
     fout << "function vf_ = " << Name() << "_vf(x_," << t << ")\n";
     string pname = Name() + "_parameters";
-    if (np > 0)
+    if (np > 0) {
         fout << "    global " << pname << ";\n";
-    if (HasPi)
-        {
+    }
+    if (HasPi) {
         fout << "    Pi = pi;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     GetFromVector(fout,"    ",parname_list,pname.c_str(),"()",1,";");
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
+    }
     fout << "    vf_ = zeros(" << nv << ",1);" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    vf_(" << (i+1) << ")" << " = " << varvecfield_list[i] << ";" << endl;
-        }
+    }
     fout << "endfunction" << endl;
     fout << endl;
     //
@@ -108,40 +105,36 @@ void VectorField::PrintOctave(map<string,string> options)
     fout << "# The Jacobian of the vector field" << endl;
     fout << "#" << endl;
     fout << "function jac_ = " << Name() << "_jac(x_," << t << ")\n";
-    if (np > 0)
+    if (np > 0) {
         fout << "    global " << pname << ";\n";
-    if (HasPi)
-        {
+    }
+    if (HasPi) {
         fout << "    Pi = pi;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     GetFromVector(fout,"    ",parname_list,pname.c_str(),"()",1,";");
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
-            if (df != 0)
+            if (df != 0) {
                 fout << "    jac_(" << (i+1) << "," << (j+1) << ")" << " = " << f.diff(v) << ";" << endl;
             }
         }
+    }
     fout << "endfunction" << endl;
     fout << endl;
 
-    if (options["func"] == "yes")
-        {
+    if (options["func"] == "yes") {
         //
         //  Create the user-defined functions.
         //
-        for (int n = 0; n < nf; ++n)
-            {
+        for (int n = 0; n < nf; ++n) {
             symbol fn = ex_to<symbol>(funcname_list[n]);
             string funcname = Name() + "_" + fn.get_name();
             fout << "#" << endl;
@@ -150,28 +143,24 @@ void VectorField::PrintOctave(map<string,string> options)
             fout << "# This function implements the user-defined function \"" << fn.get_name() << "\"" << endl;
             fout << "#" << endl;
             fout << "function r_ = " << funcname << "(x_," << t << ",p_)\n";
-            if (HasPi)
-                {
+            if (HasPi) {
                 fout << "    Pi = pi;\n";
-                }
-            for (int i = 0; i < nc; ++i)
-                {
+            }
+            for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-                }
+            }
             GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
             GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
-            for (int i = 0; i < na; ++i)
-                {
+            for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-                }
+            }
             fout << "    r_ = " << funcformula_list[n] << ";" << endl;
             fout << "endfunction" << endl;
-            }
         }
+    }
     fout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         //  Create a demonstration script.
         //
@@ -189,38 +178,34 @@ void VectorField::PrintOctave(map<string,string> options)
         PrintVFGENComment(fout,"# ");
         fout << "#" << endl;
         fout << endl;
-        if (np > 0)
-            {
+        if (np > 0) {
             fout << "# Global vector for the parameters.\n";
             fout << "global " << pname << ";\n";
             fout << endl;
-            }
+        }
         fout << "# Load the vector field definition and the jacobian." << endl;
         fout << "source \"" << vf_filename << "\";" << endl;
         fout << endl;
         // Output the constants; the initial conditions in
         // the x_mdialog can be expressed in terms of
         // these constants.
-        if (nc > 0)
+        if (nc > 0) {
             fout << "# Constants.  The names of these constants can be used in the x_mdialog." << endl;
-        if (HasPi)
-            {
+        }
+        if (HasPi) {
             fout << "Pi = pi;\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             fout << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+        }
         fout << endl;
-        if (np > 0)
-            {
+        if (np > 0) {
             fout << "# --- Parameters ---\n";
-            for (int i = 0; i < np; ++i)
-                {
+            for (int i = 0; i < np; ++i) {
                 fout << pname << "(" << i+1 << ") = " << pardefval_list[i] << ";   # " << parname_list[i] << endl; 
-                }
-            fout << endl;
             }
+            fout << endl;
+        }
         fout << "# --- Initial conditions ---\n";
         SetVectorFromNames(fout,"","x_",vardefic_list,"()",1,";");
         fout << endl;
@@ -239,16 +224,15 @@ void VectorField::PrintOctave(map<string,string> options)
         fout << endl;
         fout << "# --- Plot the solution ---" << endl;
         fout << "hold off\n";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             int k = i % strlen(colors);
             fout << "plot(t_,xsol_(1:end," << i+1 << "),\"" << colors[k] << ";" << varname_list[i] << ";\")\n";
-            if (i == 0)
+            if (i == 0) {
                 fout << "hold on\n";
             }
+        }
         fout << "grid on\n";
         fout << "xlabel(\"t\")\n";
         fout.close();
-        }
     }
-
+}

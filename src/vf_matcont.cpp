@@ -38,7 +38,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintMATCONT(map<string,string> options)
-    {
+{
     int nc, np, nv, na, nf;
 
     nc = conname_list.nops();
@@ -75,10 +75,9 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "    out{7} = @" << Name() << "_der3;"  << endl;
     fout << "    out{8} = [];" << endl;
     fout << "    out{9} = [];" << endl;
-    for (int i = 0; i < nf; ++i)
-        {
+    for (int i = 0; i < nf; ++i) {
         fout << "    out{" << 10+i << "} = @" << Name() << "_" << funcname_list[i] << ";" << endl;
-        }
+    }
     fout << endl;
 
     //
@@ -92,22 +91,20 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << endl;
     fout << "    % Get the constants and default parameters, because the default\n";
     fout << "    % initial conditions can depend on them.\n";
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = pi;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
-    for (int i = 0; i < np; ++i)
+    }
+    for (int i = 0; i < np; ++i) {
         fout << "    " << parname_list[i] << " = " << pardefval_list[i] << ";\n" ;
+    }
     fout << "    % Set the default initial point.\n";
     fout << "    y0 = zeros(" << nv << ",1);\n";
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    y0(" << i+1 << ") = " << vardefic_list[i] << ";\n";
-        }
+    }
     fout << endl;
     fout << "    handles = feval(@" << Name() << ");\n";
     fout << "    options = odeset('Jacobian',handles(3),'JacobianP',handles(4), ...\n";
@@ -124,23 +121,21 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "function vf_ = " << Name() << "_vf(" << IndependentVariable << ",x_,";
     PrintNameList(fout,parname_list);
     fout << ")" << endl;
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
-    if (na > 0)
+    }
+    if (na > 0) {
         fout << endl;
+    }
     fout << "    vf_ = zeros(" << nv << ",1);" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    vf_(" << (i+1) << ")" << " = " << varvecfield_list[i] << ";" << endl;
-        }
+    }
     fout << endl;
     //
     //  Print the Jacobian with respect to the variables.
@@ -152,24 +147,22 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "function jac_ = " << Name() << "_jac(" << IndependentVariable << ",x_,";
     PrintNameList(fout,parname_list);
     fout << ")" << endl;
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     fout << endl;
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
-            if (df != 0)
+            if (df != 0) {
                 fout << "    jac_(" << (i+1) << "," << (j+1) << ")" << " = " << f.diff(v) << ";" << endl;
             }
         }
+    }
     fout << endl;
     //
     //  Print the Jacobian with respect to the parameters.
@@ -181,24 +174,22 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "function jacp_ = " << Name() << "_jacp(" << IndependentVariable << ",x_,";
     PrintNameList(fout,parname_list);
     fout << ")" << endl;
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     fout << endl;
     fout << "    jacp_ = zeros(" << nv << "," << np << ");" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < np; ++j)
-            {
+        for (int j = 0; j < np; ++j) {
             symbol p = ex_to<symbol>(parname_list[j]);
             ex df = f.diff(p);
-            if (df != 0)
+            if (df != 0) {
                 fout << "    jacp_(" << (i+1) << "," << (j+1) << ")" << " = " << f.diff(p) << ";" << endl;
             }
         }
+    }
     fout << endl;
     //
     //  Print the Hessians function.
@@ -214,39 +205,35 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "function hess_ = " << Name() << "_hess(" << IndependentVariable << ",x_,";
     PrintNameList(fout,parname_list);
     fout << ")" << endl;
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     fout << endl;
     fout << "    hess_ = zeros(" << nv << "," << nv << "," << nv << ");" << endl;
-    for (int n = 0; n < nv; ++n)
-        {
+    for (int n = 0; n < nv; ++n) {
         fout << endl;
         // Get the n-th component of the vector field.
         ex f = iterated_subs(varvecfield_list[n],expreqn_list);
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             // Get the i-th variable
             symbol x_i = ex_to<symbol>(varname_list[i]);
             // Differentiate f once
             ex df_i = f.diff(x_i);
-            for (int j = i; j < nv; ++j)
-                {
+            for (int j = i; j < nv; ++j) {
                 // Get the j-th variable
                 symbol x_j = ex_to<symbol>(varname_list[j]);
                 // Differentiate again
                 ex df_ij = df_i.diff(x_j);
-                if (df_ij != 0)
-                    { 
+                if (df_ij != 0) { 
                     fout << "    hess_(" << (n+1) << "," << (i+1) << "," << (j+1) << ")" << " = " << df_ij << ";" << endl;
-                    if (j > i)
+                    if (j > i) {
                         fout << "    hess_(" << (n+1) << "," << (j+1) << "," << (i+1) << ") = hess_(" << (n+1) << "," << (i+1) << "," << (j+1) << ");" << endl;
                     }
                 }
             }
         }
+    }
     fout << endl;
     //
     //  Print the Hessians with respect to parameters.
@@ -262,35 +249,32 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "function hessp_ = " << Name() << "_hessp(" << IndependentVariable << ",x_,";
     PrintNameList(fout,parname_list);
     fout << ")" << endl;
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     fout << endl;
     fout << "    hessp_ = zeros(" << nv << "," << nv << "," << np << ");" << endl;
-    for (int n = 0; n < nv; ++n)
-        {
+    for (int n = 0; n < nv; ++n) {
         fout << endl;
         // Get the n-th component of the vector field.
         ex f = iterated_subs(varvecfield_list[n],expreqn_list);
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             // Get the i-th variable
             symbol x_i = ex_to<symbol>(varname_list[i]);
             // Differentiate f once
             ex df_i = f.diff(x_i);
-            for (int j = 0; j < np; ++j)
-                {
+            for (int j = 0; j < np; ++j) {
                 // Get the j-th parameter
                 symbol p_j = ex_to<symbol>(parname_list[j]);
                 // Differentiate again
                 ex df_ij = df_i.diff(p_j);
-                if (df_ij != 0)
+                if (df_ij != 0) {
                     fout << "    hessp_(" << (n+1) << "," << (i+1) << "," << (j+1) << ")" << " = " << df_ij << ";" << endl;
                 }
             }
         }
+    }
     fout << endl;
     //
     //  Print the function that computes the third derivatives
@@ -306,57 +290,53 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "function der3_ = " << Name() << "_der3(" << IndependentVariable << ",x_,";
     PrintNameList(fout,parname_list);
     fout << ")" << endl;
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
     fout << endl;
     fout << "    der3_ = zeros(" << nv << "," << nv << "," << nv << "," << nv << ");" << endl;
-    for (int n = 0; n < nv; ++n)
-        {
+    for (int n = 0; n < nv; ++n) {
         fout << endl;
         // Get the n-th component of the vector field.
         ex f = iterated_subs(varvecfield_list[n],expreqn_list);
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             // Get the i-th variable
             symbol x_i = ex_to<symbol>(varname_list[i]);
             // Differentiate f once
             ex df_i = f.diff(x_i);
-            for (int j = i; j < nv; ++j)
-                {
+            for (int j = i; j < nv; ++j) {
                 // Get the j-th variable
                 symbol x_j = ex_to<symbol>(varname_list[j]);
                 // Differentiate again
                 ex df_ij = df_i.diff(x_j); 
-                for (int k = j; k < nv; ++k)
-                    {
+                for (int k = j; k < nv; ++k) {
                     // Get the k-th variable
                     symbol x_k = ex_to<symbol>(varname_list[k]);
                     // Take the third derivative
                     ex df_ijk = df_ij.diff(x_k);
-                    if (df_ijk != 0)
-                        {
+                    if (df_ijk != 0) {
                         fout << "    der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ") = " << df_ijk << ";" << endl;
-                        if (j < k)
+                        if (j < k) {
                             fout << "    der3_(" << (n+1) << "," << (i+1) << "," << (k+1) << "," << (j+1) << ") = der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ");" << endl;
-                        if (i < k)
+                        }
+                        if (i < k) {
                             fout << "    der3_(" << (n+1) << "," << (k+1) << "," << (j+1) << "," << (i+1) << ") = der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ");" << endl;
-                        if (i < j)
+                        }
+                        if (i < j) {
                             fout << "    der3_(" << (n+1) << "," << (j+1) << "," << (i+1) << "," << (k+1) << ") = der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ");" << endl;
                         }
                     }
                 }
             }
         }
+    }
     fout << endl;
 
     //
     //  Create the user-defined functions.
     //
-    for (int n = 0; n < nf; ++n)
-        {
+    for (int n = 0; n < nf; ++n) {
         symbol fn = ex_to<symbol>(funcname_list[n]);
         string funcname = fn.get_name();
         fout << left;
@@ -365,22 +345,18 @@ void VectorField::PrintMATCONT(map<string,string> options)
         fout << "function r_ = " << Name() << "_" << funcname << "(" << IndependentVariable << ",x_,";
         PrintNameList(fout,parname_list);
         fout << ")" << endl;
-        if (HasPi)
-            {
+        if (HasPi) {
             fout << "    Pi = pi;\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
-            fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
-        GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
-        for (int i = 0; i < na; ++i)
-            {
-            fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-            }
-        fout << "    r_ = " << funcformula_list[n] << ";" << endl;
         }
+        for (int i = 0; i < nc; ++i) {
+            fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
+        }
+        GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+        for (int i = 0; i < na; ++i) {
+            fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
+        }
+        fout << "    r_ = " << funcformula_list[n] << ";" << endl;
+    }
 
     fout.close();
-
-    }
+}

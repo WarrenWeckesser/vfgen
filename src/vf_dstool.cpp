@@ -38,7 +38,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintDSTool(void)
-    {
+{
     int nc, np, nv, na, nf;
 
     nc = conname_list.nops();
@@ -83,14 +83,12 @@ void VectorField::PrintDSTool(void)
     //
     fout << "int " << Name() << "(double *f_, double *Y_, double *p_)" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     CDeclare_double(fout,exprname_list);
@@ -101,15 +99,13 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
+    }
     fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
-        }
+    }
     fout << "    }" << endl;
     fout << endl;
     //
@@ -121,14 +117,12 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "int " << Name() << "_jac(double **jac_, double *Y_, double *p_)" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << endl;
@@ -138,16 +132,14 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i].subs(expreqn_list);
         // fout << "    /*  Row " << (i+1) << " of the Jacobian:      */"<< endl;
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             fout << "    jac_[" << i << "][" << j << "] = " << f.diff(v) << ";" << endl;
-            }
         }
+    }
     fout << "    }" << endl;
     fout << endl;
     //
@@ -159,14 +151,12 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "int " << Name() << "_dfdt(double *dfdt_, double *Y_, double *p_)" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << endl;
@@ -177,11 +167,10 @@ void VectorField::PrintDSTool(void)
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;
     symbol t(IndependentVariable);
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i].subs(expreqn_list);
         fout << "    dfdt_[" << i << "] = " << f.diff(t) << ";" << endl;
-        }
+    }
     fout << "    }" << endl;
     fout << endl;
 
@@ -195,14 +184,12 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "int " << Name() << "_dfdp(double **dfdp_, double *Y_, double *p_)" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << endl;
@@ -210,15 +197,13 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
     fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < np; ++j)
-            {
+        for (int j = 0; j < np; ++j) {
             symbol p = ex_to<symbol>(parname_list[j]);
             fout << "    dfdp_[" << i << "][" << j << "] = " << f.diff(p) << ";" << endl;
-            }
         }
+    }
     fout << "    }" << endl;
     fout << endl;
     //
@@ -230,14 +215,12 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "int " << Name() << "_aux(double *f_, double *Y_, double *p_)" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << endl;
@@ -247,18 +230,16 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
-    for (int n = 0; n < nf; ++n)
-        {
+    }
+    for (int n = 0; n < nf; ++n) {
         fout << endl;
         fout << "    /*" << endl;
         fout << "     *  Aux function: " << funcname_list[n] << endl;
         fout << "     */" << endl;
         fout << "    f_[" << n << "] = " << funcformula_list[n] << ";" << endl;
-        }
+    }
     fout << "    }" << endl;
     fout << endl;
     //
@@ -272,34 +253,28 @@ void VectorField::PrintDSTool(void)
     fout << "    {" << endl;
     fout << "    /* ------------ Define the dynamical system in this segment ---------- */" << endl;
     fout << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     fout << "    int             n_varb = " << nv << ";" << endl;
     fout << "    static char     *variable_names[] = {";
-    for (int n = 0; n < nv; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nv; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "\"" << varname_list[n] << "\"";
         }
+        fout << "\"" << varname_list[n] << "\"";
+    }
     fout << "};" << endl;
     fout << "    static double   variables[] = {";
-    for (int n = 0; n < nv; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nv; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "0.0" ;
         }
+        fout << "0.0" ;
+    }
     fout << "};" << endl;
     //
     // The VectorField object does not have max or min data,
@@ -307,24 +282,20 @@ void VectorField::PrintDSTool(void)
     // and parameters, and -100 and 100 for functions.
     //
     fout << "    static double   variable_min[] = {";
-    for (int n = 0; n < nv; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nv; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "-10.0";
         }
+        fout << "-10.0";
+    }
     fout << "};" << endl;
     fout << "    static double   variable_max[] = {";
-    for (int n = 0; n < nv; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nv; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "10.0";
         }
+        fout << "10.0";
+    }
     fout << "};" << endl;
     fout << "    static char     *indep_varb_name = \"" << IndependentVariable << "\";" << endl;
     fout << "    static double   indep_varb_min = 0.0;" << endl;
@@ -332,127 +303,116 @@ void VectorField::PrintDSTool(void)
     fout << endl;
     fout << "    int             n_param = " << np << ";" << endl;
     fout << "    static char     *parameter_names[] = {";
-    for (int n = 0; n < np; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < np; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "\"" << parname_list[n] << "\"";
         }
+        fout << "\"" << parname_list[n] << "\"";
+    }
     fout << "};" << endl;
     fout << "    static double   parameters[] = {";
-    for (int n = 0; n < np; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < np; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << pardefval_list[n];
         }
+        fout << pardefval_list[n];
+    }
     fout << "};" << endl;
     fout << "    static double   parameter_min[] = {";
-    for (int n = 0; n < np; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < np; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "-10.0";
         }
+        fout << "-10.0";
+    }
     fout << "};" << endl;
     fout << "    static double   parameter_max[] = {";
-    for (int n = 0; n < np; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < np; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "10.0";
         }
+        fout << "10.0";
+    }
     fout << "};" << endl;
     fout << endl;
     fout << "    int             n_funct = " << nf << ";" << endl;
     fout << "    static char     *funct_names[] = {";
-    for (int n = 0; n < nf; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nf; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "\"" << funcname_list[n] << "\"";
         }
+        fout << "\"" << funcname_list[n] << "\"";
+    }
     fout << "};" << endl;
     fout << "    static double   *funct_min[] = {";
-    for (int n = 0; n < nf; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nf; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "-100.0";
         }
+        fout << "-100.0";
+    }
     fout << "};" << endl;
     fout << "    static double   *funct_max[] = {";
-    for (int n = 0; n < nf; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nf; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        fout << "100.0";
         }
+        fout << "100.0";
+    }
     fout << "};" << endl;
     fout << endl;
     //
     // If any StateVariable is periodic, the manifold_type is PERIODIC.
     //
     bool periodic = false;
-    for (int n = 0; n < nv & !periodic; ++n)
+    for (int n = 0; n < nv & !periodic; ++n) {
         periodic = periodic | StateVariables[n]->IsPeriodic();
+    }
     fout << "    int             manifold_type = ";
-    if (periodic)
+    if (periodic) {
         fout << "PERIODIC;" << endl;
-    else
+    }
+    else {
         fout << "EUCLIDEAN;" << endl;
+    }
     fout << "    static int      periodic_varb[] = {";
-    for (int n = 0; n < nv; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nv; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        if (StateVariables[n]->IsPeriodic())
+        }
+        if (StateVariables[n]->IsPeriodic()) {
             fout << "TRUE";
-        else
+        }
+        else {
             fout << "FALSE";
         }
+    }
     fout << "};" << endl;
     fout << "    static double   period_start[] = {";
-    for (int n = 0; n < nv; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nv; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        if (StateVariables[n]->IsPeriodic())
+        }
+        if (StateVariables[n]->IsPeriodic()) {
             fout << StateVariables[n]->PeriodicFrom();
-        else
+        }
+        else {
             fout << "0.0";
         }
+    }
     fout << "};" << endl;
     fout << "    static double   period_end[] = {";
-    for (int n = 0; n < nv; ++n)
-        {
-        if (n > 0)
-            {
+    for (int n = 0; n < nv; ++n) {
+        if (n > 0) {
             fout << ",";
-            }
-        if (StateVariables[n]->IsPeriodic())
+        }
+        if (StateVariables[n]->IsPeriodic()) {
             fout << StateVariables[n]->PeriodicTo();
-        else
+        }
+        else {
             fout << "0.0";
         }
+    }
     fout << "};" << endl;
     fout << endl;
     fout << "    int             mapping_toggle = FALSE;" << endl;
@@ -472,5 +432,4 @@ void VectorField::PrintDSTool(void)
     fout << "    return 0;" << endl;
     fout << "    }" << endl;
     fout.close();
-    }
-
+}

@@ -37,7 +37,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintScilab(map<string,string> options)
-    {
+{
     symbol t(IndependentVariable);
     int nc, np, nv, na, nf;
 
@@ -71,35 +71,33 @@ void VectorField::PrintScilab(map<string,string> options)
     fout << "// The vector field " << endl;
     fout << "//" << endl;
     fout << "function vf_ = " << Name() << "_vf(" << t << ",x_";
-    if (np > 0)
-        {
+    if (np > 0) {
         fout << ",";
-        if (options["parstyle"] == "list")
+        if (options["parstyle"] == "list") {
             PrintNameList(fout,parname_list);
-        else
+        }
+        else {
             fout << "p_";
         }
+    }
     fout << ")" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = %pi;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
-    if (options["parstyle"] != "list")
+    if (options["parstyle"] != "list") {
         GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
-    for (int i = 0; i < na; ++i)
-        {
+    }
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
+    }
     fout << "    vf_ = zeros(" << nv << ",1);" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    vf_(" << (i+1) << ")" << " = " << varvecfield_list[i] << ";" << endl;
-        }
+    }
     fout << "endfunction" << endl;
     fout << endl;
     //
@@ -111,48 +109,45 @@ void VectorField::PrintScilab(map<string,string> options)
     fout << "// The Jacobian of the vector field" << endl;
     fout << "//" << endl;
     fout << "function jac_ = " << Name() << "_jac(" << t << ",x_";
-    if (np > 0)
-        {
+    if (np > 0) {
         fout << ",";
-        if (options["parstyle"] == "list")
+        if (options["parstyle"] == "list") {
             PrintNameList(fout,parname_list);
-        else
+        }
+        else {
             fout << "p_";
         }
+    }
     fout << ")" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = %pi;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
-    if (options["parstyle"] != "list")
+    if (options["parstyle"] != "list") {
         GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+    }
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
-            if (df != 0)
+            if (df != 0) {
                 fout << "    jac_(" << (i+1) << "," << (j+1) << ")" << " = " << f.diff(v) << ";" << endl;
             }
         }
+    }
     fout << "endfunction" << endl;
     fout << endl;
 
-    if (options["func"] == "yes")
-        {
+    if (options["func"] == "yes") {
         //
         //  Create the user-defined functions.
         //
-        for (int n = 0; n < nf; ++n)
-            {
+        for (int n = 0; n < nf; ++n) {
             symbol fn = ex_to<symbol>(funcname_list[n]);
             string funcname = Name() + "_" + fn.get_name();
             fout << "//" << endl;
@@ -161,38 +156,36 @@ void VectorField::PrintScilab(map<string,string> options)
             fout << "// This function implements the user-defined function \"" << fn.get_name() << "\"" << endl;
             fout << "//" << endl;
             fout << "function r_ = " << funcname << "(" << t << ",x_";
-            if (np > 0)
-                {
+            if (np > 0) {
                 fout << ",";
-                if (options["parstyle"] == "list")
+                if (options["parstyle"] == "list") {
                     PrintNameList(fout,parname_list);
-                else
+                }
+                else {
                     fout << "p_";
                 }
+            }
             fout << ")" << endl;
-            if (HasPi)
-                {
+            if (HasPi) {
                 fout << "    Pi = %pi;\n";
-                }
-            for (int i = 0; i < nc; ++i)
-                {
+            }
+            for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-                }
+            }
             GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
-            if (options["parstyle"] != "list")
+            if (options["parstyle"] != "list") {
                 GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
-            for (int i = 0; i < na; ++i)
-                {
+            }
+            for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-                }
+            }
             fout << "    r_ = " << funcformula_list[n] << ";" << endl;
             fout << "endfunction" << endl;
-            }
         }
+    }
     fout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         //  Create a demonstration script.
         //
@@ -215,38 +208,33 @@ void VectorField::PrintScilab(map<string,string> options)
         // Output the constants; the initial conditions in
         // the x_mdialog can be expressed in terms of
         // these constants.
-        if (nc > 0)
+        if (nc > 0) {
             fout << "// Constants.  The names of these constants can be used in the x_mdialog." << endl;
-        if (HasPi)
-            {
+        }
+        if (HasPi) {
             fout << "Pi = %pi;\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             fout << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+        }
         fout << endl;
         fout << "// Create data for an x_mdialog." << endl;
         fout << "tstr = 'Enter initial conditions, parameters, stop time, and number of samples:';" << endl;
         fout << "field_names = [";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             fout << "'" << varname_list[i] << "';";
-            }
-        for (int i = 0; i < np; ++i)
-            {
+        }
+        for (int i = 0; i < np; ++i) {
             fout << "'" << parname_list[i] << "';";
-            }
+        }
         fout << "'Stop Time';'Num Samples'];" << endl;
         fout << "default_field_values = [";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             fout << "'" << vardefic_list[i] << "';";
-            }
-        for (int i = 0; i < np; ++i)
-            {
+        }
+        for (int i = 0; i < np; ++i) {
             fout << "'" << pardefval_list[i] << "';";
-            }
+        }
         fout << "'10.0';'201'];" << endl;
         fout << "t0 = 0.0;" << endl;
         fout << "field_values = x_mdialog(tstr,field_names, default_field_values);" << endl;
@@ -254,38 +242,42 @@ void VectorField::PrintScilab(map<string,string> options)
         fout << "    // Pull the data from the x_mdialog values. " << endl;
         fout << "    real_values = evstr(field_values);" << endl;
         fout << "    x0 = real_values(1:" << nv << ");" << endl;
-        if (np > 0)
-            {
-            if (options["parstyle"] != "list")
+        if (np > 0) {
+            if (options["parstyle"] != "list") {
                 fout << "    params = real_values(" << nv+1 << ":" << nv+np << ");" << endl;
-            else
+            }
+            else {
                 GetFromVector(fout,"    ",parname_list,"real_values","()",nv+1,";");
             }
+        }
         fout << "    tfinal = real_values(" << nv+np+1 << ");" << endl;
         fout << "    nsamples = real_values(" << nv+np+2 << ");" << endl;
         fout << "    tsamples = linspace(t0,tfinal,nsamples);" << endl;
         fout << endl;
-        // if (options["parstyle"] != "vector")
+        // if (options["parstyle"] != "vector") {
         //    GetFromVector(fout,"    ",parname_list,"params","()",1,";");
+        // }
         fout << "    // Call the ODE solver." << endl;
         fout << "    sol = ode(x0,t0,tsamples,list(" << Name() << "_vf";
-        if (np > 0)
-            {
+        if (np > 0) {
             fout << ",";
-            if (options["parstyle"] == "list")
+            if (options["parstyle"] == "list") {
                 PrintNameList(fout,parname_list);
-            else
+            }
+            else {
                 fout << "params";
             }
+        }
         fout << "),list(" << Name() << "_jac";
-        if (np > 0)
-            {
+        if (np > 0) {
             fout << ",";
-            if (options["parstyle"] == "list")
+            if (options["parstyle"] == "list") {
                 PrintNameList(fout,parname_list);
-            else
+            }
+            else {
                 fout << "params";
             }
+        }
         fout << "));" << endl;
 
         fout << endl;
@@ -293,18 +285,16 @@ void VectorField::PrintScilab(map<string,string> options)
         fout << "    n = size(sol,2);" << endl;
         fout << "    clf;" << endl;
 
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             fout << "    subplot(" << nv << ",1," << i+1 << ");\n";
             fout << "    plot(tsamples(1:n),sol(" << i+1 << ",:));\n";
             fout << "    ax = gca();\n";
             fout << "    ax.x_label.text = 't';\n";
             fout << "    ax.y_label.text = '" << varname_list[i] << "';\n";
-            }
+        }
         fout << "    // Get another set of data from the user." << endl;
         fout << "    field_values = x_mdialog(tstr,field_names, field_values);" << endl;
         fout << "end;" << endl;
         fout.close();
-        }
     }
-
+}

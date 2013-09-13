@@ -35,44 +35,46 @@ using namespace GiNaC;
 
 
 unsigned long factorial(unsigned n)
-    {
-    if (n == 0 || n == 1)
+{
+    if (n == 0 || n == 1) {
         return 1;
-    unsigned long f = 2;
-    for (unsigned k = 3; k <= n; ++k)
-        f = k*f;
-    return f;
     }
+    unsigned long f = 2;
+    for (unsigned k = 3; k <= n; ++k) {
+        f = k*f;
+    }
+    return f;
+}
 
 //
 // ipow -- Integer power function.
 //
 int ipow(int base, int p)
-    {
-    if (p < 0)
-        {
+{
+    if (p < 0) {
         cerr << "Error: ipow given negative power.\n";
         exit(-1);
-        }
-    if (base < 0)
-        {
+    }
+    if (base < 0) {
         cerr << "Error: ipow given negative base.\n";
         exit(-1);
-        }
-    if (base == 0 && p == 0)
-        {
+    }
+    if (base == 0 && p == 0) {
         cerr << "Error: ipow given base 0 and power 0.\n";
         exit(-1);
-        }
-    if (base == 0 && p > 0)
-        return 0;
-    if (base > 0 && p == 0)
-        return 1;
-    int m = base;
-    for (int k = 1; k < p; ++k)
-        m = m * base;
-    return m;
     }
+    if (base == 0 && p > 0) {
+        return 0;
+    }
+    if (base > 0 && p == 0) {
+        return 1;
+    }
+    int m = base;
+    for (int k = 1; k < p; ++k) {
+        m = m * base;
+    }
+    return m;
+}
 
 //
 // next_partition
@@ -101,94 +103,94 @@ int ipow(int base, int p)
 //     
 
 int next_partition(int r, int n, int part[])
-    {
+{
     // Check args
-    if (r < 1)
-        {
+    if (r < 1) {
         cerr << "Error: next_partition given r < 1.\n";
         exit(-1);
-        }
-    if (r < 1)
-        {
+    }
+    if (r < 1) {
         cerr << "Error: next_partition given n < 1.\n";
         exit(-1);
-        }
+    }
     // Be safe--check that part actually contains a valid partition.
     int sum = 0;
-    for (int k = 0; k < n; ++k)
-        {
-        if (part[k] < 0)
-            {
+    for (int k = 0; k < n; ++k) {
+        if (part[k] < 0) {
             cerr << "Error: bad partition given to next_partition: an entry is negative.\n";
             exit(-1);
-            }
-        else
+        }
+        else {
             sum = sum + part[k];
         }
-    if (sum != r)
-        {
+    }
+    if (sum != r) {
         cerr << "Error: bad partition given to next_partition: sum is not r.\n";
         exit(-1);
-        }
+    }
     // OK, the partition is valid.  Find the next one.
     int last = part[n-1];
-    if (last == r)
+    if (last == r) {
         return 0;
+    }
     part[n-1] = 0;
     int k = n-2;    // OK, since if n=1, this point would not be reached.
-    while (part[k] == 0)
+    while (part[k] == 0) {
         k = k - 1;
+    }
     part[k] = part[k]-1;
     part[k+1] = 1+last;
     return 1;
-    }
+}
 
 void print_partition(int n, int part[])
-    {
-    for (int k = 0; k < n; ++k)
-        {
+{
+    for (int k = 0; k < n; ++k) {
         cout.width(3);
         cout << part[k];
-        }
     }
+}
 
 /*
 long unsigned num_comb_partition(int r, int n, int part[])
-    {
+{
     long unsigned m = factorial(r);
-    for (int k = 0; k < n; ++k)
+    for (int k = 0; k < n; ++k) {
         m = m / factorial(part[k]);
-    return m;
     }
+    return m;
+}
 */
 
 void var_coeffs(int m, int p[], int r, int n)
-    {
-    for (int k = r; k > 0; --k)
-        {
+{
+    for (int k = r; k > 0; --k) {
         int rem = m % n;
         p[k-1] = rem;
         m = m/n;
-        }
     }
+}
 
 string p_to_deriv_string(lst vars, int p[])
-    {
+{
     int n = vars.nops();
     ostringstream dname;
-    for (int j = 0; j < n; ++j)
-        for (int k = 0; k < p[j]; ++k)
+    for (int j = 0; j < n; ++j) {
+        for (int k = 0; k < p[j]; ++k) {
             dname << "_" << vars[j];
-    return dname.str();
+        }
     }
+    return dname.str();
+}
 
 string q_to_deriv_string(lst vars, int r, int q[])
-    {
+{
     ostringstream dname;
-    for (int j = 0; j < r; ++j)
-            dname << "_" << vars[q[j]];
-    return dname.str();
+    for (int j = 0; j < r; ++j) {
+        dname << "_" << vars[q[j]];
     }
+    return dname.str();
+}
 
 //
 // generate_deriv --
@@ -205,157 +207,159 @@ string q_to_deriv_string(lst vars, int r, int q[])
 void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, int r,
                          lst vf, lst expreqn_list,
                          lst vars, lst params)
-    {
-    if (r < 1)
-        {
+{
+    if (r < 1) {
         cerr << "Error: generate_deriv called with order=" << r << ". order must be greater than 0.\n";
         exit(-1);
-        }
+    }
     //
     // Print the function header
     //
     fout << endl;
     fout << "/*\n";
-    if (r == 1)
+    if (r == 1) {
         fout << " *     deriv = Df(x)[v1]\n";
-    else if (r == 2)
+    }
+    else if (r == 2) {
         fout << " *     deriv = D^2f(x)[v1,v2]\n";
-    else if (r == 3)
+    }
+    else if (r == 3) {
         fout << " *     deriv = D^3f(x)[v1,v2,v3]\n";
-    else
+    }
+    else {
         fout << " *     deriv = D^" << r << "f(x)[v1,...,v" << r << "]\n";
+    }
     fout << " */\n";
-    if (lang == "c")
-        {
+    if (lang == "c") {
         fout << "void " << name << "_diff" << r << "(double deriv[],double x_[], double p_[],";
         pout << "void " << name << "_diff" << r << "(double deriv[], double x_[], double p_[],";
-        }
-    else
-        {
+    }
+    else {
         fout << "function " << name << "_diff" << r << "(x_, p_,";
-        }
-    for (int k = 0; k < r; ++k)
-        {
-        if (lang == "c")
-            {
+    }
+    for (int k = 0; k < r; ++k) {
+        if (lang == "c") {
             fout << "double v" << k+1 << "_[]";
             pout << "double v" << k+1 << "_[]";
-            }
-        else
-            {
+        }
+        else {
             fout << "v" << k+1 << "_";
-            }
-        if (k < r-1)
-            {
+        }
+        if (k < r-1) {
             fout << ",";
-            if (lang == "c")
+            if (lang == "c") {
                 pout << ",";
             }
         }
+    }
     fout << ")\n";
-    if (lang == "c")
+    if (lang == "c") {
         pout << ");\n";
+    }
     fout << "    {\n";
-    if (lang == "c")
-        {
+    if (lang == "c") {
         CDeclare(fout,"double",vars);
         CDeclare(fout,"double",params);
         fout << endl;
-        }
+    }
     const char* pre = "    ";
-    if (lang == "javascript")
+    if (lang == "javascript") {
         pre = "    var ";
+    }
     GetFromVector(fout,pre,vars,"x_","[]",0,";");
     fout << endl;
     GetFromVector(fout,pre,params,"p_","[]",0,";");
     fout << endl;
 /*
     int na = exprnames.nops();
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprnames[i] << " = " << exprformulas[i] << ";" << endl;
-        }
-    if (na > 0)
+    }
+    if (na > 0) {
         fout << endl;
+    }
 */
 
-    if (lang == "javascript")
+    if (lang == "javascript") {
         fout << "    var deriv = [];\n";
+    }
     int n = vars.nops();
     int *p = new int[n];
-    for (int i = 0; i < n; ++i)
-        {
-        if (lang == "c")
+    for (int i = 0; i < n; ++i) {
+        if (lang == "c") {
             fout << "    {\n";
+        }
         // ex f = vf[i];
         ex f = iterated_subs(vf[i],expreqn_list);
         map<string,ex> derivatives;
         // Initialize p to [r,0,0,...,0]
         p[0] = r;
-        for (int k = 1; k < n; ++k)
+        for (int k = 1; k < n; ++k) {
             p[k] = 0;
+        }
         fout << "    /*\n";
         fout << "     *  Partial derivatives of vf[" << i << "]. \n";
         fout << "     *  Any derivative not listed here is zero.\n";
         fout << "     */\n";
-        do 
-            {
+        do {
             // Compute the partial derivative
-
             ex df = f;
-            for (int j = 0; j < n; ++j)
+            for (int j = 0; j < n; ++j) {
                 df = df.diff(ex_to<symbol>(vars[j]),p[j]);
-            if (df != 0)
-                {
+            }
+            if (df != 0) {
                 string dname = p_to_deriv_string(vars,p);
                 derivatives[dname] = df;
-                if (lang == "c")
+                if (lang == "c") {
                     fout << "    double vf";
-                else
+                }
+                else {
                     fout << "    var vf";
+                }
                 fout << dname;
                 fout << " = ";
                 fout << df << ";\n";
-                }
             }
-        while (next_partition(r,n,p));
+        } while (next_partition(r,n,p));
 
         int A = ipow(n,r);
         int *q = new int[r];
         int *sq = new int[r];
         fout << "    deriv[" << i << "] = 0.0;\n";
-        for (int m = 0; m < A; ++m)
-            {
+        for (int m = 0; m < A; ++m) {
             var_coeffs(m,q,r,n);
             var_coeffs(m,sq,r,n);
             sort(sq,sq+r);
             string dname = q_to_deriv_string(vars,r,sq);
             map<string,ex>::iterator lookupdname = derivatives.find(dname);
-            if (lookupdname != derivatives.end())
-                {
+            if (lookupdname != derivatives.end()) {
                 fout << "    deriv[" << i << "] += vf";
                 fout << q_to_deriv_string(vars,r,sq);
                 fout << " * ";
-                for (int k = 0; k < r; ++k)
-                    {
+                for (int k = 0; k < r; ++k) {
                     fout << "v" << k+1 << "_[" << q[k] << "]";
-                    if (k == r-1)
+                    if (k == r-1) {
                         fout << ";\n";
-                    else
+                    }
+                    else {
                         fout << "*";
                     }
                 }
             }
-        if (lang == "c")
+        }
+        if (lang == "c") {
             fout << "    }\n";
+        }
         delete [] q;
         delete [] sq;
-        }
+    }
     delete [] p;
     fout << endl;
-    if (lang == "c")
+    if (lang == "c") {
         fout << "    return;\n";
-    else
-        fout << "    return deriv;\n";
-    fout << "    }\n";
     }
+    else {
+        fout << "    return deriv;\n";
+    }
+    fout << "    }\n";
+}

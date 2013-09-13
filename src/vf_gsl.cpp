@@ -39,7 +39,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintGSL(map<string,string> options)
-    {
+{
     int nc, np, nv, na, nf;
 
     symbol t(IndependentVariable);
@@ -95,14 +95,12 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "int " << Name() << "_vf(double t, const double y_[], double f_[], void *params)" << endl;
     pout << "int " << Name() << "_vf(double, const double [], double [], void *);" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     CDeclare_double(fout,exprname_list);
@@ -114,16 +112,15 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << endl;
     GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-        }
-    if (na > 0)
+    }
+    if (na > 0) {
         fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    }
+    for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
-        }
+    }
     fout << endl;
     fout << "    return GSL_SUCCESS;" << endl;
     fout << "    }" << endl;
@@ -138,14 +135,12 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "int " << Name() << "_jac(double t, const double y_[], double *jac_, double *dfdt_, void *params)" << endl;
     pout << "int " << Name() << "_jac(double, const double [], double *, double *, void *);" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << "    double *p_;" << endl;
@@ -159,21 +154,18 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "    gsl_matrix_view dfdy_mat = gsl_matrix_view_array(jac_," << nv << "," << nv << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdy_mat.matrix;" << endl;
     fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             fout << "    gsl_matrix_set(m_, " << i << ", " << j << ", " << f.diff(v) << ");" << endl;
-            }
         }
+    }
     fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
         fout << "    dfdt_[" << i << "] = " << f.diff(t) << ";" << endl;
-        }
+    }
     fout << endl;
     fout << "    return GSL_SUCCESS;" << endl;
     fout << "    }" << endl;
@@ -189,14 +181,12 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "int " << Name() << "_jacp(double t, const double y_[], double *jacp_, void *params)" << endl;
     pout << "int " << Name() << "_jacp(double, const double [], double *, void *);" << endl;
     fout << "    {" << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << "    double *p_;" << endl;
@@ -210,26 +200,22 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "    gsl_matrix_view dfdp_mat = gsl_matrix_view_array(jacp_," << nv << "," << np << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdp_mat.matrix;" << endl;
     fout << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < np; ++j)
-            {
+        for (int j = 0; j < np; ++j) {
             symbol p = ex_to<symbol>(parname_list[j]);
             fout << "    gsl_matrix_set(m_, " << i << ", " << j << ", " << f.diff(p) << ");" << endl;
-            }
         }
+    }
     fout << endl;
     fout << "    return GSL_SUCCESS;" << endl;
     fout << "    }" << endl;
 
-    if (options["func"] == "yes")
-        {
+    if (options["func"] == "yes") {
         //
         // Print the user-defined functions.
         //
-        for (int n = 0; n < nf; ++n)
-            {
+        for (int n = 0; n < nf; ++n) {
             fout << endl;
             fout << "/*" << endl;
             fout << " *  User function: " << funcname_list[n] << endl;
@@ -238,14 +224,12 @@ void VectorField::PrintGSL(map<string,string> options)
             fout << "double " << Name() << "_" << funcname_list[n] << "(double t, const double y_[], void *params)" << endl;
             pout << "double " << Name() << "_" << funcname_list[n] << "(double, const double [], void *);" << endl;
             fout << "    {" << endl;
-            if (HasPi)
-                {
+            if (HasPi) {
                 fout << "    const double Pi = M_PI;\n";
-                }
-            for (int i = 0; i < nc; ++i)
-                {
+            }
+            for (int i = 0; i < nc; ++i) {
                 fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-                }
+            }
             CDeclare_double(fout,varname_list);
             CDeclare_double(fout,parname_list);
             CDeclare_double(fout,exprname_list);
@@ -257,22 +241,21 @@ void VectorField::PrintGSL(map<string,string> options)
             fout << endl;
             GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
             fout << endl;
-            for (int i = 0; i < na; ++i)
-                {
+            for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-                }
-            if (na > 0)
+            }
+            if (na > 0) {
                 fout << endl;
+            }
             fout << "    return " << funcformula_list[n] << ";" << endl;
             fout << "    }" << endl;
-            }
         }
+    }
 
     fout.close();
     pout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         //  Create a self-contained ODE solver for this vector field
         //  that allows the user to give the initial conditions,
@@ -349,46 +332,46 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "int main (int argc, char *argv[])\n" ;
         tout << "    {\n" ;
         tout << "    int i;\n" ;
-        if (HasPi)
-            {
+        if (HasPi) {
             tout << "    const double Pi = M_PI;\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             tout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+        }
         CDeclare_double(tout,parname_list);
         tout << "    const int P_ = " << np << ";\n" ;
         tout << "    double def_p_[" << np << "] = {" ;
-        for (int i = 0; i < np; ++i)
-            {
+        for (int i = 0; i < np; ++i) {
             tout << pardefval_list[i] ;
-            if (i != np-1)
+            if (i != np-1) {
                 tout << ", " ;
             }
+        }
         tout << "};\n" ;
         GetFromVector(tout,"    ",parname_list,"def_p_","[]",0,";");
         tout << "    double p_[" << np << "];\n" ;
         tout << "    const int N_ = " << nv << ";\n" ;
         tout << "    double def_y_[" << nv << "] = {";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             // tout << def_var_value.at(i) ;
             // tout << "0.0" ;
             tout << vardefic_list[i];
-            if (i != nv-1)
+            if (i != nv-1) {
                 tout << ", " ;
             }
+        }
         tout << "};\n" ;
         tout << "    double y_[" << nv << "];\n" ;
 
         tout << "    double solver_param_[3] = {1.0e-6,0.0,10.0};\n" ;
 
         MakeCArrayOfStrings(tout,"varnames_",varname_list);
-        if (np > 0)
+        if (np > 0) {
             MakeCArrayOfStrings(tout,"parnames_",parname_list);
-        else
+        }
+        else {
             tout << "    char *parnames_[] = {\"\"};\n";
+        }
         tout << "    char *solver_param_names_[3] = {\"abserr\",\"relerr\",\"stoptime\"};\n" ;
         tout << endl;
         tout << "    for (i = 0; i < N_; ++i)\n" ;
@@ -442,9 +425,11 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "        printf(\"%.8e\",t_);\n" ;
         tout << "        for (j_ = 0; j_ < N_; ++j_)\n" ;
         tout << "            printf(\" %.8e\",y_[j_]);\n" ;
-        if (options["func"] == "yes")
-            for (int i = 0; i < nf; ++i)
-                 tout << "        printf(\" %.8e\"," << Name() << "_" << funcname_list[i] << "(t_,y_,p_));\n";
+        if (options["func"] == "yes") {
+            for (int i = 0; i < nf; ++i) {
+                tout << "        printf(\" %.8e\"," << Name() << "_" << funcname_list[i] << "(t_,y_,p_));\n";
+            }
+        }
         tout << "        printf(\"\\n\");\n";
         tout << "        }\n" ;
         tout << endl;
@@ -486,5 +471,5 @@ void VectorField::PrintGSL(map<string,string> options)
         mout << "\trm -f " << Name() << "_solve " << Name() << "_solve.o " << Name() << "_gvf.o" << endl;
         mout << endl;
         mout.close();
-        }
     }
+}

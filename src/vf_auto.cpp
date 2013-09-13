@@ -40,7 +40,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintAUTO(map<string,string> options)
-    {
+{
     int nc, nv, np, na, nf;
 
     nc = conname_list.nops();
@@ -49,8 +49,7 @@ void VectorField::PrintAUTO(map<string,string> options)
     na = exprname_list.nops();
     nf = funcname_list.nops();
 
-    if (options["lang"] == "fortran")
-        {
+    if (options["lang"] == "fortran") {
         //
         // Generate FORTRAN code.
         //
@@ -74,83 +73,80 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "      dimension u_(" << nv << "), F_(" << nv << ")\n";
         fout << "      dimension par_(" << np << ")\n";
         fout << "      dimension DFDU_(" << nv << "," << nv << "), DFDP_(" << nv << "," << np << ")\n";
-        if (nc > 0)
+        if (nc > 0) {
             F77Declare(fout,conname_list);
-        if (np > 0)
+        }
+        if (np > 0) {
             F77Declare(fout,parname_list);
-        if (na > 0)
+        }
+        if (na > 0) {
             F77Declare(fout,exprname_list);
+        }
         F77Declare(fout,varname_list);
         fout << endl;
-        if (nc > 0)
+        if (nc > 0) {
             fout << "c     --- Constants ---\n";
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             ostringstream os;
             os << left << csrc;
             os << conname_list[i] << " = " << convalue_list[i];
             F77Write(fout, os.str());
-            }
-        if (np > 0)
-            {
+        }
+        if (np > 0) {
             fout << "c     --- Parameters ---\n";
             GetFromVector(fout,"      ",parname_list,"par_","()",1,"");
-            }
+        }
         fout << "c     --- State variables ---\n";
         GetFromVector(fout,"      ",varname_list,"u_","()",1,"");
-        if (na > 0)
+        if (na > 0) {
             fout << "c     --- Expressions ---\n";
-        for (int i = 0; i < na; ++i)
-            {
+        }
+        for (int i = 0; i < na; ++i) {
             ostringstream os;
             os << left << csrc;
             os << exprname_list[i] << " = " << exprformula_list[i];
             F77Write(fout,os.str());
-            }
+        }
         fout << endl;
         fout << "c     --- The vector field ---\n";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ex f = varvecfield_list[i];
             ostringstream os;
             os << left << csrc;
             os << "f_(" << (i+1) << ")" << " = " << f;
             F77Write(fout,os.str());
-            }
+        }
         fout << endl;
         fout << "      if (ijac_ .eq. 0) return\n";
         fout << endl;
         fout << "c     --- Jacobian ---\n";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-            for (int j = 0; j < nv; ++j)
-                {
+            for (int j = 0; j < nv; ++j) {
                 symbol v = ex_to<symbol>(varname_list[j]);
                 ostringstream os;
                 os << left << csrc;
                 ex df = f.diff(v);
                 os << "DFDU_(" << i+1 << ", " << j+1 << ") = " << df;
                 F77Write(fout,os.str());
-                }
             }
+        }
         fout << endl;
         fout << "      if (ijac_ .eq. 1) return\n";
         fout << endl;
         fout << "c     --- Derivatives with respect to the parameters ---\n";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-            for (int j = 0; j < np; ++j)
-                {
+            for (int j = 0; j < np; ++j) {
                 symbol p = ex_to<symbol>(parname_list[j]);
                 ostringstream os;
                 os << left << csrc;
                 ex df = f.diff(p);
                 os << "DFDP_(" << i+1 << ", " << j+1 << ") = " << df;
                 F77Write(fout,os.str());
-                }
             }
+        }
         fout << endl;
         fout << "      return\n";
         fout << "      end\n";
@@ -161,62 +157,64 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "      double precision u_, par_\n";
         fout << "      dimension u_(" << nv << "), par_(" << np << ")\n";
 
-        if (nc > 0)
+        if (nc > 0) {
             F77Declare(fout,conname_list);
-        if (np > 0)
+        }
+        if (np > 0) {
             F77Declare(fout,parname_list);
-        if (na > 0)
+        }
+        if (na > 0) {
             F77Declare(fout,exprname_list);
+        }
         F77Declare(fout,varname_list);
-        if (HasPi)
-            {
+        if (HasPi) {
             fout << "      double precision Pi\n";
             fout << "      Pi = ";
             PrintPi(fout);
             fout << "D0\n";
-            }
-        if (nc > 0)
+        }
+        if (nc > 0) {
             fout << "c     --- Constants ---\n";
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             ostringstream os;
             os << left << csrc;
             os << conname_list[i] << " = " << convalue_list[i];
             F77Write(fout, os.str());
-            };
+        }
         /*
-        if (na > 0)
+        if (na > 0) {
             fout << "c     --- Expressions ---\n";
-        for (int i = 0; i < na; ++i)
-            {
+        }
+        for (int i = 0; i < na; ++i) {
             ostringstream os;
             os << left << csrc;
             os << exprname_list[i] << " = " << exprformula_list[i];
             F77Write(fout,os.str());
-            }
+        }
         */
         fout << endl;
         fout << "c     --- Starting point -- Update these with correct values! ---\n";
-        for (int i = 0; i < np; ++i)
-            {
+        for (int i = 0; i < np; ++i) {
             ostringstream os;
             os << left << csrc;
             os << parname_list[i] << " = " << pardefval_list[i];
             F77Write(fout,os.str());
-            }
+        }
         fout << "c\n";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ostringstream os;
             os << left << csrc;
             os << varname_list[i] << " = " << vardefic_list[i];
             F77Write(fout,os.str());
-            }
+        }
         fout << endl;
-        for (int i = 0; i < np; ++i)
+        for (int i = 0; i < np; ++i) {
             fout << "      par_(" << i+1 << ") = " << parname_list[i] << endl;
-        for (int i = 0; i < nv; ++i)
+        }
+        for (int i = 0; i < nv; ++i) {
             fout << "      u_(" << i+1 << ") = " << varname_list[i] << endl;
+        }
         fout << "c\n";
         fout << "      return\n";
         fout << "      end\n";
@@ -240,9 +238,8 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "      return\n";
         fout << "      end\n";
         fout.close();
-        }
-    else
-        {
+    }
+    else {
         //
         // Generate C code.
         //
@@ -277,14 +274,12 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "         doublereal *f_, doublereal *dfdu_, doublereal *dfdp_)" << endl;
         fout << "    {" << endl;
         fout << "    integer dfdu__dim1, dfdp__dim1;" << endl;
-        if (HasPi)
-            {
+        if (HasPi) {
             fout << "    const double Pi = M_PI;\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+        }
         CDeclare_double(fout,varname_list);
         CDeclare_double(fout,parname_list);
         CDeclare_double(fout,exprname_list);
@@ -296,19 +291,17 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << endl;
         GetFromVector(fout,"    ",parname_list,"par_","[]",0,";");
         fout << endl;
-        for (int i = 0; i < na; ++i)
-            {
+        for (int i = 0; i < na; ++i) {
             fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-            }
+        }
         fout << endl;
         fout << "    /*" << endl;
         fout << "     *  The vector field" << endl;
         fout << "     */" << endl;
         fout << endl;
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
-            }
+        }
         fout << endl;
         fout << "    if (ijac_ == 0)" << endl;
         fout << "        return 0;" << endl;
@@ -320,16 +313,14 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "     *  The Jacobian" << endl;
         fout << "     */" << endl;
         fout << endl;
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-            for (int j = 0; j < nv; ++j)
-                {
+            for (int j = 0; j < nv; ++j) {
                 symbol v = ex_to<symbol>(varname_list[j]);
 
                 fout << "    ARRAY2D(dfdu_," << i << "," << j << ") = " << f.diff(v) << ";" << endl;
-                }
             }
+        }
         fout << endl;
         //
         // The Jacobian with respect to the parameters
@@ -341,15 +332,13 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "     *  The Jacobian with respect to the parameters." << endl;
         fout << "     */" << endl;
         fout << endl;
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-            for (int j = 0; j < np; ++j)
-                {
+            for (int j = 0; j < np; ++j) {
                 symbol p = ex_to<symbol>(parname_list[j]);
                 fout << "    ARRAY2D(dfdp_," << i << "," << j << ") = " << f.diff(p) << ";" << endl;
-                }
             }
+        }
         fout << endl;
         fout << "    return 0;" << endl;
         fout << "    }" << endl;
@@ -360,31 +349,33 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << endl;
         fout << "int stpnt(integer ndim_, doublereal t_, doublereal *u_, doublereal *par_)" << endl;
         fout << "    {" << endl;
-        if (HasPi)
-            {
+        if (HasPi) {
             fout << "    const double Pi = M_PI;\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+        }
         CDeclare_double(fout,varname_list);
         CDeclare_double(fout,parname_list);
         fout << endl;
         fout << "    /* Change the parameter values and the starting point to correct values! */" << endl;
         fout << endl;
-        for (int i = 0; i < np; ++i)
+        for (int i = 0; i < np; ++i) {
             fout << "    " << parname_list[i] << " = " << pardefval_list[i] << ";\n" ;
+        }
         fout << endl;
         // Assign the DefaultInitialConditions to the variable. Not necessarily the
         // correct thing to do, but it might work for some purposes.
-        for (int i = 0; i < nv; ++i)
+        for (int i = 0; i < nv; ++i) {
             fout << "    " << varname_list[i] << " = " << vardefic_list[i] << ";\n" ;
+        }
         fout << endl;
-        for (int i = 0; i < np; ++i)
+        for (int i = 0; i < np; ++i) {
             fout << "    par_[" << i << "] = " << parname_list[i] << ";" << endl;
-        for (int i = 0; i < nv; ++i)
+        }
+        for (int i = 0; i < nv; ++i) {
             fout << "    u_[" << i << "] = " << varname_list[i] << ";" << endl;
+        }
         fout << endl;
         fout << "    return 0;" << endl;
         fout << "    }" << endl;
@@ -437,5 +428,5 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "    return 0;" << endl;
         fout << "    }" << endl; 
         fout.close();
-        }
     }
+}

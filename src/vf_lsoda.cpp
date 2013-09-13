@@ -41,7 +41,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintLSODA(map<string,string> options)
-    {
+{
     int nc, np, nv, na, nf;
 
     nc = conname_list.nops();
@@ -75,60 +75,63 @@ void VectorField::PrintLSODA(map<string,string> options)
     fout << "      integer n_\n";
     fout << "      double precision t_, y_, f_\n";
     int ydim = nv;
-    if (options["parstyle"] != "common")
+    if (options["parstyle"] != "common") {
         ydim = nv + np;
+    }
     fout << "      dimension y_(" << ydim << "), f_(" << nv << ")\n";
-    if (options["parstyle"] == "common")
-        {
+    if (options["parstyle"] == "common") {
         fout << "      double precision rpar_\n";
         fout << "      dimension rpar_(" << np << ")\n";
         fout << "      common /" << Name()+"_parameters/ rpar_\n";
-        }
-    if (nc > 0)
+    }
+    if (nc > 0) {
         F77Declare(fout,conname_list);
-    if (np > 0)
+    }
+    if (np > 0) {
         F77Declare(fout,parname_list);
-    if (na > 0)
+    }
+    if (na > 0) {
         F77Declare(fout,exprname_list);
+    }
     F77Declare(fout,varname_list);
     fout << endl;
-    if (nc > 0)
+    if (nc > 0) {
         fout << "c     --- Constants ---\n";
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         ostringstream os;
         os << left << csrc;
         os << conname_list[i] << " = " << convalue_list[i];
         F77Write(fout, os.str());
-        }
-    if (np > 0)
-        {
+    }
+    if (np > 0) {
         fout << "c     --- Parameters ---\n";
-        if (options["parstyle"] == "common")
+        if (options["parstyle"] == "common") {
             GetFromVector(fout,"      ",parname_list,"rpar_","()",1,"");
-        else
+        }
+        else {
             GetFromVector(fout,"      ",parname_list,"y_","()",nv+1,"");
         }
+    }
     fout << "c     --- State variables ---\n";
     GetFromVector(fout,"      ",varname_list,"y_","()",1,"");
-    if (na > 0)
+    if (na > 0) {
         fout << "c     --- Expressions ---\n";
-    for (int i = 0; i < na; ++i)
-        {
+    }
+    for (int i = 0; i < na; ++i) {
         ostringstream os;
         os << left << csrc;
         os << exprname_list[i] << " = " << exprformula_list[i];
         F77Write(fout,os.str());
-        }
+    }
     fout << "c     --- The vector field ---\n";
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i];
         ostringstream os;
         os << left << csrc;
         os << "f_(" << (i+1) << ")" << " = " << f;
         F77Write(fout,os.str());
-        }
+    }
     fout << endl;
     fout << "      return\n";
     fout << "      end\n";
@@ -144,63 +147,62 @@ void VectorField::PrintLSODA(map<string,string> options)
     fout << "      integer n_, ml_, mu_, nrowpd_\n";
     fout << "      double precision t_, y_, jac_\n";
     fout << "      dimension y_(" << ydim << "), jac_(nrowpd_," << nv << ")\n";
-    if (options["parstyle"] == "common")
-        {
+    if (options["parstyle"] == "common") {
         fout << "      double precision rpar_\n";
         fout << "      dimension rpar_(" << np << ")\n";
         fout << "      common /" << Name()+"_parameters/ rpar_\n";
-        }
-    if (nc > 0)
+    }
+    if (nc > 0) {
         F77Declare(fout,conname_list);
-    if (np > 0)
+    }
+    if (np > 0) {
         F77Declare(fout,parname_list);
+    }
     F77Declare(fout,varname_list);
     fout << endl;
-    if (nc > 0)
+    if (nc > 0) {
         fout << "c     --- Constants ---\n";
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         ostringstream os;
         os << left << csrc;
         os << conname_list[i] << " = " << convalue_list[i];
         F77Write(fout,os.str());
-        }
-    if (np > 0)
-        {
+    }
+    if (np > 0) {
         fout << "c     --- Parameters ---\n";
-        if (options["parstyle"] == "common")
+        if (options["parstyle"] == "common") {
             GetFromVector(fout,"      ",parname_list,"rpar_","()",1,"");
-        else
+        }
+        else {
             GetFromVector(fout,"      ",parname_list,"y_","()",nv+1,"");
         }
+    }
     fout << "c     --- State variables ---\n";
     GetFromVector(fout,"      ",varname_list,"y_","()",1,"");
     fout << "c     --- Jacobian ---\n";
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ostringstream os;
             os << left << csrc;
             ex df = f.diff(v);
-            if (df != 0)
-                {
+            if (df != 0) {
                 os << "jac_(" << i+1 << ", " << j+1 << ") = " << df;
                 F77Write(fout,os.str());
-                }
-            else
+            }
+            else {
                 fout << "c     jac_(" << i+1 << ", " << j+1 << ") = 0\n";
             }
         }
+    }
     fout << endl;
     fout << "      return\n";
     fout << "      end\n";
     fout << endl;
     
-    if (options["func"] == "yes" & nf > 0)
-        {
+    if (options["func"] == "yes" & nf > 0) {
         //
         // Print the user-defined functions.
         // A single function is created that puts all the
@@ -217,72 +219,71 @@ void VectorField::PrintLSODA(map<string,string> options)
         fout << "      integer neq_, nf_\n";
         fout << "      double precision t_, y_, func_\n";
         fout << "      dimension y_(" << ydim << "), func_(" << nf << ")\n";
-        if (options["parstyle"] == "common")
-            {
+        if (options["parstyle"] == "common") {
             fout << "      double precision rpar_\n";
             fout << "      dimension rpar_(" << np << ")\n";
             fout << "      common /" << Name()+"_parameters/ rpar_\n";
-            }
-        if (nc > 0)
+        }
+        if (nc > 0) {
             F77Declare(fout,conname_list);
-        if (np > 0)
+        }
+        if (np > 0) {
             F77Declare(fout,parname_list);
-        if (na > 0)
+        }
+        if (na > 0) {
             F77Declare(fout,exprname_list);
+        }
         F77Declare(fout,varname_list);
         fout << endl;
-        if (HasPi)
-            {
+        if (HasPi) {
             fout << "      double precision Pi\n";
             fout << "      Pi = ";
             PrintPi(fout);
             fout << "D0\n";
-            }
-        if (nc > 0)
+        }
+        if (nc > 0) {
             fout << "c     --- Constants ---\n";
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             ostringstream os;
             os << left << csrc;
             os << conname_list[i] << " = " << convalue_list[i];
             F77Write(fout,os.str());
-            }
-        if (np > 0)
-            {
+        }
+        if (np > 0) {
             fout << "c     --- Parameters ---\n";
-            if (options["parstyle"] == "common")
+            if (options["parstyle"] == "common") {
                 GetFromVector(fout,"      ",parname_list,"rpar_","()",1,"");
-            else
+            }
+            else {
                 GetFromVector(fout,"      ",parname_list,"y_","()",nv+1,"");
             }
+        }
         fout << "c     --- State variables ---\n";
         GetFromVector(fout,"      ",varname_list,"y_","()",1,"");
-        if (na > 0)
+        if (na > 0) {
             fout << "c     --- Expressions ---\n";
-		for (int i = 0; i < na; ++i)
-			{
+        }
+		for (int i = 0; i < na; ++i) {
 			ostringstream os;
 			os << left << csrc;
 			os << exprname_list[i] << " = " << exprformula_list[i];
 			F77Write(fout,os.str());
-			}        
+		}        
 
         fout << "c     --- Compute the functions ---\n";
-        for (int n = 0; n < nf; ++n)
-            {
+        for (int n = 0; n < nf; ++n) {
             fout << "c     " << funcname_list[n] << ":" << endl;
             fout << "      func_(" << n+1 << ") = " << funcformula_list[n] << ";" << endl;
-            }
+        }
         fout << endl;
         fout << "      return\n";
         fout << "      end\n";
-        }
-    
-    
+    }
+
     fout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         // Create the demo function.
         //
@@ -314,60 +315,64 @@ void VectorField::PrintLSODA(map<string,string> options)
         fout << "      double precision atol_, rtol_, y_, t_, tout_, tfinal_, rwork_\n";
         fout << "      integer iwork_\n";
         fout << "      dimension y_(" << ydim << "), rwork_(" << lrw << "), iwork_(" << liw << ")\n";
-        if (options["parstyle"] == "common")
-            {
+        if (options["parstyle"] == "common") {
             fout << "      double precision rpar_\n";
             fout << "      dimension rpar_(" << np << ")\n";
             fout << "      common /" << Name()+"_parameters/ rpar_\n";
-            }
+        }
         fout << "      integer neq_, i_, j_, nsteps_\n";
         fout << "      integer itol_, iopt_, itask_, istate_, jt_, lrw_, liw_\n";
-        if (nc > 0)
+        if (nc > 0) {
             F77Declare(fout,conname_list);
-        if (np > 0)
+        }
+        if (np > 0) {
             F77Declare(fout,parname_list);
+        }
         F77Declare(fout,varname_list);
-        if (HasPi)
+        if (HasPi) {
             fout << "      double precision Pi\n";
-        if (HasPi)
             fout << "      Pi = 3.1415926535897932385D0\n";
+        }
         fout << "c     --- t range ---\n";
         fout << "      t_ = 0.0D0\n";
         fout << "      tfinal_  = 10.0D0\n";
         fout << "      nsteps_ = 100\n";
-        if (nc > 0)
+        if (nc > 0) {
             fout << "c     --- Constants ---\n";
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             ostringstream os;
             os << left << csrc;
             os << conname_list[i] << " = " << convalue_list[i];
             F77Write(fout,os.str());
-            }
-        if (np > 0)
+        }
+        if (np > 0) {
             fout << "c     --- Parameters ---\n";
-        for (int i = 0; i < np; ++i)
-            {
+        }
+        for (int i = 0; i < np; ++i) {
             ostringstream os;
             os << left << csrc;
             os << parname_list[i] << " = " << pardefval_list[i];
             F77Write(fout,os.str()); 
-            }
-        for (int i = 0; i < np; ++i)
-            if (options["parstyle"] == "common")
+        }
+        for (int i = 0; i < np; ++i) {
+            if (options["parstyle"] == "common") {
                 fout << "      rpar_(" << i+1 << ") = " << parname_list[i] << endl;
-            else
+            }
+            else {
                 fout << "      y_(" << nv+i+1 << ") = " << parname_list[i] << endl;
+            }
+        }
         fout << "c     --- Initial conditions ---\n";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             ostringstream os;
             os << left << csrc;
             os << varname_list[i] << " = " << vardefic_list[i];
             F77Write(fout,os.str());
-            }
-        for (int i = 0; i < nv; ++i)
+        }
+        for (int i = 0; i < nv; ++i) {
             fout << "      y_(" << i+1 << ") = " << varname_list[i] << endl;
+        }
         fout << "c     --- Solver tolerances ---\n";
         fout << "      rtol_ = 1.0D-6\n";
         fout << "      atol_ = 1.0D-8\n";
@@ -406,5 +411,5 @@ void VectorField::PrintLSODA(map<string,string> options)
         fout << "      end\n";
         fout << endl;
         fout.close();
-        }
     }
+}

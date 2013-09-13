@@ -38,7 +38,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintPyDSTool(map<string,string> options)
-    {
+{
     int nc, nv, np, na, nf;
 
     nc = conname_list.nops();
@@ -53,7 +53,6 @@ void VectorField::PrintPyDSTool(map<string,string> options)
     // fout << python << left;
     fout << csrc << left;
 
-
     //
     //  Print Python file header information.
     //
@@ -67,10 +66,9 @@ void VectorField::PrintPyDSTool(map<string,string> options)
     fout << endl;
     fout << "import PyDSTool" << endl;
 
-    if (HasPi)
-        {
-        fout<< "from math import pi\n";
-        }
+    if (HasPi) {
+        fout << "from math import pi\n";
+    }
     fout << endl;
     //
     // Create a function that returns an "args" object for the vector field.
@@ -89,95 +87,100 @@ void VectorField::PrintPyDSTool(map<string,string> options)
     fout << "    \"\"\"\n";
     fout << "    DSargs = PyDSTool.args()\n";
     fout << "    DSargs.name = '" << Name() << "'\n";
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = pi\n";
-        }
+    }
 
     fout << "    DSargs.pars = {";
-    for (int i = 0; i < np; ++i)
-        {
-        if (i > 0)
+    for (int i = 0; i < np; ++i) {
+        if (i > 0) {
             fout << ", ";
-        fout << "'" << parname_list[i] << "':" << pardefval_list[i];
         }
+        fout << "'" << parname_list[i] << "':" << pardefval_list[i];
+    }
     fout << "}\n";
     /*
     fout << "    DSargs.reuseterms = {";
-    for (int i = 0; i < nc; ++i)
-        {
+    for (int i = 0; i < nc; ++i) {
 
         fout << "'" << convalue_list[i] << "':'" << conname_list[i] << "'";
-        if (i < nc-1 || na > 0)
+        if (i < nc-1 || na > 0) {
             fout << ", ";
         }
-    if (nc > 0)
-        fout << "\n                  ";
-    for (int i = 0; i < na; ++i)
-        {
+    }
+    if (nc > 0) {
+        fout << "\n
+    }                  ";
+    for (int i = 0; i < na; ++i) {
         fout << "'" << exprformula_list[i] << "':'" << exprname_list[i] << "'";
-        if (i < na-1)
+        if (i < na-1) {
             fout << ", ";
         }
+    }
     fout << "}\n";
     */
     // The vector field.  I think I should be able to put the Constants and
     // Expressions in 'reuseterms', but my initial attempt to do that caused
     // errors when I ran the program.
     fout << "    DSargs.varspecs = {";
-    for (int i = 0; i < nv; ++i)
-        {
-        if (i > 0)
-             fout << ", ";
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int k = 0; k < nc; ++k)
-            f = f.subs(conname_list[k] == convalue_list[k]);
-        fout << "'" << varname_list[i] << "':'" << f << "'";
+    for (int i = 0; i < nv; ++i) {
+        if (i > 0) {
+            fout << ", ";
         }
+        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        for (int k = 0; k < nc; ++k) {
+            f = f.subs(conname_list[k] == convalue_list[k]);
+        }
+        fout << "'" << varname_list[i] << "':'" << f << "'";
+    }
     fout << "}\n";
     fout << "    DSargs.fnspecs = {'Jacobian': (['t'";
-    for (int i = 0; i < nv; ++i)
+    for (int i = 0; i < nv; ++i) {
         fout << ", '" << varname_list[i] << "'";
+    }
     fout << "],\n";
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int k = 0; k < nc; ++k)
+        for (int k = 0; k < nc; ++k) {
             f = f.subs(conname_list[k] == convalue_list[k]);
-        if (i == 0)
+        }
+        if (i == 0) {
             fout << "            \"\"\"[";
-        else
+        }
+        else {
             fout << "                ";
+        }
         fout << "[";
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
-            if (j > 0)
+            if (j > 0) {
                 fout << ", ";
-            fout << df;
             }
+            fout << df;
+        }
         fout << "]";
-        if (i < nv-1)
+        if (i < nv-1) {
             fout << ",\n";
-        else
+        }
+        else {
             fout << "]\"\"\")";
         }
+    }
     fout << "}\n";
     fout << "    DSargs.ics = {";
-    for (int i = 0; i < nv; ++i)
-        {
-        if (i > 0)
+    for (int i = 0; i < nv; ++i) {
+        if (i > 0) {
             fout << ", ";
-        fout << "'" << varname_list[i] << "':" << vardefic_list[i];
         }
+        fout << "'" << varname_list[i] << "':" << vardefic_list[i];
+    }
     fout << "}\n";
     fout << "    DSargs.tdomain = [0,10]\n";
     fout << "    return DSargs\n";
     fout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         // Create a script that uses Vode_ODEsystem to create and plot a solution.
         string tfilename = Name()+"_dst.py";
         ofstream tout;
@@ -207,22 +210,22 @@ void VectorField::PrintPyDSTool(map<string,string> options)
         tout << endl;
         tout << "# Plot the solution\n";
         tout << "lw = 1.5\n";
-        for (int i = 0; i < nv; ++i)
+        for (int i = 0; i < nv; ++i) {
             tout << "pylab.plot(sol['t'], sol['" << varname_list[i] << "'], linewidth=lw)\n";
+        }
         tout << "pylab.xlabel('t')\n";
         tout << "pylab.title('" << Name() << "')\n";
         tout << "pylab.legend((";
-        for (int i = 0; i < nv; ++i)
-            {
-            if (i > 0)
+        for (int i = 0; i < nv; ++i) {
+            if (i > 0) {
                 tout << ", ";
-            tout << "'" << varname_list[i] << "'";
             }
+            tout << "'" << varname_list[i] << "'";
+        }
         // tout << "),prop=FontProperties(size=14))\n";
         tout << "))\n";
         tout << "pylab.grid(True)\n";
         tout << "pylab.show()\n";
         tout.close();
-        }
     }
-
+}

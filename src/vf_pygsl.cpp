@@ -38,7 +38,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintPyGSL(map<string,string> options)
-    {
+{
     int nc, nv, np, na, nf;
 
     nc = conname_list.nops();
@@ -78,26 +78,22 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << "    \"\"\"\n";
     fout << "    The vector field function for the vector field \"" << Name() << "\"\n";
     fout << "    \"\"\"\n";
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = numpy.pi\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"x_","[]",0,"");
     GetFromVector(fout,"    ",parname_list,"args","[]",0,"");
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << endl;
-        }
+    }
     fout << endl;
     fout << "    f_ = numpy.zeros((" << nv << ",))" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "] = " << varvecfield_list[i] << endl;
-        }
+    }
     fout << endl;
     fout << "    return f_" << endl;
     fout << endl;
@@ -113,56 +109,48 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << "    \"\"\"\n";
     fout << "    The Jacobian of the vector field \"" << Name() << "\"\n";
     fout << "    \"\"\"\n";
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = numpy.pi\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout,"    ",varname_list,"y_","[]",0,"");
     GetFromVector(fout,"    ",parname_list,"args","[]",0,"");
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << endl;
-        }
+    }
     fout << endl;
     fout << "    # Create the Jacobian matrix, initialized with zeros." << endl; 
     fout << "    jac_ = numpy.zeros((" << nv << "," << nv << "))" << endl; 
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
-            if (df != 0)
+            if (df != 0) {
                 fout << "    jac_[" << i << "," << j << "] = " << df << endl;
             }
         }
+    }
     fout << endl;
     fout << "    dfdt_ = numpy.zeros((2,),dtype=numpy.float)" << endl;
     symbol t(IndependentVariable);
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
         ex df = f.diff(t);
-        if (df != 0)
+        if (df != 0) {
             fout << "    dfdt_[" << i << "] = " << df << endl;
         }
+    }
     fout << endl;
     fout << "    return jac_,dfdt_" << endl;
 
-
-
-    if (options["func"] == "yes")
-        {
+    if (options["func"] == "yes") {
         //
         // Print the user-defined functions.
         //
-        for (int n = 0; n < nf; ++n)
-            {
+        for (int n = 0; n < nf; ++n) {
             fout << endl;
             fout << "#" << endl;
             fout << "# User function: " << funcname_list[n] << endl;
@@ -172,29 +160,25 @@ void VectorField::PrintPyGSL(map<string,string> options)
             fout << "    \"\"\"\n";
             fout << "    The user-defined function \"" << funcname_list[n] << "\" for the vector field \"" << Name() << "\"\n";
             fout << "    \"\"\"\n";
-            if (HasPi)
-                {
+            if (HasPi) {
                 fout << "    Pi = numpy.pi\n";
-                }
-            for (int i = 0; i < nc; ++i)
-                {
+            }
+            for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-                }
+            }
             GetFromVector(fout,"    ",varname_list,"y_","[]",0,"");
             GetFromVector(fout,"    ",parname_list,"args","[]",0,"");
-            for (int i = 0; i < na; ++i)
-                {
+            for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << "" << endl;
-                }
+            }
             fout << endl;
             fout << "    return " << funcformula_list[n] << "" << endl;
-            }
         }
+    }
 
     fout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         //  Create a self-contained ODE solver for this vector field
         //  that allows the user to give the initial conditions,
@@ -218,8 +202,9 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "#\n" ;
         tout << endl;
         tout << "import sys" << endl;
-        if (HasPi)
+        if (HasPi) {
             tout << "from math import pi as Pi" << endl;
+        }
         tout << "from pygsl import odeiv" << endl;
         tout << "import " << Name() << endl;
         tout << endl;
@@ -241,14 +226,12 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "# Main script begins here..." << endl;
         tout << "#" << endl;
 
-        // if (HasPi)
-        //     {
+        // if (HasPi) {
         //     tout << "Pi = " << numstr << ".pi\n";
-        //     }
-        for (int i = 0; i < nc; ++i)
-            {
+        // }
+        for (int i = 0; i < nc; ++i) {
             tout << conname_list[i] << " = " << convalue_list[i] << endl;
-            }
+        }
         tout << "N_ = " << nv << "\n" ;
 
         MakePythonListOfStrings(tout,"varnames_",varname_list,"");
@@ -260,11 +243,13 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "#" << endl;
         tout << "options = {}" << endl;
         tout << "# Default initial conditions" << endl;
-        for (int i = 0; i < nv; ++i)
+        for (int i = 0; i < nv; ++i) {
             tout << "options['" << varname_list[i] << "'] = " << vardefic_list[i] << endl;
+        }
         tout << "# Default vector field parameter values" << endl;
-        for (int i = 0; i < np; ++i)
+        for (int i = 0; i < np; ++i) {
             tout << "options['" << parname_list[i] << "'] = " << pardefval_list[i] << endl;
+        }
         tout << "# Default ODE solver parameters:" << endl;
         tout << "options['abserr'] = 1.0e-8" << endl;
         tout << "options['relerr'] = 1.0e-6" << endl;
@@ -296,20 +281,20 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "            sys.exit()" << endl;
         tout << endl;
         tout << "y_ = (";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             tout << "options['" << varname_list[i] << "']";
-            if (nv == 1 | i < nv-1)
+            if (nv == 1 | i < nv-1) {
                 tout << ",";
             }
+        }
         tout << ")" << endl;
         tout << "p_ = (";
-        for (int i = 0; i < np; ++i)
-            {
+        for (int i = 0; i < np; ++i) {
             tout << "options['" << parname_list[i] << "']";
-            if (np == 1 | i < np-1)
+            if (np == 1 | i < np-1) {
                 tout << ",";
             }
+        }
         tout << ")" << endl;
         tout << endl;
         tout << "# Create the GSL ODE solver" << endl;
@@ -323,28 +308,29 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "t = 0" << endl;
         tout << "# Print the initial condition\n";
         tout << "print t";
-        for (int i = 0; i < nv; ++i)
+        for (int i = 0; i < nv; ++i) {
             tout << ",y_[" << i << "]";
-        if (options["func"] == "yes")
-            {
-            for (int i = 0; i < nf; ++i)
+        }
+        if (options["func"] == "yes") {
+            for (int i = 0; i < nf; ++i) {
                 tout << "," << Name() << "." << funcname_list[i] << "(t,y_,args=p_)";
             }
+        }
         tout << endl;
         tout << "# Call evolve.apply(...) until the solution reaches stoptime" << endl;
         tout << "while t < stoptime:" << endl;
         tout << "    t, h, y_ = evolve.apply(t,stoptime,h,y_)" << endl;
         // tout << "    y_ = y_[0]" << endl;
         tout << "    print t";
-        for (int i = 0; i < nv; ++i)
+        for (int i = 0; i < nv; ++i) {
             tout << ",y_[" << i << "]";
-        if (options["func"] == "yes")
-            {
-            for (int i = 0; i < nf; ++i)
+        }
+        if (options["func"] == "yes") {
+            for (int i = 0; i < nf; ++i) {
                 tout << "," << Name() << "." << funcname_list[i] << "(t,y_,args=p_)";
             }
+        }
         tout << endl;
         tout.close();
-        }
     }
-
+}

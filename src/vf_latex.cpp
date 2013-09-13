@@ -37,7 +37,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintLatex(map<string,string> options)
-    {
+{
     int nc, np, nv, na, nf;
     int i;
 
@@ -67,26 +67,23 @@ void VectorField::PrintLatex(map<string,string> options)
     //
     //  Print the constants.
     //
-    for (i = 0; i < nc; ++i)
-        {
+    for (i = 0; i < nc; ++i) {
         fout << "number " << conname_list[i] << "=" << convalue_list[i] << endl;
-        }
+    }
     fout << "%" << endl;
     //
     //  Print the parameters.
     //
-    for (i = 0; i < np; ++i)
-        {
+    for (i = 0; i < np; ++i) {
         fout << "par " << parname_list[i] << "=" << pardefval_list[i] << endl;
-        }
+    }
     fout << "%" << endl;
     //
     //  Print the intermediate/auxiliary formulas.
     //
-    for (i = 0; i < na; ++i)
-        {
+    for (i = 0; i < na; ++i) {
         fout << exprname_list[i] << "=" << exprformula_list[i]  << endl;
-        }
+    }
 */
     //
     //  Print the vector field expressions.
@@ -97,22 +94,20 @@ void VectorField::PrintLatex(map<string,string> options)
     fout << GiNaC::latex ;
     fout << "\\begin{equation}\n";
     fout << "\\begin{split}\n";
-    for (i = 0; i < nv; ++i)
-        {
+    for (i = 0; i < nv; ++i) {
         fout << "  \\frac{d " << varname_list[i] << "}{d " << IndependentVariable << "} & =" << varvecfield_list[i] << "\\\\" << endl;
-        }
+    }
     fout << "\\end{split}\n";
     fout << "\\label{eqn:" << Name() << "}\n";
     fout << "\\end{equation}\n";
     fout << "%" << endl;
     fout << dflt;
 /*
-    for (int i = 0; i < nf; ++i)
-        {
+    for (int i = 0; i < nf; ++i) {
         fout << "aux " << funcname_list[i] << "=" << funcformula_list[i] << endl;
-        }
+    }
     fout << "#" << endl;
     fout << "done" << endl;
 */
     fout.close();
-    }
+}

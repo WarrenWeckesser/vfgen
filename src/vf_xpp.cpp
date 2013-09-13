@@ -39,7 +39,7 @@ using namespace GiNaC;
 //
 
 void VectorField::PrintXPP(map<string,string> options)
-    {
+{
     int nc, np, nv, na, nf;
     int i;
 
@@ -62,81 +62,82 @@ void VectorField::PrintXPP(map<string,string> options)
     //
     //  Print the constants.
     //
-    for (i = 0; i < nc; ++i)
-        {
+    for (i = 0; i < nc; ++i) {
         ex val = convalue_list[i];
-        for (int j = i-1; j >= 0; j--)
+        for (int j = i-1; j >= 0; j--) {
             val = val.subs(conname_list[j]==convalue_list[j]);
+        }
         val = val.subs(Pi==M_PI);
         fout << "number " << conname_list[i] << "=" << val << endl;
-        }
+    }
     fout << "#" << endl;
     //
     //  Print the parameters.
     //
-    for (i = 0; i < np; ++i)
-        {
+    for (i = 0; i < np; ++i) {
         ex val = pardefval_list[i];
-        for (int j = i-1; j >= 0; j--)
+        for (int j = i-1; j >= 0; j--) {
             val = val.subs(parname_list[j]==pardefval_list[j]);
-        for (int j = nc-1; j >= 0; j--)
+        }
+        for (int j = nc-1; j >= 0; j--) {
             val = val.subs(conname_list[j]==convalue_list[j]);
+        }
         val = val.subs(Pi==M_PI);            
         fout << "par " << parname_list[i] << "=" << val << endl;
-        }
+    }
     fout << "#" << endl;
     //
     //  Print the intermediate/auxiliary formulas.
     //
-    for (i = 0; i < na; ++i)
-        {
+    for (i = 0; i < na; ++i) {
         fout << exprname_list[i] << "=" << delay_transform(exprformula_list[i],varname_list)  << endl;
-        }
+    }
     //
     //  Print the vector field expressions.
     //
     fout << "#" << endl;
     fout << "# The vector field and initial conditions" << endl;
     fout << "#" << endl;
-    for (i = 0; i < nv; ++i)
-        {
+    for (i = 0; i < nv; ++i) {
         fout << varname_list[i] << "'=" << delay_transform(varvecfield_list[i],varname_list) << endl;
         //
         // Replace Pi, Constants and Parameters in the initial condition expression.
         // Work backwards through the Parameters, then the Constants, then Pi.
         //
         ex ic = vardefic_list[i];
-        for (int j = np-1; j >= 0; j--)
+        for (int j = np-1; j >= 0; j--) {
             ic = ic.subs(parname_list[j]==pardefval_list[j]);
-        for (int j = nc-1; j >= 0; j--)
+        }
+        for (int j = nc-1; j >= 0; j--) {
             ic = ic.subs(conname_list[j]==convalue_list[j]);
+        }
         ic = ic.subs(Pi==M_PI);        
         fout << "init " << varname_list[i] << "=" << ic << endl;
-        if (IsDelay)
+        if (IsDelay) {
             fout << varname_list[i] << "(0)=" << vardefhist_list[i] << endl;
         }
-    if (nf > 0)
+    }
+    if (nf > 0) {
         fout << "#" << endl;
-    for (int i = 0; i < nf; ++i)
-        {
+    }
+    for (int i = 0; i < nf; ++i) {
         fout << "aux " << funcname_list[i] << "=" << funcformula_list[i] << endl;
-        }
+    }
     fout << "#" << endl;
-    if (options["extra"] != "")
-        {
+    if (options["extra"] != "") {
         string s = options["extra"];
         char delim = ';';
         string::size_type k = 0;
-        while ((k = s.find(delim,k)) != string::npos)
-            {
+        while ((k = s.find(delim,k)) != string::npos) {
             s[k]='\n';
-            }
-        if (s[s.length()-1] != '\n')
+        }
+        if (s[s.length()-1] != '\n') {
             s = s + '\n';
+        }
         fout << "#--- Lines provided by the user with the \"extra\" option ---\n";
         fout << s;
         fout << "#----------------------------------------------------------\n";
-        }
+    }
     fout << "done" << endl;
     fout.close();
-    }
+}
