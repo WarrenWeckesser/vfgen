@@ -31,28 +31,26 @@
 using namespace GiNaC;
 
 ex iterated_subs(ex f, lst e)
-    {
+{
     ex g = f;
     int n = e.nops();
-    for (int i = n-1; i >= 0; --i)
-        {
+    for (int i = n-1; i >= 0; --i) {
         g = g.subs(e[i]);
-        }
-    return g;
     }
+    return g;
+}
 
 //
 // Replace each var in e with delay(var,lag).
 //
 ex delay_vars(const ex& e, const ex& lag, const lst& vars)
-    {
+{
     ex g = e;
-    for (lst::const_iterator i = vars.begin(); i != vars.end(); ++i)
-        {
-        g = g.subs(*i == delay(*i,lag));
-        }
-    return g;
+    for (lst::const_iterator i = vars.begin(); i != vars.end(); ++i) {
+        g = g.subs(*i == delay(*i, lag));
     }
+    return g;
+}
 
 //
 // Transform f so that the first operand in any delay function is
@@ -61,19 +59,17 @@ ex delay_vars(const ex& e, const ex& lag, const lst& vars)
 // and vars = {x,y}, this function will return
 //    1+ a+b*delay(x,tau)*sin(delay(y,tau)) - delay(x,2*delta)^2
 //
-ex delay_transform(const ex& f, const lst& vars)
-    {
-    if (f.has( delay(wild(1),wild(2)) ) )
-        {
+ex delay_transform(const ex& f, const lst& vars) {
+    if (f.has( delay(wild(1),wild(2)) ) ) {
         exset dlist;
         f.find( delay(wild(1),wild(2)) , dlist);
         ex g = f;
-        for (exset::const_iterator i = dlist.begin(); i != dlist.end(); ++i)
-            {
+        for (exset::const_iterator i = dlist.begin(); i != dlist.end(); ++i) {
             g = g.subs( *i == delay_vars(i->op(0),i->op(1),vars) );
-            }
-        return g;
         }
-    else
+        return g;
+    }
+    else {
         return f;
     }
+}
