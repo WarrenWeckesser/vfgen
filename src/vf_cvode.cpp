@@ -139,7 +139,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     }
     fout << func_return_type << " " << Name() << "_vf(realtype t, N_Vector y_, N_Vector f_, void *params)" << endl;
     pout << func_return_type << " " << Name() << "_vf(realtype, N_Vector, N_Vector, void *);" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     if (HasPi) {
         fout << "    const realtype Pi = RCONST(M_PI);\n";
     }
@@ -177,7 +177,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     if (options["version"] != "2.3.0") {
         fout << "    return 0;\n";
     }
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
     //
     // Print the Jacobian function.
@@ -211,7 +211,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         pout << "                N_Vector, N_Vector, void *," << endl;
         pout << "                N_Vector, N_Vector, N_Vector);" << endl;
     }
-    fout << "    {" << endl;
+    fout << "{" << endl;
     if (HasPi) {
         fout << "    const realtype Pi = RCONST(M_PI);\n";
     }
@@ -248,7 +248,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     if (options["version"] != "2.3.0") {
         fout << "    return 0;\n";
     }
-    fout << "    }" << endl;
+    fout << "}" << endl;
 
     if (options["func"] == "yes" & nf > 0) {
         //
@@ -265,7 +265,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << endl;
         fout << func_return_type << " " << Name() << "_func(realtype t, N_Vector y_, realtype *func_, void *params)" << endl;
         pout << func_return_type << " " << Name() << "_func(realtype, N_Vector, realtype *, void *);" << endl;
-        fout << "    {" << endl;
+        fout << "{" << endl;
         if (HasPi) {
             fout << "    const realtype Pi = RCONST(M_PI);\n";
         }
@@ -301,7 +301,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             fout << "    func_[" << n << "] = " << funcformula_list[n] << ";" << endl;
         }
         fout << "    return 0;\n";
-        fout << "    }" << endl;
+        fout << "}" << endl;
     }
     fout.close();
     pout.close();
@@ -369,46 +369,52 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "#include \"" << pfilename << "\"\n";
         tout << endl << endl;
         tout << "int use(int argc, char *argv[], int nv, char *vname[], double y_[], int np, char *pname[], const double p_[])\n" ;
-        tout << "    {\n" ;
+        tout << "{\n" ;
         tout << "    int i;\n" ;
-        tout << "    printf(\"use: %s [options]\\n\",argv[0]);\n" ;
+        tout << "    printf(\"use: %s [options]\\n\", argv[0]);\n" ;
         tout << "    printf(\"options:\\n\");\n" ;
         tout << "    printf(\"    -h    Print this help message.\\n\");\n" ;
-        tout << "    for (i = 0; i < nv; ++i)\n" ;
-        tout << "        printf(\"    %s=<initial_condition>   Default value is %e\\n\",vname[i],y_[i]);\n";
-        tout << "    for (i = 0; i < np; ++i)\n" ;
-        tout << "        printf(\"    %s=<parameter_value>   Default value is %e\\n\",pname[i],p_[i]);\n";
+        tout << "    for (i = 0; i < nv; ++i) {\n" ;
+        tout << "        printf(\"    %s=<initial_condition>   Default value is %e\\n\", vname[i], y_[i]);\n";
+        tout << "    }\n";
+        tout << "    for (i = 0; i < np; ++i) {\n" ;
+        tout << "        printf(\"    %s=<parameter_value>   Default value is %e\\n\", pname[i], p_[i]);\n";
+        tout << "    }\n";
         tout << "    printf(\"    abserr=<absolute_error_tolerance>\\n\");\n" ;
         tout << "    printf(\"    relerr=<relative_error_tolerance>\\n\");\n" ;
         tout << "    printf(\"    stoptime=<stop_time>\\n\");\n" ;
         tout << "    return 0;\n";
-        tout << "    }\n" ;
+        tout << "}\n" ;
         tout << endl << endl;
         tout << "int assign(char *str[], int ns, double v[], char *a)\n" ;
-        tout << "    {\n" ;
+        tout << "{\n" ;
         tout << "    int i;\n" ;
         tout << "    char name[256];\n" ;
         tout << "    char *e;\n" ;
         tout << "\n" ;
-        tout << "    e = strchr(a,'=');\n" ;
-        tout << "    if (e == NULL)\n" ;
-        tout << "        return(-1);\n" ;
+        tout << "    e = strchr(a, '=');\n" ;
+        tout << "    if (e == NULL) {\n" ;
+        tout << "        return -1;\n" ;
+        tout << "    }\n";
         tout << "    *e = '\\0';\n" ;
-        tout << "    strcpy(name,a);\n" ;
+        tout << "    strcpy(name, a);\n" ;
         tout << "    *e = '=';\n" ;
         tout << "    ++e;\n" ;
-        tout << "    for (i = 0; i < ns; ++i)\n" ;
-        tout << "        if (strcmp(str[i],name)==0)\n" ;
+        tout << "    for (i = 0; i < ns; ++i) {\n" ;
+        tout << "        if (strcmp(str[i], name) == 0) {\n" ;
         tout << "            break;\n" ;
-        tout << "    if (i == ns)\n" ;
-        tout << "        return(-1);\n" ;
+        tout << "        }\n";
+        tout << "    }\n";
+        tout << "    if (i == ns) {\n" ;
+        tout << "        return -1;\n" ;
+        tout << "    }\n";
         tout << "    v[i] = atof(e);\n" ;
-        tout << "    return(i);\n" ;
-        tout << "    }\n" ;
+        tout << "    return i;\n" ;
+        tout << "}\n" ;
         tout << endl << endl;
         tout << "int main (int argc, char *argv[])\n" ;
-        tout << "    {\n" ;
-        tout << "    int i,j;\n";
+        tout << "{\n" ;
+        tout << "    int i, j;\n";
         tout << "    int flag;\n";
         tout << "    const int N_ = " << nv << ";\n" ;
         tout << "    const int P_ = " << np << ";\n" ;
@@ -418,8 +424,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         for (int i = 0; i < nc; ++i) {
             tout << "    const realtype " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-        tout << "    const realtype def_p_[" << np << "] = \n" ;
-        tout << "        {\n";
+        tout << "    const realtype def_p_[" << np << "] = {\n" ;
         for (int i = 0; i < np; ++i) {
             tout << "        RCONST(" << pardefval_list[i] << ")" ;
             if (i != np-1) {
@@ -427,7 +432,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             }
             tout << endl;
         }
-        tout << "        };\n" ;
+        tout << "    };\n" ;
         // CDeclare(tout,"realtype",parname_list);
         GetFromVector(tout,"    const realtype ",parname_list,"def_p_","[]",0,";");
         tout << "    realtype def_y_[" << nv << "] = {";
@@ -443,7 +448,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "    realtype y_[" << nv << "];\n" ;
 
         tout << "    realtype p_[" << np << "];\n" ;
-        tout << "    realtype solver_param_[3] = {RCONST(1.0e-6),RCONST(0.0),RCONST(10.0)};\n" ;
+        tout << "    realtype solver_param_[3] = {RCONST(1.0e-6), RCONST(0.0), RCONST(10.0)};\n" ;
         MakeCArrayOfStrings(tout,"varnames_",varname_list);
         if (np > 0) {
             MakeCArrayOfStrings(tout,"parnames_",parname_list);
@@ -451,58 +456,56 @@ void VectorField::PrintCVODE(map<string,string> options)
         else {
             tout << "    char *parnames_[] = {\"\"};\n";
         }
-        tout << "    char *solver_param_names_[3] = {\"abserr\",\"relerr\",\"stoptime\"};\n" ;
+        tout << "    char *solver_param_names_[3] = {\"abserr\", \"relerr\", \"stoptime\"};\n" ;
         tout << endl;
-        tout << "    for (i = 0; i < N_; ++i)\n" ;
+        tout << "    for (i = 0; i < N_; ++i) {\n" ;
         tout << "        y_[i] = def_y_[i];\n" ;
-        tout << "    for (i = 0; i < P_; ++i)\n" ;
+        tout << "    }\n";
+        tout << "    for (i = 0; i < P_; ++i) {\n" ;
         tout << "        p_[i] = def_p_[i];\n" ;
-        tout << "    for (i = 1; i < argc; ++i)\n" ;
-        tout << "        {\n" ;
+        tout << "    }\n";
+        tout << "    for (i = 1; i < argc; ++i) {\n" ;
         tout << "        int j;\n" ;
-        tout << "        if (strcmp(argv[i],\"-h\") == 0)\n" ;
-        tout << "            {\n" ;
-        tout << "            use(argc,argv,N_,varnames_,def_y_,P_,parnames_,def_p_);\n" ;
+        tout << "        if (strcmp(argv[i], \"-h\") == 0) {\n" ;
+        tout << "            use(argc, argv, N_, varnames_, def_y_, P_, parnames_, def_p_);\n" ;
         tout << "            exit(0);\n" ;
-        tout << "            }\n" ;
-        tout << "        j = assign(varnames_,N_,y_,argv[i]);\n" ;
-        tout << "        if (j == -1)\n" ;
-        tout << "            {\n" ;
-        tout << "            j = assign(parnames_,P_,p_,argv[i]);\n" ;
-        tout << "            if (j == -1)\n" ;
-        tout << "                {\n" ;
-        tout << "                j = assign(solver_param_names_,3,solver_param_,argv[i]);\n" ;
-        tout << "                if (j == -1)\n" ;
-        tout << "                    {\n" ;
-        tout << "                    fprintf(stderr,\"unknown argument: %s\\n\",argv[i]);\n" ;
-        tout << "                    use(argc,argv,N_,varnames_,def_y_,P_,parnames_,def_p_); \n";
+        tout << "        }\n" ;
+        tout << "        j = assign(varnames_, N_, y_, argv[i]);\n" ;
+        tout << "        if (j == -1) {\n" ;
+        tout << "            j = assign(parnames_, P_, p_, argv[i]);\n" ;
+        tout << "            if (j == -1) {\n" ;
+        tout << "                j = assign(solver_param_names_, 3, solver_param_, argv[i]);\n" ;
+        tout << "                if (j == -1) {\n" ;
+        tout << "                    fprintf(stderr, \"unknown argument: %s\\n\", argv[i]);\n" ;
+        tout << "                    use(argc, argv, N_, varnames_, def_y_, P_, parnames_, def_p_); \n";
         tout << "                    exit(-1);\n" ;
-        tout << "                    }\n" ;
         tout << "                }\n" ;
         tout << "            }\n" ;
         tout << "        }\n" ;
+        tout << "    }\n" ;
         tout << endl;
         tout << "    N_Vector y0_;\n";
         tout << "    y0_ = N_VNew_Serial(N_);\n";
-        tout << "    for (i = 0; i < N_; ++i)\n";
-        tout << "        NV_Ith_S(y0_,i) = y_[i];\n";
+        tout << "    for (i = 0; i < N_; ++i) {\n";
+        tout << "        NV_Ith_S(y0_, i) = y_[i];\n";
+        tout << "    }\n";
         tout << endl;
 
         tout << "    /* For non-stiff problems:   */\n";
-        tout << "    void *cvode_mem = CVodeCreate(CV_ADAMS,CV_FUNCTIONAL);\n";
+        tout << "    void *cvode_mem = CVodeCreate(CV_ADAMS, CV_FUNCTIONAL);\n";
         tout << "    /* For stiff problems:       */\n";
-        tout << "    /* void *cvode_mem = CVodeCreate(CV_BDF,CV_NEWTON); */\n";
+        tout << "    /* void *cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON); */\n";
         tout << endl;
 
         tout << "    realtype t = RCONST(0.0);\n";
 
         if (options["version"] == "2.6.0" || options["version"] == "2.7.0") {
-            tout << "    flag = CVodeInit(cvode_mem," << Name() << "_vf, t, y0_);\n";
+            tout << "    flag = CVodeInit(cvode_mem, " << Name() << "_vf, t, y0_);\n";
             tout << "    flag = CVodeSStolerances(cvode_mem, solver_param_[1], solver_param_[0]);\n";
             tout << "    flag = CVodeSetUserData(cvode_mem, &(p_[0]));\n";
         }
         else {
-            tout << "    flag = CVodeMalloc(cvode_mem," << Name() << "_vf, t, y0_, CV_SS, solver_param_[1], &(solver_param_[0]));\n";
+            tout << "    flag = CVodeMalloc(cvode_mem, " << Name() << "_vf, t, y0_, CV_SS, solver_param_[1], &(solver_param_[0]));\n";
             tout << "    flag = CVodeSetFdata(cvode_mem, &(p_[0]));\n";
         }
         tout << "    flag = CVDense(cvode_mem, N_);\n";
@@ -516,8 +519,9 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "    realtype t1 = solver_param_[2];\n" ;
         tout << "    /* Print the initial condition  */\n";
         tout << "    printf(\"%.8e\", t);\n" ;
-        tout << "    for (j = 0; j < N_; ++j)\n" ;
-        tout << "        printf(\" %.8e\", NV_Ith_S(y0_,j));\n" ;
+        tout << "    for (j = 0; j < N_; ++j) {\n" ;
+        tout << "        printf(\" %.8e\", NV_Ith_S(y0_, j));\n";
+        tout << "    }\n";
         if (options["func"] == "yes" & nf > 0) {
             tout << "    realtype funcval[" << nf << "];\n";
             tout << "    " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
@@ -527,8 +531,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         }
         tout << "    printf(\"\\n\");\n";
         tout << "    flag = CVodeSetStopTime(cvode_mem, t1);\n";
-        tout << "    while (t < t1)\n";
-        tout << "        {\n" ;
+        tout << "    while (t < t1) {\n";
         tout << "        /* Advance the solution */\n";
         if (options["version"] == "2.6.0" || options["version"] == "2.7.0") {
             tout << "        flag = CVode(cvode_mem, t1, y0_, &t, CV_ONE_STEP);\n";
@@ -536,15 +539,15 @@ void VectorField::PrintCVODE(map<string,string> options)
         else {
             tout << "        flag = CVode(cvode_mem, t1, y0_, &t, CV_ONE_STEP_TSTOP);\n";
         }        
-        tout << "        if (flag != CV_SUCCESS && flag != CV_TSTOP_RETURN)\n";
-        tout << "            {\n" ;
+        tout << "        if (flag != CV_SUCCESS && flag != CV_TSTOP_RETURN) {\n";
         tout << "            fprintf(stderr, \"flag=%d\\n\", flag);\n" ;
         tout << "            break;\n" ;
-        tout << "            }\n" ;
+        tout << "        }\n" ;
         tout << "        /* Print the solution at the current time */\n";
         tout << "        printf(\"%.8e\", t);\n" ;
-        tout << "        for (j = 0; j < N_; ++j)\n" ;
+        tout << "        for (j = 0; j < N_; ++j) {\n" ;
         tout << "            printf(\" %.8e\", NV_Ith_S(y0_,j));\n" ;
+        tout << "        }\n";
 
         if (options["func"] == "yes" & nf > 0) {
             tout << "        " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
@@ -553,7 +556,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             }
         }
         tout << "        printf(\"\\n\");\n";
-        tout << "        }\n" ;
+        tout << "    }\n" ;
         tout << endl;
         tout << "    N_VDestroy_Serial(y0_);\n";
         if (options["version"] == "2.3.0") {
@@ -562,7 +565,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         else {
             tout << "    CVodeFree(&cvode_mem);\n";
         }
-        tout << "    }\n" ;
+        tout << "}\n" ;
         tout.close();
         //
         // Create a Makefile for the CVODE demo program
