@@ -363,13 +363,13 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     }
     fout << endl;
     fout << "    % State variables\n";
-    GetFromVector2(fout,"    ",varname_list,"Zlags_","(",",1)",1,";");
+    GetFromVector2(fout, "    ", varname_list, "=", "Zlags_", "(", ",1)", 1, ";");
     //
     // Parameters...
     //
     if (parname_list.nops() > 0) {
         fout << "    % Parameters\n";
-        GetFromVector(fout,"    ",parname_list,"par_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "par_", "()", 1, ";");
         fout << endl;
     }
     //
@@ -438,7 +438,7 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     dout << " ]\n";
     dout << "%\n";
     dout << "% The state vector:\n";
-    GetFromVector2(dout,"% ",varname_list,"Zlags_","(",",1)",1,";");
+    GetFromVector2(dout, "% ", varname_list, "=", "Zlags_", "(", ",1)", 1, ";");
     dout << "%\n";
     dout << "% (In the comments below, \"wrt\" means \"with respect to\".)\n";
     // Function definition starts here.
@@ -461,7 +461,7 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     //
     if (parname_list.nops() > 0) {
         dout << "    % Parameters\n";
-        GetFromVector(dout,"    ",parname_list,"par_","()",1,";");
+        GetFromVector(dout, "    ", parname_list, "=", "par_", "()", 1, ";");
         dout << endl;
     }
     //

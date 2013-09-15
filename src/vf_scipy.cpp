@@ -142,9 +142,9 @@ void VectorField::PrintSciPy(map<string,string> options)
         {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-    GetFromVector(fout,"    ",varname_list,"y_","[]",0,"");
+    GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,"");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
     fout << endl;
     for (int i = 0; i < na; ++i)
         {
@@ -183,8 +183,8 @@ void VectorField::PrintSciPy(map<string,string> options)
         {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-    GetFromVector(fout,"    ",varname_list,"y_","[]",0,"");
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,"");
+    GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
     fout << endl;
     fout << "    # Create the Jacobian matrix:" << endl; 
     fout << "    jac_ = numpy.zeros((" << nv << "," << nv << "))" << endl; 
@@ -218,7 +218,7 @@ void VectorField::PrintSciPy(map<string,string> options)
             fout << "def " << funcname_list[n] << "(y_, t_, p_):" << endl;
             fout << "    \"\"\"\n";
             fout << "    The user-defined function \"" << funcname_list[n] << "\" for the vector field \"" << Name() << "\"\n";
-            PrintArgDescription(fout,varname_list,parname_list);
+            PrintArgDescription(fout, varname_list, parname_list);
             fout << "    \"\"\"\n";
             if (HasPi)
                 {
@@ -228,9 +228,9 @@ void VectorField::PrintSciPy(map<string,string> options)
                 {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
                 }
-            GetFromVector(fout,"    ",varname_list,"y_","[]",0,"");
+            GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
             fout << endl;
-            GetFromVector(fout,"    ",parname_list,"p_","[]",0,"");
+            GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
             fout << endl;
             for (int i = 0; i < na; ++i)
                 {

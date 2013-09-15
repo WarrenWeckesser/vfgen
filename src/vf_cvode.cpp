@@ -146,14 +146,14 @@ void VectorField::PrintCVODE(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    const realtype " << conname_list[i] << " = RCONST(" << convalue_list[i] << ");" << endl;
     }
-    CDeclare(fout,"realtype",varname_list);
-    CDeclare(fout,"realtype",parname_list);
-    CDeclare(fout,"realtype",exprname_list);
+    CDeclare(fout, "realtype", varname_list);
+    CDeclare(fout, "realtype", parname_list);
+    CDeclare(fout, "realtype", exprname_list);
     fout << "    realtype *p_;" << endl;
     fout << endl;
     fout << "    p_ = (realtype *) params;" << endl;
     fout << endl;
-    // GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+    // GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
     for (int i = 0; i < nv; ++i) {
         fout << "    ";
         fout.width(10);
@@ -163,7 +163,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     }
 
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -224,7 +224,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << endl;
     fout << "    p_ = (realtype *) params;" << endl;
     fout << endl;
-    // GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+    // GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
     for (int i = 0; i < nv; ++i) {
         fout << "    ";
         fout.width(10);
@@ -233,7 +233,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << " = NV_Ith_S(y_," << i << ");" << endl;
     }
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
@@ -279,7 +279,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << endl;
         fout << "    p_ = (realtype *) params;" << endl;
         fout << endl;
-        // GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+        // GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
         for (int i = 0; i < nv; ++i) {
             fout << "    ";
             fout.width(10);
@@ -288,7 +288,7 @@ void VectorField::PrintCVODE(map<string,string> options)
             fout << " = NV_Ith_S(y_," << i << ");" << endl;
         }
         fout << endl;
-        GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
         fout << endl;
         for (int i = 0; i < na; ++i) {
             fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -434,7 +434,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         }
         tout << "    };\n" ;
         // CDeclare(tout,"realtype",parname_list);
-        GetFromVector(tout,"    const realtype ",parname_list,"def_p_","[]",0,";");
+        GetFromVector(tout, "    const realtype ", parname_list, "=", "def_p_", "[]", 0, ";");
         tout << "    realtype def_y_[" << nv << "] = {";
         for (int i = 0; i < nv; ++i) {
             // tout << def_var_value.at(i) ;

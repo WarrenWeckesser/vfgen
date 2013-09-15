@@ -87,9 +87,9 @@ void VectorField::PrintScilab(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     if (options["parstyle"] != "list") {
-        GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -125,9 +125,9 @@ void VectorField::PrintScilab(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     if (options["parstyle"] != "list") {
-        GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
     for (int i = 0; i < nv; ++i) {
@@ -172,9 +172,9 @@ void VectorField::PrintScilab(map<string,string> options)
             for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
             }
-            GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+            GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
             if (options["parstyle"] != "list") {
-                GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+                GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
             }
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -247,7 +247,7 @@ void VectorField::PrintScilab(map<string,string> options)
                 fout << "    params = real_values(" << nv+1 << ":" << nv+np << ");" << endl;
             }
             else {
-                GetFromVector(fout,"    ",parname_list,"real_values","()",nv+1,";");
+                GetFromVector(fout, "    ", parname_list, "=", "real_values", "()", nv+1, ";");
             }
         }
         fout << "    tfinal = real_values(" << nv+np+1 << ");" << endl;
@@ -255,7 +255,7 @@ void VectorField::PrintScilab(map<string,string> options)
         fout << "    tsamples = linspace(t0,tfinal,nsamples);" << endl;
         fout << endl;
         // if (options["parstyle"] != "vector") {
-        //    GetFromVector(fout,"    ",parname_list,"params","()",1,";");
+        //    GetFromVector(fout, "    ", parname_list, "=", "params", "()", 1, ";");
         // }
         fout << "    // Call the ODE solver." << endl;
         fout << "    sol = ode(x0,t0,tsamples,list(" << Name() << "_vf";

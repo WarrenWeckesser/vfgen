@@ -84,8 +84,8 @@ void VectorField::PrintPyGSL(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","[]",0,"");
-    GetFromVector(fout,"    ",parname_list,"args","[]",0,"");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, "");
+    GetFromVector(fout, "    ", parname_list, "=", "args", "[]", 0, "");
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << endl;
     }
@@ -115,8 +115,8 @@ void VectorField::PrintPyGSL(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"y_","[]",0,"");
-    GetFromVector(fout,"    ",parname_list,"args","[]",0,"");
+    GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
+    GetFromVector(fout, "    ", parname_list, "=", "args", "[]", 0, "");
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << endl;
     }
@@ -166,8 +166,8 @@ void VectorField::PrintPyGSL(map<string,string> options)
             for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
             }
-            GetFromVector(fout,"    ",varname_list,"y_","[]",0,"");
-            GetFromVector(fout,"    ",parname_list,"args","[]",0,"");
+            GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
+            GetFromVector(fout, "    ", parname_list, "=", "args", "[]", 0, "");
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << "" << endl;
             }

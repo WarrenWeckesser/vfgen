@@ -353,13 +353,13 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     }
     // sys_out << endl;
     sys_out << "    // State variables\n";
-    GetFromVector2(sys_out,"    const double ",varname_list,"Zlags_","(",",0)",0,";");
+    GetFromVector2(sys_out, "    const double ", varname_list, "=", "Zlags_", "(", ",0)", 0, ";");
     //
     // Parameters...
     //
     if (parname_list.nops() > 0) {
         sys_out << "    // Parameters (par_(0) is the period)\n";
-        GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
+        GetFromVector(sys_out, "    const double ", parname_list, "=", "par_", "()", 1, ";");
         // sys_out << endl;
     }
     //
@@ -423,7 +423,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     //
     if (parname_list.nops() > 0) {
         sys_out << "    // Parameters\n";
-        GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
+        GetFromVector(sys_out, "    const double ", parname_list, "=", "par_", "()", 1, ";");
         sys_out << endl;
     }
 
@@ -471,7 +471,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     //
     if (parname_list.nops() > 0) {
         sys_out << "    // Parameters\n";
-        GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
+        GetFromVector(sys_out, "    const double ", parname_list, "=", "par_", "()", 1, ";");
         sys_out << endl;
     }
     PDDEC_PrintParDerivs(sys_out,vf0);
@@ -504,7 +504,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     //
     if (parname_list.nops() > 0) {
         sys_out << "    // Parameters\n";
-        GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
+        GetFromVector(sys_out, "    const double ", parname_list, "=", "par_", "()", 1, ";");
         sys_out << endl;
     }
     PDDEC_PrintXandParJacobians(sys_out,vf0);
@@ -538,7 +538,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     //
     if (parname_list.nops() > 0) {
         sys_out << "    // Parameters\n";
-        GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
+        GetFromVector(sys_out, "    const double ", parname_list, "=", "par_", "()", 1, ";");
         sys_out << endl;
     }
     PDDEC_PrintHessiansTimesV(sys_out,vf0);
@@ -573,7 +573,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     sys_out << " ]\n";
     sys_out << "//\n";
     sys_out << "// The state vector:\n";
-    GetFromVector2(sys_out,"// ",varname_list,"Zlags_","(",",0)",0,";");
+    GetFromVector2(sys_out, "// ", varname_list, "=", "Zlags_", "(", ",0)", 0, ";");
     sys_out << "//\n";
     // Function definition starts here.
     sys_out << "//" << endl;
@@ -618,7 +618,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
         sys_out << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
     sys_out << "    // par_(0) is the period.\n";
-    GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
+    GetFromVector(sys_out, "    const double ", parname_list, "=", "par_", "()", 1, ";");
     sys_out << endl;
     sys_out << "    out(0) = 0.0;\n";
     int j = 1;
@@ -677,7 +677,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     }
 
     sys_out << "    // par_(0) is the period.\n";
-    GetFromVector(sys_out,"    const double ",parname_list,"par_","()",1,";");
+    GetFromVector(sys_out, "    const double ", parname_list, "=", "par_", "()", 1, ";");
     sys_out << endl;
     sys_out << "    out(0) = 0.0;\n";
     sys_out << "    if (p_ == 0) {\n";

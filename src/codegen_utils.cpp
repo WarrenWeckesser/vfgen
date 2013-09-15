@@ -19,8 +19,6 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-//  TO DO -- Add 'const' declarations where appropriate.
-
 
 #include <fstream>
 #include <iostream>
@@ -149,8 +147,10 @@ void MakePythonListOfStrings(ofstream &fout, const char *var, lst names, const c
 }
 
 
-void GetFromVector(ofstream &fout, const char *skip, lst names, const char *vector,
-                      const char *braces, int istart, const char *term)
+void GetFromVector(ofstream &fout, const char *skip, lst names,
+                   const char *assignop,
+                   const char *vector,
+                   const char *braces, int istart, const char *term)
 {
     int n;
 
@@ -160,13 +160,15 @@ void GetFromVector(ofstream &fout, const char *skip, lst names, const char *vect
         fout.width(10);
         fout << left << names[i];
         fout.width(0);
-        fout << " = " << vector << braces[0] << (i+istart) << braces[1] << term << endl;
+        fout << " " << assignop << " " << vector << braces[0] << (i+istart) << braces[1] << term << endl;
     }
 }
 
 
-void GetFromVector2(ofstream &fout, const char *skip, lst names, const char *vector,
-                      const char *bropen, const char *brclose, int istart, const char *term)
+void GetFromVector2(ofstream &fout, const char *skip, lst names,
+                    const char *assignop,
+                    const char *vector,
+                    const char *bropen, const char *brclose, int istart, const char *term)
 {
     int n;
 
@@ -176,7 +178,7 @@ void GetFromVector2(ofstream &fout, const char *skip, lst names, const char *vec
         fout.width(10);
         fout << left << names[i];
         fout.width(0);
-        fout << " = " << vector << bropen << (i+istart) << brclose << term << endl;
+        fout << " " << assignop << " " << vector << bropen << (i+istart) << brclose << term << endl;
     }
 }
 

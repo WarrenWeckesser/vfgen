@@ -111,9 +111,9 @@ void VectorField::PrintADOLC(map<string,string> options)
     fout << "    for (int i = 0; i < " << nv << "; i++) {" << endl;
     fout << "        ay_[i] <<= y_[i];" << endl;
     fout << "    }" << endl;
-    GetFromVector(fout,"    ", varname_list, "ay_", "[]", 0, ";");
+    GetFromVector(fout,"    ", varname_list, "=", "ay_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ", parname_list, "params_", "[]", 0, ";");
+    GetFromVector(fout,"    ", parname_list, "=", "params_", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;

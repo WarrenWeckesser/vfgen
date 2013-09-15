@@ -101,16 +101,16 @@ void VectorField::PrintGSL(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    CDeclare_double(fout,varname_list);
-    CDeclare_double(fout,parname_list);
-    CDeclare_double(fout,exprname_list);
+    CDeclare_double(fout, varname_list);
+    CDeclare_double(fout, parname_list);
+    CDeclare_double(fout, exprname_list);
     fout << "    double *p_;" << endl;
     fout << endl;
     fout << "    p_ = (double *) params;" << endl;
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -141,15 +141,15 @@ void VectorField::PrintGSL(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    CDeclare_double(fout,varname_list);
-    CDeclare_double(fout,parname_list);
+    CDeclare_double(fout, varname_list);
+    CDeclare_double(fout, parname_list);
     fout << "    double *p_;" << endl;
     fout << endl;
     fout << "    p_ = (double *) params;" << endl;
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     fout << "    gsl_matrix_view dfdy_mat = gsl_matrix_view_array(jac_," << nv << "," << nv << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdy_mat.matrix;" << endl;
@@ -187,15 +187,15 @@ void VectorField::PrintGSL(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    CDeclare_double(fout,varname_list);
-    CDeclare_double(fout,parname_list);
+    CDeclare_double(fout, varname_list);
+    CDeclare_double(fout, parname_list);
     fout << "    double *p_;" << endl;
     fout << endl;
     fout << "    p_ = (double *) params;" << endl;
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     fout << "    gsl_matrix_view dfdp_mat = gsl_matrix_view_array(jacp_," << nv << "," << np << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdp_mat.matrix;" << endl;
@@ -230,16 +230,16 @@ void VectorField::PrintGSL(map<string,string> options)
             for (int i = 0; i < nc; ++i) {
                 fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
             }
-            CDeclare_double(fout,varname_list);
-            CDeclare_double(fout,parname_list);
-            CDeclare_double(fout,exprname_list);
+            CDeclare_double(fout, varname_list);
+            CDeclare_double(fout, parname_list);
+            CDeclare_double(fout, exprname_list);
             fout << "    double *p_;" << endl;
             fout << endl;
             fout << "    p_ = (double *) params;" << endl;
             fout << endl;
-            GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+            GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
             fout << endl;
-            GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+            GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
             fout << endl;
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -344,7 +344,7 @@ void VectorField::PrintGSL(map<string,string> options)
         for (int i = 0; i < nc; ++i) {
             tout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-        CDeclare_double(tout,parname_list);
+        CDeclare_double(tout, parname_list);
         tout << "    const int P_ = " << np << ";\n" ;
         tout << "    double def_p_[" << np << "] = {" ;
         for (int i = 0; i < np; ++i) {
@@ -354,7 +354,7 @@ void VectorField::PrintGSL(map<string,string> options)
             }
         }
         tout << "};\n" ;
-        GetFromVector(tout,"    ",parname_list,"def_p_","[]",0,";");
+        GetFromVector(tout, "    ", parname_list, "=", "def_p_", "[]", 0, ";");
         tout << "    double p_[" << np << "];\n" ;
         tout << "    const int N_ = " << nv << ";\n" ;
         tout << "    double def_y_[" << nv << "] = {";
@@ -371,9 +371,9 @@ void VectorField::PrintGSL(map<string,string> options)
 
         tout << "    double solver_param_[3] = {1.0e-6, 0.0, 10.0};\n" ;
 
-        MakeCArrayOfStrings(tout,"varnames_",varname_list);
+        MakeCArrayOfStrings(tout,"varnames_", varname_list);
         if (np > 0) {
-            MakeCArrayOfStrings(tout,"parnames_",parname_list);
+            MakeCArrayOfStrings(tout,"parnames_", parname_list);
         }
         else {
             tout << "    char *parnames_[] = {\"\"};\n";

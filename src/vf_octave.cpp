@@ -85,8 +85,8 @@ void VectorField::PrintOctave(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
-    GetFromVector(fout,"    ",parname_list,pname.c_str(),"()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
+    GetFromVector(fout, "    ", parname_list,pname.c_str(), "=", "()", 1, ";");
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
     }
@@ -114,8 +114,8 @@ void VectorField::PrintOctave(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
-    GetFromVector(fout,"    ",parname_list,pname.c_str(),"()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
+    GetFromVector(fout, "    ", parname_list, "=", pname.c_str(), "()", 1, ";");
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
@@ -149,8 +149,8 @@ void VectorField::PrintOctave(map<string,string> options)
             for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
             }
-            GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
-            GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+            GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
+            GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
             }

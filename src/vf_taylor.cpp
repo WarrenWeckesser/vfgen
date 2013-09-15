@@ -132,9 +132,9 @@ void VectorField::PrintTaylor(map<string,string> options)
     fout << endl;
     fout << "    p_ = (double *) params;" << endl;
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;

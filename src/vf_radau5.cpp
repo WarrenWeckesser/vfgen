@@ -99,9 +99,9 @@ void VectorField::PrintRadau5(map<string,string> options)
     if (np > 0) {
         fout << "c     --- Parameters ---\n";
     }
-    GetFromVector(fout,"      ",parname_list,"rpar_","()",1,"");
+    GetFromVector(fout, "      ", parname_list, "=", "rpar_", "()", 1, "");
     fout << "c     --- State variables ---\n";
-    GetFromVector(fout,"      ",varname_list,"y_","()",1,"");
+    GetFromVector(fout, "      ", varname_list, "=", "y_", "()", 1 ,"");
     if (na > 0) {
         fout << "c     --- Expressions ---\n";
     }
@@ -152,9 +152,9 @@ void VectorField::PrintRadau5(map<string,string> options)
     if (np > 0) {
         fout << "c     --- Parameters ---\n";
     }
-    GetFromVector(fout,"      ",parname_list,"rpar_","()",1,"");
+    GetFromVector(fout, "      ", parname_list, "=", "rpar_", "()", 1, "");
     fout << "c     --- State variables ---\n";
-    GetFromVector(fout,"      ",varname_list,"y_","()",1,"");
+    GetFromVector(fout, "      ", varname_list, "=", "y_", "()", 1, "");
     fout << "c     --- Jacobian ---\n";
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);

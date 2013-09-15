@@ -259,6 +259,7 @@ class VectorField : public Symbol
     void PrintMATLAB(std::map<std::string,std::string> options);
     // void PrintODETools(void);
     void PrintOctave(std::map<std::string,std::string> options);
+    void PrintR(std::map<std::string,std::string> options);
     void PrintRadau5(std::map<std::string,std::string> options);
     void PrintLSODA(std::map<std::string,std::string> options);
     void PrintSciPy(std::map<std::string,std::string> options);

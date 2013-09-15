@@ -93,9 +93,9 @@ void VectorField::PrintDSTool(void)
     CDeclare_double(fout,parname_list);
     CDeclare_double(fout,exprname_list);
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"Y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "Y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;
@@ -126,9 +126,9 @@ void VectorField::PrintDSTool(void)
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"Y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "Y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;
@@ -160,9 +160,9 @@ void VectorField::PrintDSTool(void)
     CDeclare_double(fout,varname_list);
     CDeclare_double(fout,parname_list);
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"Y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "Y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;
@@ -190,12 +190,12 @@ void VectorField::PrintDSTool(void)
     for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    CDeclare_double(fout,varname_list);
-    CDeclare_double(fout,parname_list);
+    CDeclare_double(fout, varname_list);
+    CDeclare_double(fout, parname_list);
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"Y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "Y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
@@ -221,12 +221,12 @@ void VectorField::PrintDSTool(void)
     for (int i = 0; i < nc; ++i) {
         fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    CDeclare_double(fout,varname_list);
-    CDeclare_double(fout,parname_list);
+    CDeclare_double(fout, varname_list);
+    CDeclare_double(fout, parname_list);
     fout << endl;
-    GetFromVector(fout,"    ",varname_list,"Y_","[]",0,";");
+    GetFromVector(fout, "    ", varname_list, "=", "Y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    ",parname_list,"p_","[]",0,";");
+    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
     fout << "    double " << IndependentVariable << " = Y_[" << nv << "];" << endl;
     fout << endl;

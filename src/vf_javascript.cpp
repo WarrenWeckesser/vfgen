@@ -122,9 +122,9 @@ void VectorField::PrintJavascript(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    var " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    var ",varname_list,"y_","[]",0,";");
+    GetFromVector(fout, "    var ", varname_list, "=", "y_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,"    var ",parname_list,"params","[]",0,";");
+    GetFromVector(fout, "    var ", parname_list, "=", "params", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;

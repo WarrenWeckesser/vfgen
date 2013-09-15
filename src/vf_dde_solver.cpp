@@ -162,7 +162,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
     fout << "    ! State variables\n";
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,"");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, "");
 
     //
     // Expressions...
@@ -239,7 +239,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << endl;
         // State Variables...
         fout << "    ! State variables\n";
-        GetFromVector(fout,"    ",varname_list,"x_","()",1,"");
+        GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, "");
         // Expressions...
         if (na > 0) {
             fout << "    ! Expressions\n";

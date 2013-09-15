@@ -33,7 +33,6 @@ using namespace std;
 using namespace GiNaC;
 
 
-
 //
 // This function overrides the default print method for the Zlags_ function.
 // Ginac thinks Zlags_ is a function, but in fact, in the code generated in
@@ -96,6 +95,7 @@ const char *commands[] = {
         "pddecont",
         "pydstool",
         "pygsl",
+        "r",
         "radau5",
         "scilab",
         "scipy",
@@ -552,6 +552,24 @@ int help(char *command)
         cout << "    initial conditions and parameters can be specified on the command line.\n";
         cout << "    The program will print the solution data to the console.\n";
     }
+    else if (strcmp(command,"r") == 0) {
+        cout << "use: vfgen r vector_field_file.vf\n";
+        cout << endl;
+        cout << "This command creates the file [name].R, which defines the vector field\n";
+        cout << "and its Jacobian in subroutines to be used with the R package deSolve.\n";
+        cout << "XXX ignore the rest... \n";
+        cout << "The subroutines defined in the file are\n";
+        cout << "    [name]_rhs    The vector field\n";
+        cout << "    [name]_jac    The Jacobian of the vector field\n";
+        cout << "    [name]_sol    A subroutine that prints a point of the solution.\n";
+        cout << endl;
+        cout << "Options: (default is listed first)\n";
+        cout << "demo=no|yes\n";
+        cout << "    If the option demo=yes is given, the file [name]_dr5.f is also created.\n";
+        cout << "    This program provides a driver that will generated a solution to equations\n";
+        cout << "    by calling RADAU5.  The initial conditions and parameters of the solution\n";
+        cout << "    are the default values given in the vector field file.\n";
+    }
 	else if (strcmp(command,"radau5") == 0) {
 		cout << "use: vfgen radau5 vector_field_file.vf\n";
 		cout << "     vfgen radau5:demo=yes vector_field_file.vf\n";
@@ -712,6 +730,8 @@ int main(int argc, char **argv)
     command_options["pydstool"].push_back("demo");
     command_options["pygsl"].push_back("demo");
     command_options["pygsl"].push_back("func");
+    command_options["r"].push_back("demo");
+    command_options["r"].push_back("func");    
     command_options["radau5"].push_back("demo");
     command_options["scilab"].push_back("demo");
     command_options["scilab"].push_back("func");
@@ -953,6 +973,14 @@ int main(int argc, char **argv)
     else if (commandstr == "adolc") {
         if (vf.IsDelay == false) {
             vf.PrintADOLC(options);
+        }
+        else {
+            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
+        }
+    }
+    else if (commandstr == "r") {
+        if (vf.IsDelay == false) {
+            vf.PrintR(options);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";

@@ -124,7 +124,7 @@ void VectorField::PrintMATCONT(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     fout << endl;
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -150,7 +150,7 @@ void VectorField::PrintMATCONT(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     fout << endl;
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
     for (int i = 0; i < nv; ++i) {
@@ -177,7 +177,7 @@ void VectorField::PrintMATCONT(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     fout << endl;
     fout << "    jacp_ = zeros(" << nv << "," << np << ");" << endl;
     for (int i = 0; i < nv; ++i) {
@@ -208,7 +208,7 @@ void VectorField::PrintMATCONT(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     fout << endl;
     fout << "    hess_ = zeros(" << nv << "," << nv << "," << nv << ");" << endl;
     for (int n = 0; n < nv; ++n) {
@@ -252,7 +252,7 @@ void VectorField::PrintMATCONT(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     fout << endl;
     fout << "    hessp_ = zeros(" << nv << "," << nv << "," << np << ");" << endl;
     for (int n = 0; n < nv; ++n) {
@@ -288,12 +288,12 @@ void VectorField::PrintMATCONT(map<string,string> options)
     fout << "% of the vector field, taken with respect to the i-th, j-th and k-th variables." << endl;
     fout << "%" << endl;
     fout << "function der3_ = " << Name() << "_der3(" << IndependentVariable << ",x_,";
-    PrintNameList(fout,parname_list);
+    PrintNameList(fout, parname_list);
     fout << ")" << endl;
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     fout << endl;
     fout << "    der3_ = zeros(" << nv << "," << nv << "," << nv << "," << nv << ");" << endl;
     for (int n = 0; n < nv; ++n) {
@@ -351,7 +351,7 @@ void VectorField::PrintMATCONT(map<string,string> options)
         for (int i = 0; i < nc; ++i) {
             fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-        GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+        GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
         for (int i = 0; i < na; ++i) {
             fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
         }

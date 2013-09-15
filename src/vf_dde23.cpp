@@ -123,7 +123,7 @@ void VectorField::PrintDDE23(map<string,string> options)
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
     fout << "    % State variables\n";
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     //
     // Parameters...
     //    If parstyle is vector, get the actual parameter variables from
@@ -132,7 +132,7 @@ void VectorField::PrintDDE23(map<string,string> options)
     if (options["parstyle"] != "list") {
         if (np > 0) {
             fout << "    % Parameters\n";
-            GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+            GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
             fout << endl;
         }
     }
@@ -270,7 +270,7 @@ void VectorField::PrintDDE23(map<string,string> options)
             fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
         if (options["parstyle"] != "list") {
-            GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+            GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
         }
         for (unsigned k = 0; k < vardefhist_list.nops(); ++k) {
             fout << "    x_(" << k+1 << ") = " << vardefhist_list[k] << ";\n";

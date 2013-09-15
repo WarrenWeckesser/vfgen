@@ -80,9 +80,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     if (options["parstyle"] != "list") {
-        GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -126,9 +126,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     if (options["parstyle"] != "list") {
-        GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
     for (int i = 0; i < nv; ++i) {
@@ -178,9 +178,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     if (options["parstyle"] != "list") {
-        GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     fout << "    jacp_ = zeros(" << nv << "," << np << ");" << endl;
     for (int i = 0; i < nv; ++i) {
@@ -232,9 +232,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     if (options["parstyle"] != "list") {
-        GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     fout << endl;
     fout << "    hess_ = zeros(" << nv << "," << nv << "," << nv << ");" << endl;
@@ -300,9 +300,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
-    GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     if (options["parstyle"] != "list") {
-        GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     fout << endl;
     fout << "    der3_ = zeros(" << nv << "," << nv << "," << nv << "," << nv << ");" << endl;
@@ -368,7 +368,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << "%" << endl;
         fout << "function hessp_ = " << Name() << "_hessp(" << IndependentVariable << ",x_,";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -380,9 +380,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
         for (int i = 0; i < nc; ++i) {
             fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-        GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+        GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
         if (options["parstyle"] != "list") {
-            GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+            GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
         }
         fout << endl;
         fout << "    hessp_ = zeros(" << nv << "," << nv << "," << np << ");" << endl;
@@ -434,7 +434,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
             if (np > 0) {
                 fout << ",";
                 if (options["parstyle"] == "list") {
-                    PrintNameList(fout,parname_list);
+                    PrintNameList(fout, parname_list);
                 }
                 else {
                     fout << "p_";
@@ -447,9 +447,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
             for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
             }
-            GetFromVector(fout,"    ",varname_list,"x_","()",1,";");
+            GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
             if (options["parstyle"] != "list") {
-                GetFromVector(fout,"    ",parname_list,"p_","()",1,";");
+                GetFromVector(fout,"    ",parname_list, "=", "p_", "()", 1, ";");
             }
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;

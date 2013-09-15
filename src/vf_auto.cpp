@@ -95,10 +95,10 @@ void VectorField::PrintAUTO(map<string,string> options)
         }
         if (np > 0) {
             fout << "c     --- Parameters ---\n";
-            GetFromVector(fout,"      ",parname_list,"par_","()",1,"");
+            GetFromVector(fout, "      ", parname_list, "=", "par_", "()", 1, "");
         }
         fout << "c     --- State variables ---\n";
-        GetFromVector(fout,"      ",varname_list,"u_","()",1,"");
+        GetFromVector(fout, "      ", varname_list, "=", "u_", "()", 1, "");
         if (na > 0) {
             fout << "c     --- Expressions ---\n";
         }
@@ -287,9 +287,9 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "    dfdu__dim1 = ndim_;" << endl;
         fout << "    dfdp__dim1 = ndim_;" << endl;
         fout << endl;
-        GetFromVector(fout,"    ",varname_list,"u_","[]",0,";");
+        GetFromVector(fout, "    ", varname_list, "=", "u_", "[]", 0, ";");
         fout << endl;
-        GetFromVector(fout,"    ",parname_list,"par_","[]",0,";");
+        GetFromVector(fout, "    ", parname_list, "=", "par_", "[]", 0, ";");
         fout << endl;
         for (int i = 0; i < na; ++i) {
             fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;

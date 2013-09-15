@@ -266,9 +266,9 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
     if (lang == "javascript") {
         pre = "    var ";
     }
-    GetFromVector(fout,pre,vars,"x_","[]",0,";");
+    GetFromVector(fout, pre, vars, "=", "x_", "[]", 0, ";");
     fout << endl;
-    GetFromVector(fout,pre,params,"p_","[]",0,";");
+    GetFromVector(fout,pre,params, "=", "p_", "[]", 0, ";");
     fout << endl;
 /*
     int na = exprnames.nops();
