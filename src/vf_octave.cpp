@@ -33,7 +33,7 @@ using namespace std;
 using namespace GiNaC;
 
 //
-// PrintScilab -- The Octave Code Generator.
+// PrintOctave -- The Octave Code Generator.
 //
 
 void VectorField::PrintOctave(map<string,string> options)
