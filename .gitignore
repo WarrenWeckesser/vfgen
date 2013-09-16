@@ -12,3 +12,4 @@ missing
 src/Makefile
 src/Makefile.in
 src/vfgen
+src/.deps/*
