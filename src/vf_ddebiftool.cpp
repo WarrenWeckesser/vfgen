@@ -36,7 +36,7 @@ using namespace std;
 using namespace GiNaC;
 
 //
-// DDE23_ConvertDelaysToZlags(ex& f)
+// DDEBT_ConvertDelaysToZlags(ex& f)
 //
 // This function converts each subexpression of the form delay(delayexpr,del)
 // in f to an expression in terms of Zlags_(i,j).
