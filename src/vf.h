@@ -241,6 +241,9 @@ class VectorField : public Symbol
     int FindDelay(GiNaC::ex&);
     int AddDelay(GiNaC::ex&);
 
+    void ConvertDelaysToZlags(GiNaC::ex& f, int i_offset, int j_offset);
+    void ConvertStateToZlags(GiNaC::ex& f, int offset);
+
     void PrintXML(std::string cmdstr);
     int  ReadXML(std::string xmlfilename);
 
@@ -257,7 +260,6 @@ class VectorField : public Symbol
     void PrintEVF(std::map<std::string,std::string> options);
     void PrintMATCONT(std::map<std::string,std::string> options);
     void PrintMATLAB(std::map<std::string,std::string> options);
-    // void PrintODETools(void);
     void PrintOctave(std::map<std::string,std::string> options);
     void PrintR(std::map<std::string,std::string> options);
     void PrintRadau5(std::map<std::string,std::string> options);
@@ -274,21 +276,16 @@ class VectorField : public Symbol
     void Delay2ODE_ConvertAndExtend(GiNaC::ex& f, int N, int p);
     void PrintDelay2ODE(std::map<std::string,std::string> options);
 
-    void DDE23_ConvertDelaysToZlags(GiNaC::ex& f);
     void PrintDDE23(std::map<std::string,std::string> options);
 
-    void DDESM_ConvertDelaysToZlags(GiNaC::ex& f);
     void PrintDDE_SOLVER(std::map<std::string,std::string> options);
 
-    void DDEBT_ConvertDelaysToZlags(GiNaC::ex& f);
-    void DDEBT_ConvertStateToZlags(GiNaC::ex& f);
     void DDEBT_PrintParDerivs(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void DDEBT_PrintJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void DDEBT_PrintXandParJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void DDEBT_PrintHessiansTimesV(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PrintDDEBIFTOOL(std::map<std::string,std::string> options);
-    void PDDEC_ConvertDelaysToZlags(GiNaC::ex& f);
-    void PDDEC_ConvertStateToZlags(GiNaC::ex& f);
+
     void PDDEC_PrintParDerivs(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PDDEC_PrintJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PDDEC_PrintXandParJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);

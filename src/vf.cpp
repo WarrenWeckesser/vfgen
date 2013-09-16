@@ -20,6 +20,7 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
+#include <cassert>
 #include <vector>
 #include <fstream>
 #include <string>
@@ -404,6 +405,62 @@ void VectorField::CheckForDelay(const ex& f)
     }
 }
 
+
+//
+// ConvertDelaysToZlags(ex& f, int i_offset, int j_offset)
+//
+// This function converts each subexpression of the form delay(delayexpr,del)
+// in f to an expression in terms of Zlags_(i,j).
+//
+
+void VectorField::ConvertDelaysToZlags(ex& f, int i_offset, int j_offset)
+{
+    exset dlist;
+    f.find(delay(wild(1),wild(2)),dlist);
+    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
+        ex delayfunc = *iter;
+        ex delayexpr = delayfunc.op(0);
+        lst vars = FindVarsInEx(delayexpr);
+        ex del = delayfunc.op(1);
+        int dindex = FindDelay(del);
+        assert(dindex != -1);
+        for (lst::const_iterator iter = vars.begin(); iter != vars.end(); ++iter) {
+            int vindex = FindVar(ex_to<symbol>(*iter));
+            delayexpr = delayexpr.subs(*iter == Zlags_(vindex + i_offset, dindex + j_offset));
+        }
+        f = f.subs(delayfunc == delayexpr);
+    }
+}
+
+//
+// ConvertStateToZlags(ex& f, int offset)
+//
+// This function converts all references to state variables--current time or
+// delayed--to an expression in terms of Zlags_(i,j).
+//
+
+void VectorField::ConvertStateToZlags(ex& f, int offset)
+{
+    exset dlist;
+    f.find(delay(wild(1),wild(2)),dlist);
+    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
+        ex delayfunc = *iter;
+        ex delayexpr = delayfunc.op(0);
+        lst vars = FindVarsInEx(delayexpr);
+        ex del = delayfunc.op(1);
+        int dindex = FindDelay(del);
+        assert(dindex != -1);
+        for (lst::const_iterator viter = vars.begin(); viter != vars.end(); ++viter) {
+            int vindex = FindVar(ex_to<symbol>(*viter));
+            delayexpr = delayexpr.subs(*viter == Zlags_(vindex + offset, dindex + 1 + offset));
+        }
+        f = f.subs(delayfunc == delayexpr);
+    }
+    int nv = varname_list.nops();    
+    for (int i = 0; i < nv; ++i) {
+        f = f.subs(varname_list[i] == Zlags_(i + offset, offset));
+    }
+}
 
 int VectorField::ProcessSymbols(void)
 {

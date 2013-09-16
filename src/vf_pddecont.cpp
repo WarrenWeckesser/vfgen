@@ -35,61 +35,6 @@
 using namespace std;
 using namespace GiNaC;
 
-//
-// PDDEC_ConvertDelaysToZlags(ex& f)
-//
-// This function converts each subexpression of the form delay(delayexpr,del)
-// in f to an expression in terms of Zlags_(i,j).
-//
-
-void VectorField::PDDEC_ConvertDelaysToZlags(ex& f)
-{
-    exset dlist;
-    f.find(delay(wild(1),wild(2)),dlist);
-    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
-        ex delayfunc = *iter;
-        ex delayexpr = delayfunc.op(0);
-        lst vars = FindVarsInEx(delayexpr);
-        ex del = delayfunc.op(1);
-        int dindex = FindDelay(del);
-        assert(dindex != -1);
-        for (lst::const_iterator viter = vars.begin(); viter != vars.end(); ++viter) {
-            int vindex = FindVar(ex_to<symbol>(*viter));
-            delayexpr = delayexpr.subs(*viter == Zlags_(vindex,dindex+1));
-        }
-        f = f.subs(delayfunc == delayexpr);
-    }
-}
-
-//
-// PDDEC_ConvertStateToZlags(ex& f)
-//
-// This function converts all references to state variables--current time or
-// delayed--to an expression in terms of Zlags_(i,j).
-//
-
-void VectorField::PDDEC_ConvertStateToZlags(ex& f)
-{
-    exset dlist;
-    f.find(delay(wild(1),wild(2)),dlist);
-    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
-        ex delayfunc = *iter;
-        ex delayexpr = delayfunc.op(0);
-        lst vars = FindVarsInEx(delayexpr);
-        ex del = delayfunc.op(1);
-        int dindex = FindDelay(del);
-        assert(dindex != -1);
-        for (lst::const_iterator viter = vars.begin(); viter != vars.end(); ++viter) {
-            int vindex = FindVar(ex_to<symbol>(*viter));
-            delayexpr = delayexpr.subs(*viter == Zlags_(vindex,dindex+1));
-        }
-        f = f.subs(delayfunc == delayexpr);
-    }
-    int nv = varname_list.nops();    
-    for (int i = 0; i < nv; ++i) {
-        f = f.subs(varname_list[i] == Zlags_(i,0));
-    }
-}
 
 void VectorField::PDDEC_PrintParDerivs(ofstream &dout, const vector<ex> &vf0)
 {
@@ -374,7 +319,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     for (int i = 0; i < na; ++i) {
         ex f = exprformula_list[i];
         if (f.has(delay(wild(1),wild(2)))) {
-            PDDEC_ConvertDelaysToZlags(f);
+            ConvertDelaysToZlags(f, 0, 1);
         }
         sys_out << "    const double " << exprname_list[i] << " = " << f << ";" << endl;
     }
@@ -386,7 +331,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
     for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i];
         if (f.has(delay(wild(1),wild(2)))) {
-            PDDEC_ConvertDelaysToZlags(f);
+            ConvertDelaysToZlags(f, 0, 1);
         }
         sys_out << "    out(" << i << ")" << " = " << f << ";" << endl;
     }
@@ -438,7 +383,7 @@ void VectorField::PrintPDDECONT(map<string,string> options)
         // Get the i^th formula, and substitute all expressions.
         ex f = varvecfield_list[i].subs(expreqn_list);
         // Convert the state variables and delay expressions to Zlags_
-        PDDEC_ConvertStateToZlags(f);
+        ConvertStateToZlags(f, 0);
         vf0.push_back(f);
     }
     PDDEC_PrintJacobians(sys_out,vf0);

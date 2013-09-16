@@ -37,32 +37,6 @@ using namespace GiNaC;
 
 
 //
-// DDESM_ConvertDelaysToZlags(ex& f)
-//
-// This function converts each subexpression of the form delay(delayexpr,del)
-// in f to an expression in terms of Zlags_(i,j).
-//
-
-void VectorField::DDESM_ConvertDelaysToZlags(ex& f)
-{
-    exset dlist;
-    f.find(delay(wild(1),wild(2)),dlist);
-    for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
-        ex delayfunc = *iter;
-        ex delayexpr = delayfunc.op(0);
-        lst vars = FindVarsInEx(delayexpr);
-        ex del = delayfunc.op(1);
-        int dindex = FindDelay(del);
-        assert(dindex != -1);
-        for (lst::const_iterator iter = vars.begin(); iter != vars.end(); ++iter) {
-            int vindex = FindVar(ex_to<symbol>(*iter));
-            delayexpr = delayexpr.subs(*iter == Zlags_(vindex+1,dindex+1));
-        }
-        f = f.subs(delayfunc == delayexpr);
-    }
-}
-
-//
 // PrintDDE_SOLVER --
 //
 
@@ -173,7 +147,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     for (int i = 0; i < na; ++i) {
         ex f = exprformula_list[i];
         if (f.has(delay(wild(1),wild(2)))) {
-            DDESM_ConvertDelaysToZlags(f);
+            ConvertDelaysToZlags(f, 1, 1);
         }
         ostringstream os;
         os << left << csrc;
@@ -187,7 +161,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i];
         if (f.has(delay(wild(1),wild(2)))) {
-            DDESM_ConvertDelaysToZlags(f);
+            ConvertDelaysToZlags(f, 1, 1);
         }
         ostringstream os;
         os << left << csrc;
