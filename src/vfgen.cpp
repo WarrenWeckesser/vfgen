@@ -70,6 +70,8 @@ REGISTER_FUNCTION(delay, dummy())
 REGISTER_FUNCTION(Zlags_, print_func<print_csrc_float>(Zlags_print).
                           print_func<print_csrc_double>(Zlags_print).
                           print_func<print_python>(Zlags_print) )
+REGISTER_FUNCTION(lagvalue, dummy())
+
 
 #define NAMEWIDTH 9
 
@@ -979,11 +981,11 @@ int main(int argc, char **argv)
         }
     }
     else if (commandstr == "r") {
-        if (vf.IsDelay == false) {
-            vf.PrintR(options);
+        if (vf.IsDelay) {
+            vf.PrintRdede(options);
         }
         else {
-            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
+            vf.PrintRode(options);
         }
     }
     else if (commandstr == "radau5") {

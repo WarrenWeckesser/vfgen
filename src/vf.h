@@ -243,6 +243,7 @@ class VectorField : public Symbol
 
     void ConvertDelaysToZlags(GiNaC::ex& f, int i_offset, int j_offset);
     void ConvertStateToZlags(GiNaC::ex& f, int offset);
+    void convert_delay_to_lagvalue(GiNaC::ex& f, GiNaC::lst& lags);
 
     void PrintXML(std::string cmdstr);
     int  ReadXML(std::string xmlfilename);
@@ -261,7 +262,8 @@ class VectorField : public Symbol
     void PrintMATCONT(std::map<std::string,std::string> options);
     void PrintMATLAB(std::map<std::string,std::string> options);
     void PrintOctave(std::map<std::string,std::string> options);
-    void PrintR(std::map<std::string,std::string> options);
+    void PrintRode(std::map<std::string,std::string> options);
+    void PrintRdede(std::map<std::string,std::string> options);
     void PrintRadau5(std::map<std::string,std::string> options);
     void PrintLSODA(std::map<std::string,std::string> options);
     void PrintSciPy(std::map<std::string,std::string> options);

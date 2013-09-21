@@ -26,5 +26,6 @@
 
 DECLARE_FUNCTION_2P(delay)
 DECLARE_FUNCTION_2P(Zlags_)
+DECLARE_FUNCTION_2P(lagvalue)
 
 #endif

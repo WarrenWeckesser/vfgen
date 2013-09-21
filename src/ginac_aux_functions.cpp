@@ -23,6 +23,7 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
+#include <cassert>
 #include <ginac/ginac.h>
 
 #include "ginac_declare_funcs.h"
@@ -72,4 +73,61 @@ ex delay_transform(const ex& f, const lst& vars) {
     else {
         return f;
     }
+}
+
+
+//
+// Merge the expressions in exprs and formulas into a single expression.
+// They are "merged" using the equality relation.  That is, if
+// exprs = {e1, e2, e3} and formulas = {f1, f2}, the result is
+// e1 == (e2 == (e3 == (f1 == f2)))
+// Using == as the operator is just for convenience.  Any binary operation
+// that does not occur in the expressions could have been used.
+//
+ex to_nested_tuple(const lst& exprs, const lst& formulas)
+{
+    lst all;
+    int ne = exprs.nops();
+    int nf = formulas.nops();
+
+    for (lst::const_iterator iter = exprs.begin(); iter != exprs.end(); ++iter) {
+        all.append(*iter);
+    }
+    for (lst::const_iterator iter = formulas.begin(); iter != formulas.end(); ++iter) {
+        all.append(*iter);
+    }
+
+    int n = all.nops();
+    assert(n != 0);
+
+    if (n == 1) {
+        return all.op(0);
+    }
+    ex t = all.op(n-2) == all.op(n-1);
+    for (int k = n - 3; k >= 0; --k) {
+        t = all.op(k) == t;
+    }
+    return t;
+}
+
+
+//
+// Converts an expression created by `to_nested_tuple` into a list (GiNaC:lst)
+// of expressions.
+//
+
+lst to_list(const ex& expr)
+{
+    lst exprs;
+    if (!is_a<relational>(expr)) {
+        exprs = lst(expr);
+        return exprs;
+    }
+    ex e = expr;
+    while (is_a<relational>(e)) {
+        exprs.append(e.op(0));
+        e = e.op(1);
+    }
+    exprs.append(e);
+    return exprs;
 }

@@ -34,5 +34,7 @@
 GiNaC::ex iterated_subs(GiNaC::ex f, GiNaC::lst e);
 GiNaC::ex delay_vars(const GiNaC::ex& e, const GiNaC::ex& lag, const GiNaC::lst& vars);
 GiNaC::ex delay_transform(const GiNaC::ex& f, const GiNaC::lst& vars);
+GiNaC::ex to_nested_tuple(const GiNaC::lst& exprs, const GiNaC::lst& formulas);
+GiNaC::lst to_list(const GiNaC::ex& expr);
 
 #endif
