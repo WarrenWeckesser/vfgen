@@ -560,7 +560,7 @@ void VectorField::PrintRdede(map<string,string> options)
         fout << "# --- Time values ---\n";
         fout << "times = seq(0, 10, by = 0.02)\n";
         fout << endl;
-        fout << "# --- Call the ODE solver ---" << endl;
+        fout << "# --- Call the DDE solver ---" << endl;
         fout << "sol = dede(y = state, times = times, func = " << Name() << ", parms = parameters)\n";
         fout << endl;
         fout << "# --- Plot the solution ---" << endl;
