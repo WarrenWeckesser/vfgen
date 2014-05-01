@@ -283,7 +283,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "y_ = (";
         for (int i = 0; i < nv; ++i) {
             tout << "options['" << varname_list[i] << "']";
-            if (nv == 1 | i < nv-1) {
+            if (nv == 1 || i < nv-1) {
                 tout << ",";
             }
         }
@@ -291,7 +291,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "p_ = (";
         for (int i = 0; i < np; ++i) {
             tout << "options['" << parname_list[i] << "']";
-            if (np == 1 | i < np-1) {
+            if (np == 1 || i < np-1) {
                 tout << ",";
             }
         }

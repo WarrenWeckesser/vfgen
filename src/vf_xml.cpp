@@ -443,12 +443,12 @@ int VectorField::ReadXML(string xmlfilename)
                 string pto(attr);
                 sv->PeriodicTo(pto);
             }
-            if (sv->PeriodicFrom() != "" & sv->PeriodicTo() == "") {
+            if (sv->PeriodicFrom() != "" && sv->PeriodicTo() == "") {
                 cerr << "Error: The StateVariable with Name=\"" << sv->Name() << "\" has a PeriodicFrom attribute but no PeriodicTo attribute.\n";
                 mxmlDelete(tree);
                 exit(-1);
             }
-            if (sv->PeriodicFrom() == "" & sv->PeriodicTo() != "") {
+            if (sv->PeriodicFrom() == "" && sv->PeriodicTo() != "") {
                 cerr << "Error: The StateVariable with Name=\"" << sv->Name() << "\" has a PeriodTo attribute but no PeriodicFrom attribute.\n";
                 mxmlDelete(tree);
                 exit(-1);

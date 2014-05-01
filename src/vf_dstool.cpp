@@ -366,7 +366,7 @@ void VectorField::PrintDSTool(void)
     //
     bool periodic = false;
     for (int n = 0; (n < nv) && !periodic; ++n) {
-        periodic = periodic | StateVariables[n]->IsPeriodic();
+        periodic = periodic || StateVariables[n]->IsPeriodic();
     }
     fout << "    int             manifold_type = ";
     if (periodic) {
