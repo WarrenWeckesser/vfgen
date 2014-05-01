@@ -250,7 +250,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     }
     fout << "}" << endl;
 
-    if (options["func"] == "yes" & nf > 0) {
+    if ((options["func"] == "yes") && (nf > 0)) {
         //
         // Print the user-defined functions.
         // A single function is created that puts all the
@@ -522,7 +522,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "    for (j = 0; j < N_; ++j) {\n" ;
         tout << "        printf(\" %.8e\", NV_Ith_S(y0_, j));\n";
         tout << "    }\n";
-        if (options["func"] == "yes" & nf > 0) {
+        if ((options["func"] == "yes") && (nf > 0)) {
             tout << "    realtype funcval[" << nf << "];\n";
             tout << "    " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
             for (int i = 0; i < nf; ++i) {
@@ -549,7 +549,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         tout << "            printf(\" %.8e\", NV_Ith_S(y0_,j));\n" ;
         tout << "        }\n";
 
-        if (options["func"] == "yes" & nf > 0) {
+        if ((options["func"] == "yes") && (nf > 0)) {
             tout << "        " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
             for (int i = 0; i < nf; ++i) {
                  tout << "        printf(\" %.8e\", funcval[" << i << "]);\n";

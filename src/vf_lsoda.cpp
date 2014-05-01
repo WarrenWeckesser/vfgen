@@ -202,7 +202,7 @@ void VectorField::PrintLSODA(map<string,string> options)
     fout << "      end\n";
     fout << endl;
     
-    if (options["func"] == "yes" & nf > 0) {
+    if ((options["func"] == "yes") && (nf > 0)) {
         //
         // Print the user-defined functions.
         // A single function is created that puts all the
