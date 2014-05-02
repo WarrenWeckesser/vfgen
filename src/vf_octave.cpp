@@ -86,7 +86,7 @@ void VectorField::PrintOctave(map<string,string> options)
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
     }
     GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
-    GetFromVector(fout, "    ", parname_list,pname.c_str(), "=", "()", 1, ";");
+    GetFromVector(fout, "    ", parname_list, "=", pname.c_str(), "()", 1, ";");
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
     }
