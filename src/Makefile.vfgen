@@ -40,7 +40,8 @@ OBJ_FILES = vfgen.o vf.o MyVec.o vf_adolc.o vf_auto.o vf_cvode.o vf_dde23.o    \
             vf_dstool.o vf_evf.o vf_gsl.o vf_javascript.o vf_latex.o           \
             vf_lsoda.o vf_matcont.o                                            \
             vf_matlab.o vf_octave.o vf_pddecont.o vf_pydstool.o  vf_pygsl.o    \
-            vf_radau5.o vf_scilab.o vf_scipy.o vf_taylor.o vf_xml.o vf_xpp.o   \
+            vf_r.o vf_radau5.o vf_scilab.o vf_scipy.o vf_taylor.o vf_xml.o     \
+            vf_xpp.o  \
             ginac_aux_functions.o strutils.o codegen_utils.o
 HEADERS = vf.h MyVec.h codegen_utils.h strutils.h     \
           ginac_aux_functions.h ginac_declare_funcs.h
@@ -52,7 +53,7 @@ vfgen:	$(OBJ_FILES)
 	$(CXX) $(OBJ_FILES) `pkg-config --libs ginac mxml` -o vfgen
 
 %.o: %.cpp $(HEADERS)
-	$(CXX) -c -O2 -o $@ `pkg-config --cflags ginac mxml` -DVERSION=\"2.5.0\" $<
+	$(CXX) -c -O2 -o $@ `pkg-config --cflags ginac mxml` -DVERSION=\"2.5.0dev\" $<
 
 clean:
 	rm -f *.o
