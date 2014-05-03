@@ -5,7 +5,7 @@
 #
 
 AC_PREREQ(2.59)
-AC_INIT([vfgen],[2.5.0],[vfgen DOT help AT gmail])
+AC_INIT([vfgen],[2.5.0dev],[vfgen DOT help AT gmail])
 
 AC_MSG_NOTICE([[
 ------------------------------------
