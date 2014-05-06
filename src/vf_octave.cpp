@@ -223,16 +223,25 @@ void VectorField::PrintOctave(map<string,string> options)
         fout << "xsol_ = lsode({\"" << Name() << "_vf\", \"" << Name() << "_jac\"}, x_, t_);\n";
         fout << endl;
         fout << "# --- Plot the solution ---" << endl;
-        fout << "hold off\n";
+        fout << "args = argv();\n";
+        fout << "fig = figure;\n";
+        fout << "if length(args) == 1\n";
+        fout << "    set(fig, \"visible\", \"off\")\n";
+        fout << "end\n";
         for (int i = 0; i < nv; ++i) {
             int k = i % strlen(colors);
-            fout << "plot(t_, xsol_(1:end, " << i+1 << "), \"" << colors[k] << ";" << varname_list[i] << ";\")\n";
+            fout << "plot(t_, xsol_(1:end, " << i+1 << "), \""
+                 << colors[k] << ";" << varname_list[i] << ";\", "
+                 << "\"linewidth\", 1)\n";
             if (i == 0) {
                 fout << "hold on\n";
             }
         }
         fout << "grid on\n";
         fout << "xlabel(\"t\")\n";
+        fout << "if length(args) == 1\n";
+        fout << "    print(args{1})\n";
+        fout << "end\n";
         fout.close();
     }
 }
