@@ -37,13 +37,14 @@ char *DateTimeMsg()
 {
     time_t now_t;
     tm     now;
-    const char *months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+    const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     time(&now_t);
     now = *(localtime(&now_t));
     sprintf(datetimebuf,datetimefmt,
-                  now.tm_mday,months[now.tm_mon],now.tm_year+1900,
-                  now.tm_hour,now.tm_min);
+                  now.tm_mday, months[now.tm_mon], now.tm_year+1900,
+                  now.tm_hour, now.tm_min);
     return(datetimebuf);
 }
 
