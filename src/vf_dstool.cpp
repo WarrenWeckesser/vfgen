@@ -82,7 +82,7 @@ void VectorField::PrintDSTool(void)
     //  so it should really be void.
     //
     fout << "int " << Name() << "(double *f_, double *Y_, double *p_)" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
@@ -106,7 +106,7 @@ void VectorField::PrintDSTool(void)
     for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
     }
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
     //
     // Print the DSTOOL C function jacobian
@@ -116,7 +116,7 @@ void VectorField::PrintDSTool(void)
     fout << " */" << endl;
     fout << endl;
     fout << "int " << Name() << "_jac(double **jac_, double *Y_, double *p_)" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
@@ -140,7 +140,7 @@ void VectorField::PrintDSTool(void)
             fout << "    jac_[" << i << "][" << j << "] = " << f.diff(v) << ";" << endl;
         }
     }
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
     //
     // Print the DSTOOL C function dfdt
@@ -150,7 +150,7 @@ void VectorField::PrintDSTool(void)
     fout << " */" << endl;
     fout << endl;
     fout << "int " << Name() << "_dfdt(double *dfdt_, double *Y_, double *p_)" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
@@ -171,7 +171,7 @@ void VectorField::PrintDSTool(void)
         ex f = varvecfield_list[i].subs(expreqn_list);
         fout << "    dfdt_[" << i << "] = " << f.diff(t) << ";" << endl;
     }
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
 
     //
@@ -183,7 +183,7 @@ void VectorField::PrintDSTool(void)
     fout << " */" << endl;
     fout << endl;
     fout << "int " << Name() << "_dfdp(double **dfdp_, double *Y_, double *p_)" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
@@ -204,7 +204,7 @@ void VectorField::PrintDSTool(void)
             fout << "    dfdp_[" << i << "][" << j << "] = " << f.diff(p) << ";" << endl;
         }
     }
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
     //
     // Print the user-defined aux. functions.
@@ -214,7 +214,7 @@ void VectorField::PrintDSTool(void)
     fout << " */" << endl;
     fout << endl;
     fout << "int " << Name() << "_aux(double *f_, double *Y_, double *p_)" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
@@ -240,7 +240,7 @@ void VectorField::PrintDSTool(void)
         fout << "     */" << endl;
         fout << "    f_[" << n << "] = " << funcformula_list[n] << ";" << endl;
     }
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout << endl;
     //
     //  Print the user_init function.
@@ -250,7 +250,7 @@ void VectorField::PrintDSTool(void)
     fout << " */" << endl;
     fout << endl;
     fout << "int " << Name() << "_init()" << endl;
-    fout << "    {" << endl;
+    fout << "{" << endl;
     fout << "    /* ------------ Define the dynamical system in this segment ---------- */" << endl;
     fout << endl;
     if (HasPi) {
@@ -430,6 +430,6 @@ void VectorField::PrintDSTool(void)
     fout << "    /* ------------ End of dynamical system definition          ---------- */" << endl;
     fout << "    #include <ds_define.c>" << endl;
     fout << "    return 0;" << endl;
-    fout << "    }" << endl;
+    fout << "}" << endl;
     fout.close();
 }
