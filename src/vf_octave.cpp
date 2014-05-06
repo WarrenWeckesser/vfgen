@@ -74,7 +74,7 @@ void VectorField::PrintOctave(map<string,string> options)
     fout << "#" << endl;
     fout << "# The vector field " << endl;
     fout << "#" << endl;
-    fout << "function vf_ = " << Name() << "_vf(x_," << t << ")\n";
+    fout << "function vf_ = " << Name() << "_vf(x_, " << t << ")\n";
     string pname = Name() + "_parameters";
     if (np > 0) {
         fout << "    global " << pname << ";\n";
@@ -90,7 +90,7 @@ void VectorField::PrintOctave(map<string,string> options)
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
     }
-    fout << "    vf_ = zeros(" << nv << ",1);" << endl;
+    fout << "    vf_ = zeros(" << nv << ", 1);" << endl;
     for (int i = 0; i < nv; ++i) {
         fout << "    vf_(" << (i+1) << ")" << " = " << varvecfield_list[i] << ";" << endl;
     }
@@ -104,7 +104,7 @@ void VectorField::PrintOctave(map<string,string> options)
     fout << "#" << endl;
     fout << "# The Jacobian of the vector field" << endl;
     fout << "#" << endl;
-    fout << "function jac_ = " << Name() << "_jac(x_," << t << ")\n";
+    fout << "function jac_ = " << Name() << "_jac(x_, " << t << ")\n";
     if (np > 0) {
         fout << "    global " << pname << ";\n";
     }
@@ -116,14 +116,14 @@ void VectorField::PrintOctave(map<string,string> options)
     }
     GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     GetFromVector(fout, "    ", parname_list, "=", pname.c_str(), "()", 1, ";");
-    fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
+    fout << "    jac_ = zeros(" << nv << ", " << nv << ");" << endl;
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
             if (df != 0) {
-                fout << "    jac_(" << (i+1) << "," << (j+1) << ")" << " = " << f.diff(v) << ";" << endl;
+                fout << "    jac_(" << (i+1) << ", " << (j+1) << ")" << " = " << f.diff(v) << ";" << endl;
             }
         }
     }
@@ -142,7 +142,7 @@ void VectorField::PrintOctave(map<string,string> options)
             fout << "#" << endl;
             fout << "# This function implements the user-defined function \"" << fn.get_name() << "\"" << endl;
             fout << "#" << endl;
-            fout << "function r_ = " << funcname << "(x_," << t << ",p_)\n";
+            fout << "function r_ = " << funcname << "(x_, " << t << ", p_)\n";
             if (HasPi) {
                 fout << "    Pi = pi;\n";
             }
@@ -207,26 +207,26 @@ void VectorField::PrintOctave(map<string,string> options)
             fout << endl;
         }
         fout << "# --- Initial conditions ---\n";
-        SetVectorFromNames(fout,"","x_",vardefic_list,"()",1,";");
+        SetVectorFromNames(fout, "", "x_", vardefic_list, "()", 1, ";");
         fout << endl;
         fout << "# --- Time values ---\n";
         fout << "t0_ = 0.0;" << endl;
         fout << "t1_ = 10.0;" << endl;
         fout << "numpoints = 201;" << endl;
-        fout << "t_ = linspace(t0_,t1_,numpoints);\n";
+        fout << "t_ = linspace(t0_, t1_, numpoints);\n";
         fout << endl;
         fout << "# --- Solver error tolerances ---\n";
-        fout << "lsode_options(\"relative tolerance\",1e-6);\n";
-        fout << "lsode_options(\"absolute tolerance\",1e-8);\n";
+        fout << "lsode_options(\"relative tolerance\", 1e-6);\n";
+        fout << "lsode_options(\"absolute tolerance\", 1e-8);\n";
         fout << endl;
         fout << "# --- Call the ODE solver ---" << endl;
-        fout << "xsol_ = lsode({\"" << Name() << "_vf\",\"" << Name() << "_jac\"},x_,t_);\n";
+        fout << "xsol_ = lsode({\"" << Name() << "_vf\", \"" << Name() << "_jac\"}, x_, t_);\n";
         fout << endl;
         fout << "# --- Plot the solution ---" << endl;
         fout << "hold off\n";
         for (int i = 0; i < nv; ++i) {
             int k = i % strlen(colors);
-            fout << "plot(t_,xsol_(1:end," << i+1 << "),\"" << colors[k] << ";" << varname_list[i] << ";\")\n";
+            fout << "plot(t_, xsol_(1:end, " << i+1 << "), \"" << colors[k] << ";" << varname_list[i] << ";\")\n";
             if (i == 0) {
                 fout << "hold on\n";
             }
