@@ -248,9 +248,10 @@ void print_power_as_fortran(const power& p, const print_csrc& c, unsigned level)
     if (level >= power_prec) {
         c.s << "(";
     }
-    p.op(0).print(c,power_prec);
-    c.s << "**";
-    p.op(1).print(c,power_prec);
+    p.op(0).print(c, power_prec);
+    c.s << "**(";
+    p.op(1).print(c, power_prec);
+    c.s << ")";
     if (level >= power_prec) {
         c.s << ")";
     }
