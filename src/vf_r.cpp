@@ -122,7 +122,7 @@ void VectorField::PrintRode(map<string,string> options)
     for (int i = 0; i < nv; ++i) {
         fout << "    vf_[" << (i+1) << "]" << " = " << varvecfield_list[i] << ";" << endl;
     }
-    fout << "    return(list(q))\n";
+    fout << "    return(list(vf_))\n";
     fout << "}" << endl;
     fout << endl;
     //
