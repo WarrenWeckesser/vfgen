@@ -5,7 +5,7 @@
 //  This file defines the VectorField::PyDSTool method.
 //
 //
-//  Copyright (C) 2008 Warren Weckesser
+//  Copyright (C) 2008-2014 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License, Version 2, as
@@ -198,9 +198,10 @@ void VectorField::PrintPyDSTool(map<string,string> options)
         tout << endl;
         // tout << "from math import *" << endl;
         // tout << "from matplotlib.font_manager import FontProperties\n";
-        tout << "import " << Name() << endl;
+        tout << "import sys\n";
+        tout << "import matplotlib.pyplot as plt\n";
         tout << "import PyDSTool\n";
-        tout << "import pylab\n";
+        tout << "import " << Name() << endl;
         tout << endl;
         tout << "# Compute the solution\n";
         tout << "ds = " << Name() << ".args()\n";
@@ -211,11 +212,11 @@ void VectorField::PrintPyDSTool(map<string,string> options)
         tout << "# Plot the solution\n";
         tout << "lw = 1.5\n";
         for (int i = 0; i < nv; ++i) {
-            tout << "pylab.plot(sol['t'], sol['" << varname_list[i] << "'], linewidth=lw)\n";
+            tout << "plt.plot(sol['t'], sol['" << varname_list[i] << "'], linewidth=lw)\n";
         }
-        tout << "pylab.xlabel('t')\n";
-        tout << "pylab.title('" << Name() << "')\n";
-        tout << "pylab.legend((";
+        tout << "plt.xlabel('t')\n";
+        tout << "plt.title('" << Name() << "')\n";
+        tout << "plt.legend((";
         for (int i = 0; i < nv; ++i) {
             if (i > 0) {
                 tout << ", ";
@@ -224,8 +225,12 @@ void VectorField::PrintPyDSTool(map<string,string> options)
         }
         // tout << "),prop=FontProperties(size=14))\n";
         tout << "))\n";
-        tout << "pylab.grid(True)\n";
-        tout << "pylab.show()\n";
+        tout << "plt.grid(True)\n";
+        tout << "\n";
+        tout << "if len(sys.argv) > 1:\n";
+        tout << "    plt.savefig(sys.argv[1], dpi=72)\n";
+        tout << "else:\n";
+        tout << "    plt.show()\n";
         tout.close();
     }
 }
