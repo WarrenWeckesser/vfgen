@@ -42,13 +42,12 @@ using namespace GiNaC;
 
 void VectorField::PrintRadau5(map<string,string> options)
 {
-    int nc, np, nv, na, nf;
+    int nc, np, nv, na;
 
     nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
     na = exprname_list.nops();
-    nf = funcname_list.nops();
 
     //
     //  Create the vector field function.

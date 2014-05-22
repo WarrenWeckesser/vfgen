@@ -41,13 +41,12 @@ using namespace GiNaC;
 
 void VectorField::PrintAUTO(map<string,string> options)
 {
-    int nc, nv, np, na, nf;
+    int nc, nv, np, na;
 
     nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
     na = exprname_list.nops();
-    nf = funcname_list.nops();
 
     if (options["lang"] == "fortran") {
         //

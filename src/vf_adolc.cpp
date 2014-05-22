@@ -41,14 +41,12 @@ using namespace GiNaC;
 void VectorField::PrintADOLC(map<string,string> options)
 {
 
-    int nc, np, nv, na, nf;
+    int nc, nv, na;
 
     symbol t(IndependentVariable);
     nc = conname_list.nops();
     nv = varname_list.nops();
-    np = parname_list.nops();
     na = exprname_list.nops();
-    nf = funcname_list.nops();
 
     string filename = Name()+"_adolc.cpp";
     ofstream fout;

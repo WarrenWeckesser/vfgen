@@ -39,13 +39,11 @@ using namespace GiNaC;
 
 void VectorField::PrintPyDSTool(map<string,string> options)
 {
-    int nc, nv, np, na, nf;
+    int nc, nv, np;
 
     nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
-    na = exprname_list.nops();
-    nf = funcname_list.nops();
 
     string filename = Name()+".py";
     ofstream fout;

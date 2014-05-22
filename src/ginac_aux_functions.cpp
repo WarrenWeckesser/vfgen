@@ -87,8 +87,6 @@ ex delay_transform(const ex& f, const lst& vars) {
 ex to_nested_tuple(const lst& exprs, const lst& formulas)
 {
     lst all;
-    int ne = exprs.nops();
-    int nf = formulas.nops();
 
     for (lst::const_iterator iter = exprs.begin(); iter != exprs.end(); ++iter) {
         all.append(*iter);

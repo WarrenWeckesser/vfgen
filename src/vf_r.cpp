@@ -35,17 +35,6 @@ using namespace std;
 using namespace GiNaC;
 
 
-
-static void hist_header_comment(ofstream& fout, string name, string indvar)
-{
-    fout << "#" << endl;
-    fout << "# " << name << "_history(" << indvar << ", state_index)" << endl;
-    fout << "#" << endl;
-    fout << "# The history functions" << endl;
-    fout << "#" << endl;
-    return;
-}
-
 static void vf_header_comment(ofstream& fout, string name, string indvar)
 {
     fout << "#" << endl;

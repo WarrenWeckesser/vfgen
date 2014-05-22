@@ -38,14 +38,10 @@ using namespace GiNaC;
 
 void VectorField::PrintLatex(map<string,string> options)
 {
-    int nc, np, nv, na, nf;
+    int nv;
     int i;
 
-    nc = conname_list.nops();
     nv = varname_list.nops();
-    np = parname_list.nops();
-    na = exprname_list.nops();
-    nf = funcname_list.nops();
 
     string filename = Name()+".tex";
     ofstream fout;
