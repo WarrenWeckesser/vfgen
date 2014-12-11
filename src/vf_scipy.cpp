@@ -34,23 +34,25 @@ using namespace std;
 using namespace GiNaC;
 
 static void PrintArgDescription(ofstream &fout,lst varname_list, lst parname_list)
-    {
+{
     fout << "    Arguments:\n";
     fout << "        y_ :  vector of the state variables:\n";
-    for (unsigned i = 0; i < varname_list.nops(); ++i)
+    for (unsigned i = 0; i < varname_list.nops(); ++i) {
         fout << "                  y_[" << i << "] is " << varname_list[i] << endl;
+    }
     fout << "        t_ :  time\n";
     fout << "        p_ :  vector of the parameters\n";
-    for (unsigned i = 0; i < parname_list.nops(); ++i)
+    for (unsigned i = 0; i < parname_list.nops(); ++i) {
         fout << "                  p_[" << i << "] is " << parname_list[i] << endl;
     }
+}
 
 //
 // PrintSciPy -- The SciPy Code Generator.
 //
 
 void VectorField::PrintSciPy(map<string,string> options)
-    {
+{
     int nc, nv, np, na, nf;
 
     nc = conname_list.nops();
@@ -78,26 +80,27 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "the function vectorfield().  The Jacobian of the vector field\n";
     fout << "is computed by jacobian().  These functions can be used with" << endl;
     fout << "the SciPy odeint function." << endl;
-    if (options["func"] == "yes" && nf > 0)
-        {
+    if (options["func"] == "yes" && nf > 0) {
         fout << "This module also defines the function";
-        if (nf > 1)
+        if (nf > 1) {
             fout << "s";
-        for (int i = 0; i < nf; ++i)
-            {
-            if (i == 0)
+        }
+        for (int i = 0; i < nf; ++i) {
+            if (i == 0) {
                 fout << " ";
-            else if (nf > 1)
-                {
-                if (i == nf-1)
+            }
+            else if (nf > 1) {
+                if (i == nf-1) {
                     fout << " and ";
-                else
+                }
+                else {
                     fout << ", ";
                 }
-            fout << funcname_list[i] << "()";
             }
-        fout << ".\n";
+            fout << funcname_list[i] << "()";
         }
+        fout << ".\n";
+    }
     fout << endl;
     fout << "For example:\n";
     fout << endl;
@@ -109,8 +112,9 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "]   # Assume the parameters have been set elsewhere\n";
     fout << "    t = [i/10.0 for i in range(0, 101)]\n";
     fout << "    ic = ";
-    for (int i = 0; i < nv; ++i)
+    for (int i = 0; i < nv; ++i) {
         fout << ((i == 0) ? "[1.0" : ",0.0");
+    }
     fout << "]\n";
     fout << "    sol = odeint(" << Name() << ".vectorfield, ic, t, args=(params,), Dfun=" << Name() << ".jacobian)\n";
     fout << endl;
@@ -134,30 +138,27 @@ void VectorField::PrintSciPy(map<string,string> options)
     PrintArgDescription(fout,varname_list,parname_list);
     fout << "    \"\"\"\n";
     // fout << endl;
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = pi\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
     fout << endl;
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
     fout << endl;
-    for (int i = 0; i < na; ++i)
-        {
+    for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << endl;
-        }
-    if (na > 0)
+    }
+    if (na > 0) {
         fout << endl;
+    }
 
     fout << "    f_ = numpy.zeros((" << nv << ",))" << endl;
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "] = " << varvecfield_list[i] << endl;
-        }
+    }
     fout << endl;
 
     fout << "    return f_" << endl;
@@ -175,41 +176,35 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "    The Jacobian of the vector field \"" << Name() << "\"\n";
     PrintArgDescription(fout,varname_list,parname_list);
     fout << "    \"\"\"\n";
-    if (HasPi)
-        {
+    if (HasPi) {
         fout << "    Pi = pi\n";
-        }
-    for (int i = 0; i < nc; ++i)
-        {
+    }
+    for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+    }
     GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
     fout << endl;
     fout << "    # Create the Jacobian matrix:" << endl; 
     fout << "    jac_ = numpy.zeros((" << nv << "," << nv << "))" << endl; 
-    for (int i = 0; i < nv; ++i)
-        {
+    for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j)
-            {
+        for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
-            if (df != 0)
+            if (df != 0) {
                 fout << "    jac_[" << i << "," << j << "] = " << df << endl;
             }
         }
+    }
     fout << "    return jac_\n";
     fout << endl;
 
-
-    if (options["func"] == "yes")
-        {
+    if (options["func"] == "yes") {
         //
         // Print the user-defined functions.
         //
-        for (int n = 0; n < nf; ++n)
-            {
+        for (int n = 0; n < nf; ++n) {
             fout << endl;
             fout << "#" << endl;
             fout << "# User function: " << funcname_list[n] << endl;
@@ -220,32 +215,29 @@ void VectorField::PrintSciPy(map<string,string> options)
             fout << "    The user-defined function \"" << funcname_list[n] << "\" for the vector field \"" << Name() << "\"\n";
             PrintArgDescription(fout, varname_list, parname_list);
             fout << "    \"\"\"\n";
-            if (HasPi)
-                {
+            if (HasPi) {
                 fout << "    Pi = pi\n";
-                }
-            for (int i = 0; i < nc; ++i)
-                {
+            }
+            for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-                }
+            }
             GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
             fout << endl;
             GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
             fout << endl;
-            for (int i = 0; i < na; ++i)
-                {
+            for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << "" << endl;
-                }
-            if (na > 0)
-                fout << endl;
-            fout << "    return " << funcformula_list[n] << "" << endl;
             }
+            if (na > 0) {
+                fout << endl;
+            }
+            fout << "    return " << funcformula_list[n] << "" << endl;
         }
+    }
 
     fout.close();
 
-    if (options["demo"] == "yes")
-        {
+    if (options["demo"] == "yes") {
         //
         //  Create a self-contained ODE solver for this vector field
         //  that allows the user to give the initial conditions,
@@ -270,8 +262,9 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << endl;
         tout << "from __future__ import print_function\n\n";
         tout << "import sys" << endl;
-        if (HasPi)
+        if (HasPi) {
             tout << "from math import pi" << endl;
+        }
         tout << "from scipy.integrate import odeint" << endl;
         tout << "import " << Name() << endl;
         tout << endl << endl;
@@ -294,32 +287,30 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "# Main script begins here..." << endl;
         tout << "#" << endl;
 
-        if (HasPi)
-            {
+        if (HasPi) {
             tout << "Pi = pi\n";
-            }
-        for (int i = 0; i < nc; ++i)
-            {
+        }
+        for (int i = 0; i < nc; ++i) {
             tout << conname_list[i] << " = " << convalue_list[i] << endl;
-            }
+        }
         tout << "N_ = " << nv << "\n" ;
         tout << "P_ = " << np << "\n" ;
         tout << "# Default values for the initial conditions, parameters and solver parameters\n";
         tout << "def_y_ = [";
-        for (int i = 0; i < nv; ++i)
-            {
+        for (int i = 0; i < nv; ++i) {
             tout << vardefic_list[i];
-            if (i != nv-1)
+            if (i != nv-1) {
                 tout << ", " ;
             }
+        }
         tout << "]\n" ;
         tout << "def_p_ = [" ;
-        for (int i = 0; i < np; ++i)
-            {
+        for (int i = 0; i < np; ++i) {
             tout << pardefval_list[i] ;
-            if (i != np-1)
+            if (i != np-1) {
                 tout << ", " ;
             }
+        }
         tout << "]\n" ;
         tout << "abserr = 1.0e-8\n";
         tout << "relerr = 1.0e-6\n";
@@ -382,18 +373,19 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "# Print the solution.\n";
         tout << "for t1,y1 in zip(t,ysol):\n";
         tout << "    print(t1, ";
-        for (int i = 0; i < nv; ++i)
+        for (int i = 0; i < nv; ++i) {
             tout << "y1[" << i << "], ";
+        }
         tout << "end='')\n";
         tout << "    print(";
-        for (int i = 0; i < nf; ++i)
-            {
+        for (int i = 0; i < nf; ++i) {
             tout << Name() << "." << funcname_list[i] << "(y1, t1, p_)";
-            if (i < nf-1)
+            if (i < nf-1) {
                 tout << ",";
             }
+        }
         tout << ")\n";
         tout.close();
-        }
     }
+}
 
