@@ -268,6 +268,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         PrintVFGENComment(tout,"# ");
         tout << "#\n" ;
         tout << endl;
+        tout << "from __future__ import print_function\n\n";
         tout << "import sys" << endl;
         if (HasPi)
             tout << "from math import pi" << endl;
@@ -276,17 +277,17 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << endl << endl;
 
         tout << "def use():" << endl;
-        tout << "    print 'use: ',sys.argv[0],' [options]'" << endl;
-        tout << "    print 'options:'" << endl;
-        tout << "    print '    -h    Print this message.'" << endl;
+        tout << "    print('use: ',sys.argv[0],' [options]')" << endl;
+        tout << "    print('options:')" << endl;
+        tout << "    print('    -h    Print this message.')" << endl;
         tout << "    for i in range(N_):" << endl;
-        tout << "        print '    '+varnames_[i]+'=<initial_condition>  Default value is ', def_y_[i]" << endl;
+        tout << "        print('    '+varnames_[i]+'=<initial_condition>  Default value is ', def_y_[i])" << endl;
         tout << "    for i in range(P_):" << endl;
-        tout << "        print '    '+parnames_[i]+'=<parameter_value>    Default value is ', def_p_[i]" << endl;
-        tout << "    print '    abserr=<absolute_error_tolerance>   Default value is ', abserr" << endl;
-        tout << "    print '    relerr=<relative_error_tolerance>   Default value is ', relerr" << endl;
-        tout << "    print '    stoptime=<stop_time>                Default value is ', stoptime" << endl;
-        tout << "    print '    numpoints=<number_of_output_points> Default value is ', numpoints" << endl;
+        tout << "        print('    '+parnames_[i]+'=<parameter_value>    Default value is ', def_p_[i])" << endl;
+        tout << "    print('    abserr=<absolute_error_tolerance>   Default value is ', abserr)" << endl;
+        tout << "    print('    relerr=<relative_error_tolerance>   Default value is ', relerr)" << endl;
+        tout << "    print('    stoptime=<stop_time>                Default value is ', stoptime)" << endl;
+        tout << "    print('    numpoints=<number_of_output_points> Default value is ', numpoints)" << endl;
         tout << endl;
 
         tout << "#" << endl;
@@ -346,7 +347,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "        sys.exit()" << endl;
         tout << "    eqloc = a.find('=')" << endl;
         tout << "    if (eqloc == -1):" << endl;
-        tout << "        print 'Invalid argument (missing =): ', a" << endl;
+        tout << "        print('Invalid argument (missing =): ', a)" << endl;
         tout << "        use()" << endl;
         tout << "        sys.exit()" << endl;
         tout << "    else:" << endl;
@@ -355,7 +356,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "        if var in options:" << endl;
         tout << "            options[var] = float(val)" << endl;
         tout << "        else:" << endl;
-        tout << "            print 'Unknown argument: ', a" << endl;
+        tout << "            print('Unknown argument: ', a)" << endl;
         tout << "            use()" << endl;
         tout << "            sys.exit()" << endl;
         tout << endl;
@@ -371,7 +372,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "tfinal = options['stoptime']" << endl;
         tout << "N = int(options['numpoints'])" << endl;
         tout << "if N < 2:\n";
-        tout << "    print 'The number of points must be at least 2.'\n";
+        tout << "    print('The number of points must be at least 2.')\n";
         tout << "    sys.exit()\n";
         tout << "t = [tfinal*float(i)/(N-1) for i in range(N)]" << endl;
         tout << endl;
@@ -380,20 +381,18 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << endl;
         tout << "# Print the solution.\n";
         tout << "for t1,y1 in zip(t,ysol):\n";
-        tout << "    print t1,";
+        tout << "    print(t1, ";
         for (int i = 0; i < nv; ++i)
-            tout << "y1[" << i << "],";
-        tout << endl;
-        tout << "    print ";
+            tout << "y1[" << i << "], ";
+        tout << "end='')\n";
+        tout << "    print(";
         for (int i = 0; i < nf; ++i)
             {
-            tout << Name() << "." << funcname_list[i] << "(y1,t1,p_)";
-            if (i == nf-1)
-                tout << endl;
-            else
+            tout << Name() << "." << funcname_list[i] << "(y1, t1, p_)";
+            if (i < nf-1)
                 tout << ",";
             }
-
+        tout << ")\n";
         tout.close();
         }
     }
