@@ -358,7 +358,7 @@ char help_r[] =
 "Options: (default is listed first)\n"
 "func=no|yes\n"
 "    If the option func=yes is given, the file [name].R will define two\n"
-"    function for each user-defined function in the vector field file.\n"
+"    functions for each user-defined function in the vector field file.\n"
 "    The functions are:\n"
 "        [name]_sol_[funcname](sol, parameters)\n"
 "            Arguments are a solution and the vector field parameters.\n"
