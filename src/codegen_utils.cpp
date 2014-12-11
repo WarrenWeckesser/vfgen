@@ -197,6 +197,18 @@ void SetVectorFromNames(ofstream &fout, const char *skip, const char *vector, ls
 }
 
 
+//
+// names.nops() must equal values.nops()
+//
+void AssignNameValueLists(std::ofstream &fout, const char *skip,
+                          GiNaC::lst names, const char *assignop, GiNaC::lst values,
+                          const char *term)
+{
+    for (int i = 0; i < names.nops(); ++i) {
+        fout << skip << names[i] << " " << assignop << " " << values[i] << term << endl;
+    }
+}
+
 void PrintNameList(ofstream &fout, lst names)
 {
     int n;

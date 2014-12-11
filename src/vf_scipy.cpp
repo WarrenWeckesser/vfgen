@@ -141,20 +141,15 @@ void VectorField::PrintSciPy(map<string,string> options)
     if (HasPi) {
         fout << "    Pi = pi\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
     GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
     fout << endl;
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
     fout << endl;
-    for (int i = 0; i < na; ++i) {
-        fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << endl;
-    }
+    AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, "");
     if (na > 0) {
         fout << endl;
     }
-
     fout << "    f_ = numpy.zeros((" << nv << ",))" << endl;
     for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "] = " << varvecfield_list[i] << endl;
@@ -179,9 +174,7 @@ void VectorField::PrintSciPy(map<string,string> options)
     if (HasPi) {
         fout << "    Pi = pi\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
     GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
     fout << endl;
@@ -218,16 +211,12 @@ void VectorField::PrintSciPy(map<string,string> options)
             if (HasPi) {
                 fout << "    Pi = pi\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
             GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
             fout << endl;
             GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
             fout << endl;
-            for (int i = 0; i < na; ++i) {
-                fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << "" << endl;
-            }
+            AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, "");
             if (na > 0) {
                 fout << endl;
             }
@@ -290,9 +279,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         if (HasPi) {
             tout << "Pi = pi\n";
         }
-        for (int i = 0; i < nc; ++i) {
-            tout << conname_list[i] << " = " << convalue_list[i] << endl;
-        }
+        AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
         tout << "N_ = " << nv << "\n" ;
         tout << "P_ = " << np << "\n" ;
         tout << "# Default values for the initial conditions, parameters and solver parameters\n";
@@ -388,4 +375,3 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout.close();
     }
 }
-

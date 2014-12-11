@@ -38,6 +38,9 @@ void GetFromVector2(std::ofstream &fout, const char *skip, GiNaC::lst names, con
 					const char *vector, const char *bropen, const char *brclose, int istart, const char *term);
 void SetVectorFromNames(std::ofstream &fout, const char *skip, const char *vector, GiNaC::lst names,
                       const char *braces, int istart, const char *term);
+void AssignNameValueLists(std::ofstream &fout, const char *skip,
+						  GiNaC::lst names, const char *assignop, GiNaC::lst values,
+						  const char *term);
 void PrintNameList(std::ofstream &fout, GiNaC::lst names);
 void PrintPi(std::ofstream &fout);
 void PrintMultilineComment(std::ofstream &fout, const std::string &comment,
