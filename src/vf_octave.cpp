@@ -82,14 +82,10 @@ void VectorField::PrintOctave(map<string,string> options)
     if (HasPi) {
         fout << "    Pi = pi;\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, ";");
     GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     GetFromVector(fout, "    ", parname_list, "=", pname.c_str(), "()", 1, ";");
-    for (int i = 0; i < na; ++i) {
-        fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, ";");
     fout << "    vf_ = zeros(" << nv << ", 1);" << endl;
     for (int i = 0; i < nv; ++i) {
         fout << "    vf_(" << (i+1) << ")" << " = " << varvecfield_list[i] << ";" << endl;
@@ -111,9 +107,7 @@ void VectorField::PrintOctave(map<string,string> options)
     if (HasPi) {
         fout << "    Pi = pi;\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, ";");
     GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
     GetFromVector(fout, "    ", parname_list, "=", pname.c_str(), "()", 1, ";");
     fout << "    jac_ = zeros(" << nv << ", " << nv << ");" << endl;
@@ -146,14 +140,10 @@ void VectorField::PrintOctave(map<string,string> options)
             if (HasPi) {
                 fout << "    Pi = pi;\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, ";");
             GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
             GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
-            for (int i = 0; i < na; ++i) {
-                fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, ";");
             fout << "    r_ = " << funcformula_list[n] << ";" << endl;
             fout << "endfunction" << endl;
         }
@@ -195,9 +185,7 @@ void VectorField::PrintOctave(map<string,string> options)
         if (HasPi) {
             fout << "Pi = pi;\n";
         }
-        for (int i = 0; i < nc; ++i) {
-            fout << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+        AssignNameValueLists(fout, "", conname_list, "=", convalue_list, ";");
         fout << endl;
         if (np > 0) {
             fout << "# --- Parameters ---\n";
