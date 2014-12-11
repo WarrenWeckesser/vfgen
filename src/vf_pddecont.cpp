@@ -220,7 +220,7 @@ void VectorField::PDDEC_PrintHessiansTimesV(ofstream &dout, const vector<ex> &vf
 //
 
 void VectorField::PrintPDDECONT(map<string,string> options)
-    {
+{
     int nc = conname_list.nops();
     int nv = varname_list.nops();
     int np = parname_list.nops();
