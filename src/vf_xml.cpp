@@ -525,4 +525,4 @@ int VectorField::ReadXML(string xmlfilename)
 
     mxmlDelete(tree);
     return 0;
-    }
+}
