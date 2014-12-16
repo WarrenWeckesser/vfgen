@@ -42,7 +42,7 @@ configure (i.e. the autotools script), or plain old Make.  These are discussed
 below.
 
 
-** CMake **
+**CMake**
 
 CMake (`http://www.cmake.org/`) is a platform-independent build tool. To build
 VFGEN with CMake, you must have CMake installed, and you must have the GiNaC
@@ -69,7 +69,7 @@ before running cmake.  Then `make install` will install the executable file
 in `$(CMAKE_INSTALL_PREFIX)/bin`.
 
 
-** configure (i.e. autotools) **
+**configure (i.e. autotools)**
 
 VFGEN also comes with a "configure" script.  The simplest way to use this
 script is the following sequence of commands in the top directory:
@@ -94,7 +94,7 @@ command
     $ ./configure --help
 
 
-** Plain old Makefile **
+**Plain old Makefile**
 
 If you are using Linux (or some other Unix-like system), you have the GNU C++
 compiler installed (g++), you have the program pkg-config installed, and you
@@ -112,8 +112,7 @@ no `install` target.  Besides the default `vfgen` target, the only other
 target of interest is `clean`; `make clean` will remove all the `.o` files.
 
 
-Building from version control source
-------------------------------------
+**Building from version control source**
 
 The code under version control does not include the `configure` script.
 To create the `configure` script:
