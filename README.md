@@ -121,3 +121,8 @@ To create the `configure` script:
     $ aclocal
     $ automake --add-missing
     $ autoconf
+
+Some additional options may be necessary.  On a Mac running OS X 10.9.5,
+with pkg-config installed in /usr/local, aclocal might have to run as
+
+    $ aclocal -I /usr/local/share/aclocal
