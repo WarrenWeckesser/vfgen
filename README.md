@@ -6,10 +6,10 @@ other computational tools.  Given a specification of an ordinary or delay
 differential equation, VFGEN can generate source code that defines the
 equations for a wide assortment of solvers and tools.
 
-* Web page: `www.warrenweckesser.net/vfgen`
-* License:  GPL-2
-* Author:   Warren Weckesser, `www.warrenweckesser.net`
-* Email:    vfgen DOT help AT gmail com  (fix the obvious minor obfuscation)
+* _Web page:_ `www.warrenweckesser.net/vfgen`
+* _License:_  GPL-2
+* _Author:_   Warren Weckesser, `www.warrenweckesser.net`
+* _Email:_    vfgen DOT help AT gmail com  (fix the obvious minor obfuscation)
 
 This file is in the top directory for the source code distribution of the
 program VFGEN.  This README gives the steps necessary to build VFGEN from
