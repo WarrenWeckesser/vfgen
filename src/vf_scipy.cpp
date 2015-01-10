@@ -363,7 +363,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         for (int i = 0; i < nv; ++i) {
             tout << "y1[" << i << "], ";
         }
-        tout << "end='')\n";
+        tout << "end=' ')\n";
         tout << "    print(";
         for (int i = 0; i < nf; ++i) {
             tout << Name() << "." << funcname_list[i] << "(y1, t1, p_)";
