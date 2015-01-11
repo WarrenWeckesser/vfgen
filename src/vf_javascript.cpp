@@ -438,13 +438,13 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "var intervalID = \"none\"\n";
         dout << endl;
         dout << "function clear_canvas()\n";
-        dout << " {\n";
+        dout << "{\n";
         dout << "    var ctx = document.getElementById('canvas').getContext('2d')\n";
         dout << "    ctx.clearRect(0,0,500,500)\n";
-        dout << " }\n";
+        dout << "}\n";
         dout << endl;
         dout << "function init()\n";
-        dout << " {\n";
+        dout << "{\n";
         dout << "    clear_canvas()\n";
         dout << "    t = 0.0\n";
         for (int i = 0; i < nv; ++i) {
@@ -458,14 +458,14 @@ void VectorField::PrintJavascript(map<string,string> options)
             dout << "    document.getElementById('" << varname_list[i] << "_t').value = document.getElementById('" << varname_list[i] << "0').value\n";
         }
         dout << "    document.getElementById('t').value = t\n";
-        dout << " }\n";
+        dout << "}\n";
         dout << endl;
         dout << "function start_animation()\n";
-        dout << " {\n";
+        dout << "{\n";
         dout << "    if (intervalID == \"none\") {\n";
         dout << "        intervalID = setInterval(advance,0)\n";
         dout << "    }\n";
-        dout << " }\n";
+        dout << "}\n";
         dout << endl;
         dout << "function stop_animation()\n";
         dout << "{\n";
