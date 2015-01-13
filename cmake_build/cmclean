@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Delete *all* cmake-related files.
+#
+rm -f CMakeCache.txt progress.make Makefile install_manifest.txt *.cmake
+rm -rf CMakeFiles
+rm -rf _CPack_Packages
