@@ -53,7 +53,7 @@ vfgen:	$(OBJ_FILES)
 	$(CXX) $(OBJ_FILES) `pkg-config --libs ginac mxml` -o vfgen
 
 %.o: %.cpp $(HEADERS)
-	$(CXX) -c -O2 -o $@ `pkg-config --cflags ginac mxml` -DVERSION=\"2.5.0-dev\" $<
+	$(CXX) -c -O2 -o $@ `pkg-config --cflags ginac mxml` -DVERSION=\"$(shell cat ../version.txt)\" $<
 
 clean:
 	rm -f *.o
