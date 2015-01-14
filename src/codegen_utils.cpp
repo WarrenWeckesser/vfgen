@@ -204,7 +204,7 @@ void AssignNameValueLists(std::ofstream &fout, const char *skip,
                           GiNaC::lst names, const char *assignop, GiNaC::lst values,
                           const char *term)
 {
-    for (int i = 0; i < names.nops(); ++i) {
+    for (unsigned i = 0; i < names.nops(); ++i) {
         fout << skip << names[i] << " " << assignop << " " << values[i] << term << endl;
     }
 }

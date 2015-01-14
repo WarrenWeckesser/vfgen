@@ -53,9 +53,8 @@ static void PrintArgDescription(ofstream &fout,lst varname_list, lst parname_lis
 
 void VectorField::PrintSciPy(map<string,string> options)
 {
-    int nc, nv, np, na, nf;
+    int nv, np, na, nf;
 
-    nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
     na = exprname_list.nops();

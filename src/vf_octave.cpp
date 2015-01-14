@@ -39,12 +39,11 @@ using namespace GiNaC;
 void VectorField::PrintOctave(map<string,string> options)
 {
     symbol t(IndependentVariable);
-    int nc, np, nv, na, nf;
+    int nc, np, nv, nf;
 
     nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
-    na = exprname_list.nops();
     nf = funcname_list.nops();
 
     //
