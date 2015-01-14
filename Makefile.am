@@ -1,2 +1,2 @@
 SUBDIRS = src
-EXTRA_DIST = cmake_build/cmclean
+EXTRA_DIST = version.txt cmake_build/cmclean
