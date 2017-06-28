@@ -290,6 +290,7 @@ int main(int argc, char **argv)
     command_options["matlab"].push_back("parstyle");
     command_options["octave"].push_back("demo");
     command_options["octave"].push_back("func");
+    command_options["octave"].push_back("parstyle");
     command_options["pydstool"].push_back("demo");
     command_options["pygsl"].push_back("demo");
     command_options["pygsl"].push_back("func");
