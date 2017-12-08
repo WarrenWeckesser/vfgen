@@ -132,7 +132,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "    ! Constants\n";
     }
     for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
+        fout << "    " << conname_list[i] << " = " << convalue_list[i] << endl;
     }
     fout << "    ! State variables\n";
     GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, "");
@@ -207,7 +207,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         Declare(fout,"    ","DOUBLE PRECISION",varname_list,"");
         // Constants...
         for (int i = 0; i < nc; ++i) {
-            fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
+            fout << "    " << conname_list[i] << " = " << convalue_list[i] << endl;
         }
         fout << endl;
         // State Variables...
@@ -296,7 +296,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
             fout << "! Constants\n";
         }
         for (int k = 0; k < nc; ++k) {
-            fout << conname_list[k] << " = " << convalue_list[k] << ";\n";
+            fout << conname_list[k] << " = " << convalue_list[k] << "\n";
         }
         if (nc > 0) {
             fout << endl;
@@ -306,14 +306,14 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
             fout << "! Set the parameters of the DDE\n";
         }
         for (unsigned k = 0; k < parname_list.nops(); ++k) {
-            fout << parname_list[k] << " = " << pardefval_list[k] << ";\n"; 
+            fout << parname_list[k] << " = " << pardefval_list[k] << "\n";
         }
         fout << "! Set the solver parameters: relative error, abs. error, stop time\n";
         fout << "relerr = 1D-7\n";
         fout << "abserr = 1D-9\n";
         fout << "stoptime = 10.0\n";
         for (unsigned k = 0; k < parname_list.nops(); ++k) { 
-            fout << "p_(" << k+1 << ") = " << parname_list[k] << ";\n";
+            fout << "p_(" << k+1 << ") = " << parname_list[k] << "\n";
         }
         if (!HasNonconstantDelay) {
             // If there are only constant delays, put them in the array LAGS
@@ -334,7 +334,8 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         else {
             lags_arg = "LAGS";
         } 
-        fout << "SOL = DDE_SOLVER(NVAR," << Name() << "_ddes," << lags_arg << "," << Name() << "_history,TSPAN,OPTIONS=OPTS)\n";
+        fout << "SOL = DDE_SOLVER(NVAR," << Name() << "_ddes," << lags_arg <<
+             "," << Name() << "_history,TSPAN,OPTIONS=OPTS)\n";
         fout << endl;
         fout << "F = \"(E17.8\"//REPEAT(\",E17.8\",NEQN)//\")\"\n";
         fout << "DO I = 1, SOL%NPTS\n";
