@@ -1,4 +1,10 @@
-char help_adolc[] = 
+#include <string>
+#include <map>
+
+using namespace std;
+
+
+const string help_adolc =
 "use: vfgen adolc vector_field_file.vf\n\n"
 "This command creates a C++ function that can be used with the ADOL-C library.\n"
 "Two files are created:\n"
@@ -11,7 +17,7 @@ char help_adolc[] =
 "and trace_off(tag) statement.\n\n"
 "Options: none.\n";
 
-char help_auto[] =
+const string help_auto =
 "use:  vfgen auto vector_field_file.vf\n\n"
 "This command generates a C or FORTRAN file to be used with the AUTO\n"
 "continuation software.  A single file is created, called [name]_avf.c\n"
@@ -23,13 +29,13 @@ char help_auto[] =
 "    For AUTO2000, use C (the default).  For AUTO07p, either C or FORTRAN\n"
 "    may be used.\n";
 
-char help_check[] =
+const string help_check =
 "use: vfgen check vector_field_file.vf\n\n"
 "This command prints information from the vector field file.  It can be used to\n"
 "to check for errors before using another command.\n\n"
 "Options: none.\n";
 
-char help_cvode[] =
+const string help_cvode =
 "use: vfgen cvode vector_field_file.vf\n"
 "     vfgen cvode:option=value,...,option=value vector_field_file.vf\n\n"
 "This command generates code to be used with the CVODE library (which is part\n"
@@ -60,7 +66,7 @@ char help_cvode[] =
 "    solver.  The output of the program consists of columns of numbers; the\n"
 "    first column is the time, and the rest are the state variables.\n";
 
-char help_dde23[] =
+const string help_dde23 =
 "use: vfgen dde23 vector_field_file.vf\n"
 "     vfgen dde23:option=value,...,option=value vector_field_file.vf\n\n"
 "This command creates a MATLAB file that can be used with the DDE23 delay\n"
@@ -78,7 +84,7 @@ char help_dde23[] =
 "    the DDE23 function with the default parameter values and initial conditions\n"
 "    to plot a solution to the system.\n";
 
-char help_ddebiftool[] =
+const string help_ddebiftool =
 "use: vfgen ddebiftool vector_field_file.vf\n"
 "     vfgen ddebiftool:path=/path/to/ddebiftool vector_field_file.vf\n\n"
 "This command creates the files sys_init.m, sys_rhs.m, sys_deri.m and sys_tau.m,\n"
@@ -90,7 +96,7 @@ char help_ddebiftool[] =
 "    The 'path' option allows the user to specify a directory that is added to\n"
 "    the MATLAB search path in the file sys_init.m.\n";
 
-char help_dde_solver[] =
+const string help_dde_solver =
 "use: vfgen dde_solver vector_field_file.vf\n"
 "     vfgen dde_solver:demo=yes vector_field_file.vf\n\n"
 "This command creates a Fortran 90 file that can be used with the DDE solver\n"
@@ -101,7 +107,7 @@ char help_dde_solver[] =
 "    This program will use [name].f90 to generate a solution to the delay\n"
 "    equations.\n";
 
-char help_delay2ode[] =
+const string help_delay2ode =
 "use: vfgen delay2ode vector_field_file.vf\n"
 "     vfgen delay2ode:option=value,...,option=value vector_field_file.vf\n\n"
 "This command generates a new vector field file that is a finite dimensional\n"
@@ -119,13 +125,13 @@ char help_delay2ode[] =
 "    The number of fractional delay steps into which each delay is split.\n"
 "    The default is N=10.\n";
 
-char help_dstool[] =
+const string help_dstool =
 "use: vfgen dstool vector_field_file.vf\n\n"
 "This command creates a C definition file for the vector field to be used\n"
 "with DSTOOL. The name of the file is [name]_def.c.\n\n"
 "Options: none.\n";
 
-char help_evf[] =
+const string help_evf =
 "use: vfgen evf vector_field_file.vf\n\n"
 "This command generates a new vector field file, in which the original vector\n"
 "field has been extended with its variational equations.\n\n"
@@ -144,7 +150,7 @@ char help_evf[] =
 "    If this option is not given, the vector field is simply extended with\n"
 "        v' = (DF(x)/dx)v\n";
 
-char help_gsl[] =
+const string help_gsl =
 "use: vfgen gsl vector_field_file.vf\n"
 "     vfgen gsl:option=value,...,option=value vector_field_file.vf\n\n"
 "This command generates a C file containing functions to be used with the\n"
@@ -174,14 +180,14 @@ char help_gsl[] =
 "    solver.  The output of the program consists of columns of numbers; the\n"
 "    first column is the time, and the rest are the state variables.\n";
 
-char help_help[] =
+const string help_help =
 "use: vfgen help <command>\n\n"
 "The help command will print a short description of the given <command>.\n"
 "For example,\n"
 "    vfgen help cvode\n"
 "prints a description of the cvode command.\n";
 
-char help_javascript[] =
+const string help_javascript =
 "use: vfgen javascript vector_field_file.vf\n"
 "     vfgen javascript:option=value,... vector_field_file.vf\n\n"
 "This command creates Javascript functions for computing a Taylor polynomial\n"
@@ -208,7 +214,7 @@ char help_javascript[] =
 "order=[integer]\n"
 "    The order of the Taylor polynomial. The default is order=5.\n";
 
-char help_latex[] =
+const string help_latex =
 "use: vfgen latex vector_field_file.vf\n\n"
 "This command generate a LaTeX fragment for the vector field, in a file called\n"
 "[name].tex, where [name] is the Name attribute of the VectorField entity in\n"
@@ -217,7 +223,7 @@ char help_latex[] =
 "by the AMSMATH LaTeX package.)\n\n"
 "Options: none.\n";
 
-char help_lsoda[] =
+const string help_lsoda =
 "use: vfgen lsoda vector_field_file.vf\n"
 "     vfgen lsoda:option=value,option=value,... vector_field_file.vf\n\n"
 "This command creates the Fortran file [name]_rhs.f, which defines the vector\n"
@@ -247,14 +253,14 @@ char help_lsoda[] =
 "    given, the parameters are included in the state variable vector, beginning\n"
 "    just after the last state variable.\n";
 
-char help_matcont[] =
+const string help_matcont =
 "use: vfgen matcont vector_field_file.vf\n\n"
 "This command generates a MATLAB file to be used with the MATCONT and\n"
 "CL_MATCONT programs.  The name of the file is [name].m, where [name]\n"
 "is the Name attribute of the VectorField entity in the vector field file.\n\n"
 "Options: none.\n";
 
-char help_matlab[] =
+const string help_matlab =
 "use: vfgen matlab vector_field_file.vf\n"
 "     vfgen matlab:option=value,...,option=value vector_field_file.vf\n\n"
 "This command generates MATLAB files to be used with the MATLAB ODE solvers.\n"
@@ -290,7 +296,7 @@ char help_matlab[] =
 "    alternative, because you can then use VFGEN to create the Jacobian of the\n"
 "     extended vector field.)\n";
 
-char help_octave[] =
+const string help_octave =
 "use: vfgen octave vector_field_file.vf\n"
 "     vfgen octave:option=value,...,option=value vector_field_file.vf\n\n"
 "This command generates an OCTAVE file, [name].m, to be used with the OCTAVE\n"
@@ -312,14 +318,14 @@ char help_octave[] =
 "    If the option func=yes is given, the file [name].m will define a\n"
 "    function for each user function given in the vector field file.\n";
 
-char help_pddecont[] =
+const string help_pddecont =
 "use: vfgen pddecont vector_field_file.vf\n\n"
 "This command creates the file sys-[name].cpp to be used with the PDDE-CONT\n"
 "software package.  PDDE-CONT does continuation and bifurcation computations\n"
 "for delay differential equations.\n\n"
 "Options: none.\n";
 
-char help_pydstool[] =
+const string help_pydstool =
 "use: vfgen pydstool vector_field_file.vf\n"
 "     vfgen pydstool:demo=yes vector_field_file.vf\n\n"
 "This command creates a Python file that can be used to define a differential\n"
@@ -331,7 +337,7 @@ char help_pydstool[] =
 "    This file contains a script that uses the function defined in [name].py\n"
 "    to generate and plot a solution to the differential equation.\n";
 
-char help_pygsl[] =
+const string help_pygsl =
 "use: vfgen pygsl vector_field_file.vf\n"
 "     vfgen pygsl:option=value,...,option=value vector_field_file.vf\n\n"
 "This command creates Python files that can be used with the PyGSL Python\n"
@@ -352,7 +358,7 @@ char help_pygsl[] =
 "    initial conditions and parameters can be specified on the command line.\n"
 "    The program will print the solution data to the console.\n";
 
-char help_r[] =
+const string help_r =
 "use: vfgen r vector_field_file.vf\n\n"
 "This command creates the file [name].R, which defines the vector field\n"
 "and its Jacobian in subroutines to be used with the R package deSolve.\n"
@@ -376,7 +382,7 @@ char help_r[] =
 "    This file contains a simple demonstration of the use of the functions\n"
 "    defined in [name].R\n";
 
-char help_radau5[] =
+const string help_radau5 =
 "use: vfgen radau5 vector_field_file.vf\n"
 "     vfgen radau5:demo=yes vector_field_file.vf\n\n"
 "This command creates the file [name]_rhs.f, which defines the vector field\n"
@@ -392,7 +398,7 @@ char help_radau5[] =
 "    by calling RADAU5.  The initial conditions and parameters of the solution\n"
 "    are the default values given in the vector field file.\n";
 
-char help_scilab[] =
+const string help_scilab =
 "use: vfgen scilab vector_field_file.vf\n"
 "     vfgen scilab:option=value,...,option=value vector_field_file.vf\n\n"
 "This command creates files to be used with Scilab. The main file created\n"
@@ -420,7 +426,7 @@ char help_scilab[] =
 "    solution. Run the script in Scilab with the command\n"
 "        -->exec [name]_demo.sce;\n";
 
-char help_scipy[] =
+const string help_scipy =
 "use: vfgen scipy vector_field_file.vf\n"
 "     vfgen scipy:option=value,...,option=value vector_field_file.vf\n\n"
 "This command generates Python files to be used with the SciPy library.\n"
@@ -440,7 +446,7 @@ char help_scipy[] =
 "    initial conditions and parameters can be specified on the command line.\n"
 "    The program will print the solution data to the console.\n";
 
-char help_taylor[] =
+const string help_taylor =
 "use: vfgen taylor vector_field_file.vf\n"
 "     vfgen taylor:order=[integer] vector_field_file.vf\n\n"
 "This command creates C functions for computing a Taylor polynomial\n"
@@ -458,7 +464,7 @@ char help_taylor[] =
 "order=[integer]\n"
 "    The order of the Taylor polynomial. The default is order=5.\n";
 
-char help_xpp[] =
+const string help_xpp =
 "use: vfgen xpp vector_field_file.vf\n"
 "     vfgen xpp:option=value,...,option=value vector_field_file.vf\n\n"
 "This command creats a file to be used with XPP (aka XPP-AUT).\n"
@@ -475,3 +481,34 @@ char help_xpp[] =
 "        @ maxstor=10000\n"
 "    to the ODE file. (A final semi-colon in text is optional.)\n"
 "    Note: text must not contain any commas.\n";
+
+
+map<const string, const string> help_text = {
+    {"adolc",       help_adolc},
+    {"auto",        help_auto},
+    {"check",       help_check},
+    {"cvode",       help_cvode},
+    {"ode23",       help_dde23},
+    {"ddebiftool",  help_ddebiftool},
+    {"dde_solver",  help_dde_solver},
+    {"delay2ode",   help_delay2ode},
+    {"dstool",      help_dstool},
+    {"evf",         help_evf},
+    {"gsl",         help_gsl},
+    {"help",        help_help},
+    {"javascript",  help_javascript},
+    {"latex",       help_latex},
+    {"lsoda",       help_lsoda},
+    {"matcont",     help_matcont},
+    {"matlab",      help_matlab},
+    {"octave",      help_octave},
+    {"pddecont",    help_pddecont},
+    {"pydstool",    help_pydstool},
+    {"pygsl",       help_pygsl},
+    {"r",           help_r},
+    {"radau5",      help_radau5},
+    {"scilab",      help_scilab},
+    {"scipy",       help_scipy},
+    {"taylor",      help_taylor},
+    {"xpp",         help_xpp}
+};

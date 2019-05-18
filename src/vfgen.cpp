@@ -66,7 +66,6 @@ static void Zlags_print(const ex& arg1, const ex& arg2, const print_context& c) 
 //
 
 REGISTER_FUNCTION(delay, dummy())
-//REGISTER_FUNCTION(Zlags_, dummy())
 REGISTER_FUNCTION(Zlags_, print_func<print_csrc_float>(Zlags_print).
                           print_func<print_csrc_double>(Zlags_print).
                           print_func<print_python>(Zlags_print) )
@@ -75,7 +74,7 @@ REGISTER_FUNCTION(lagvalue, dummy())
 
 #define NAMEWIDTH 9
 
-const char *commands[] = {
+const vector<string> commands = {
         "adolc",
         "auto",
         "check",
@@ -103,40 +102,37 @@ const char *commands[] = {
         "scipy",
         "taylor",
         "xml",
-        "xpp",
-        "end"};
-        
-map<string,vector<string> > command_options;
+        "xpp"
+};
 
-int checkcommand(const char *s)
+map<string, vector<string>> command_options;
+
+int checkcommand(const string& s)
 {
-    int i;
+    size_t i;
 
-    i = 0;
-    while (strcmp(commands[i],"end") != 0) {
-        if (strcmp(s,commands[i]) == 0) {
-            return i;
-        }
-        else {
-            i = i + 1;
-        }
+    i = distance(begin(commands), find(begin(commands), end(commands), s));
+    if (i == commands.size()) {
+        return -1;
     }
-    return -1;
+    return (int) i;
 }
-    
+
+
 void printcommands(ostream &c)
 {
     int i = 0;
     c << "    ";
-    while (strcmp(commands[i],"end") != 0) {
+
+    for (auto cmd : commands) {
         if (i > 0) {
             c << ", ";
         }
         if (i > 0 && i % 8 == 0) {
             c << "\n    ";
         }
-        c << commands[i];
-        i = i + 1;
+        c << cmd;
+        i += 1;
     }
     c << endl;
 }
@@ -152,7 +148,7 @@ void printuse()
     printcommands(cerr);
 }
 
-int help(char *command)
+int help(const string& command)
 {
     int m;
     m = checkcommand(command);
@@ -162,90 +158,8 @@ int help(char *command)
         printcommands(cout);
         return -1;
     }
-    if (strcmp(command, "adolc") == 0) {
-        cout << help_adolc;
-    }
-    else if (strcmp(command, "auto") == 0) {
-        cout << help_auto;
-    }
-    else if (strcmp(command, "check") == 0) {
-        cout << help_check;
-    }
-    else if (strcmp(command, "cvode") == 0) {
-        cout << help_cvode;
-    }
-    else if (strcmp(command, "dde23") == 0) {
-        cout << help_dde23;
-    }
-    else if (strcmp(command, "ddebiftool") == 0) {
-        cout << help_ddebiftool;
-    }
-    else if (strcmp(command, "dde_solver") == 0) {
-        cout << help_dde_solver;
-    }
-    else if (strcmp(command, "delay2ode") == 0) {
-        cout << help_delay2ode;
-    }
-    else if (strcmp(command, "dstool") == 0) {
-        cout << help_dstool;
-    }
-    else if (strcmp(command, "evf") == 0) {
-        cout << help_evf;
-    }
-    else if (strcmp(command, "gsl") == 0) {
-        cout << help_gsl;
-    }
-    else if (strcmp(command, "help") == 0) {
-        cout << help_help;
-    }
-    else if (strcmp(command, "javascript") == 0) {
-        cout << help_javascript;
-    }
-    else if (strcmp(command, "latex") == 0) {
-        cout << help_latex;
-    }
-    else if (strcmp(command, "lsoda") == 0) {
-        cout << help_lsoda;
-    }
-    else if (strcmp(command, "matcont") == 0) {
-        cout << help_matcont;
-    }
-    else if (strcmp(command, "matlab") == 0) {
-        cout << help_matlab;
-    }
-    else if (strcmp(command, "octave") == 0) {
-        cout << help_octave;
-    }
-    else if (strcmp(command, "pddecont") == 0) {
-        cout << help_pddecont;
-    }
-    else if (strcmp(command, "pydstool") == 0) {
-        cout << help_pydstool;
-    }
-    else if (strcmp(command, "pygsl") == 0) {
-        cout << help_pygsl;
-    }
-    else if (strcmp(command, "r") == 0) {
-        cout << help_r;
-    }
-    else if (strcmp(command, "radau5") == 0) {
-        cout << help_radau5;
-    }
-    else if (strcmp(command, "scilab") == 0) {
-        cout << help_scilab;
-    }
-    else if (strcmp(command,"scipy") == 0) {
-        cout << help_scipy;
-    }
-    else if (strcmp(command,"taylor") == 0) {
-        cout << help_taylor;
-    }
-    else if (strcmp(command,"xpp") == 0) {
-        cout << help_xpp;
-    }
-    else {
-        cout << "Sorry, help for \"" << command << "\" is not available yet!" << endl;
-    }
+    cout << help_text[command];
+
     return 0;
 }
 
@@ -295,7 +209,7 @@ int main(int argc, char **argv)
     command_options["pygsl"].push_back("demo");
     command_options["pygsl"].push_back("func");
     command_options["r"].push_back("demo");
-    command_options["r"].push_back("func");    
+    command_options["r"].push_back("func");
     command_options["radau5"].push_back("demo");
     command_options["scilab"].push_back("demo");
     command_options["scilab"].push_back("func");
@@ -304,7 +218,7 @@ int main(int argc, char **argv)
     command_options["scipy"].push_back("func");
     command_options["taylor"].push_back("order");
     command_options["xpp"].push_back("extra");
-    
+
     string commandstr(argv[1]);
     //
     // Check for the help command.
@@ -316,24 +230,24 @@ int main(int argc, char **argv)
     //
     //  Check for any options appended to the command.
     //
-    map<string,string> options;
+    map<string, string> options;
 
-    string::size_type loccolon = commandstr.find(":",0);
+    string::size_type loccolon = commandstr.find(":", 0);
     if (loccolon != string::npos) {
         // extrastr holds all the options given after the :
-        extrastr = commandstr.substr(loccolon+1,commandstr.length()-loccolon-1);
-        commandstr.erase(loccolon,commandstr.length()-loccolon);
+        extrastr = commandstr.substr(loccolon+1, commandstr.length()-loccolon-1);
+        commandstr.erase(loccolon, commandstr.length()-loccolon);
         // cerr << "Options \"" << extrastr << "\"" << endl;
         string::size_type pos = 0;
         do {
-            string::size_type locsep = extrastr.find(",",pos);
+            string::size_type locsep = extrastr.find(",", pos);
             string current_option, option_name, option_value;
             if (locsep == string::npos) {
                 locsep = extrastr.length();
             }
-            current_option = extrastr.substr(pos,locsep-pos);
+            current_option = extrastr.substr(pos, locsep-pos);
             // cerr << "current_option = \"" << current_option << "\"\n";
-            string::size_type loceq = current_option.find("=",0);
+            string::size_type loceq = current_option.find("=", 0);
             if (loceq == string::npos) {
                 // No "=" given in the option.
                 option_name = current_option;
@@ -346,15 +260,15 @@ int main(int argc, char **argv)
                     exit(-1);
                 }
                 option_name = current_option.substr(0,loceq);
-                option_value = current_option.substr(loceq+1,current_option.length()-loceq);
+                option_value = current_option.substr(loceq+1, current_option.length()-loceq);
             }
             options[option_name] = option_value;
             pos = locsep+1;
         } while (pos < extrastr.length());
     }
-        
-        
-    int command = checkcommand(commandstr.c_str());
+
+
+    int command = checkcommand(commandstr);
     if (command == -1) {
         cout << "vfgen: unknown command: " << commandstr << endl;
         printuse();
@@ -367,7 +281,7 @@ int main(int argc, char **argv)
     //  checks that the name of the option is one of the  allowed options for
     //  the given command.)
     //
-    bool bad_opt = false;        
+    bool bad_opt = false;
     map<string,string>::const_iterator opt;
     for (opt = options.begin(); opt != options.end(); ++opt) {
         string optstr = opt->first;
