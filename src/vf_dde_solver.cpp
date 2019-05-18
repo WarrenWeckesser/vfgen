@@ -130,9 +130,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     //
     if (nc > 0) {
         fout << "    ! Constants\n";
-    }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << endl;
+        AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
     }
     fout << "    ! State variables\n";
     GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, "");
@@ -206,8 +204,8 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         }
         Declare(fout,"    ","DOUBLE PRECISION",varname_list,"");
         // Constants...
-        for (int i = 0; i < nc; ++i) {
-            fout << "    " << conname_list[i] << " = " << convalue_list[i] << endl;
+        if (nc > 0) {
+            AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
         }
         fout << endl;
         // State Variables...
@@ -292,22 +290,18 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         if (HasPi) {
             fout << "Pi = 3.1415926535897932385D0\n";
         }
+
         if (nc > 0) {
             fout << "! Constants\n";
-        }
-        for (int k = 0; k < nc; ++k) {
-            fout << conname_list[k] << " = " << convalue_list[k] << "\n";
-        }
-        if (nc > 0) {
+            AssignNameValueLists(fout, "", conname_list, "=", convalue_list, "");
             fout << endl;
         }
 
         if (np > 0) {
             fout << "! Set the parameters of the DDE\n";
+            AssignNameValueLists(fout, "", parname_list, "=", pardefval_list, "");
         }
-        for (unsigned k = 0; k < parname_list.nops(); ++k) {
-            fout << parname_list[k] << " = " << pardefval_list[k] << "\n";
-        }
+
         fout << "! Set the solver parameters: relative error, abs. error, stop time\n";
         fout << "relerr = 1D-7\n";
         fout << "abserr = 1D-9\n";
