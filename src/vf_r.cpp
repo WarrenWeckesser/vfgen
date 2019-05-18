@@ -293,11 +293,13 @@ void VectorField::convert_delay_to_lagvalue(ex& f, lst &lags)
         ex del = delayfunc.op(1);
         for (lst::const_iterator iter = vars.begin(); iter != vars.end(); ++iter) {
             ostringstream os;
+            lst tmp;
             os << lags.nops() + 1;
             symbol lagsym("lag" + os.str());
             int vindex = FindVar(ex_to<symbol>(*iter));
             delayexpr = delayexpr.subs(*iter == lagsym);
-            lags.append(lst(lagsym, vindex + 1, *iter, del));
+            tmp = {lagsym, vindex + 1, *iter, del};
+            lags.append(tmp);
         }
         f = f.subs(delayfunc == delayexpr);
     }

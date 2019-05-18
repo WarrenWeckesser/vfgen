@@ -118,7 +118,7 @@ lst to_list(const ex& expr)
 {
     lst exprs;
     if (!is_a<relational>(expr)) {
-        exprs = lst(expr);
+        exprs.append(expr);
         return exprs;
     }
     ex e = expr;
