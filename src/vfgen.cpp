@@ -74,72 +74,102 @@ REGISTER_FUNCTION(lagvalue, dummy())
 
 #define NAMEWIDTH 9
 
-const vector<string> commands = {
-        "adolc",
-        "auto",
-        "check",
-        "cvode",
-        "dde23",
-        "ddebiftool",
-        "dde_solver",
-        "delay2ode",
-        "dstool",
-        "evf",
-        "gsl",
-        "help",
-        "javascript",
-        "latex",
-        "lsoda",
-        "matcont",
-        "matlab",
-        "octave",
-        "pddecont",
-        "pydstool",
-        "pygsl",
-        "r",
-        "radau5",
-        "scilab",
-        "scipy",
-        "taylor",
-        "xml",
-        "xpp"
+struct command_info {
+    const vector<string> options;
+    const char *help_text;
 };
 
-//
-//  Allowed command options:
-//
-map<string, vector<string>> command_options = {
-    {"auto", {"lang"}},
-    {"cvode", {"demo", "func", "version"}},
-    {"dde23", {"demo", "parstyle"}},
-    {"ddebiftool", {"path"}},
-    {"dde_solver", {"demo"}},
-    {"delay2ode", {"N", "p"}},
-    {"evf", {"par"}},
-    {"gsl", {"demo", "func"}},
-    {"javascript", {"order", "demo"}},
-    {"lsoda", {"demo", "func", "parstyle"}},
-    {"matlab", {"demo", "evf", "func", "parstyle"}},
-    {"octave", {"demo", "func", "parstyle"}},
-    {"pydstool", {"demo"}},
-    {"pygsl", {"demo", "func"}},
-    {"r", {"demo", "func"}},
-    {"radau5", {"demo"}},
-    {"scilab", {"demo", "func", "parstyle"}},
-    {"scipy", {"demo", "func"}},
-    {"taylor", {"order"}},
-    {"xpp", {"extra"}}
+map<string, command_info> commands = {
+    {"adolc",
+        {{},
+         help_adolc}},
+    {"auto",
+        {{"lang"},
+         help_auto}},
+    {"check",
+        {{},
+         help_check}},
+    {"cvode",
+        {{"demo", "func", "version"},
+         help_cvode}},
+    {"dde23",
+        {{"demo", "parstyle"},
+         help_dde23}},
+    {"ddebiftool",
+        {{"path"},
+         help_ddebiftool}},
+    {"dde_solver",
+        {{"demo"},
+         help_dde_solver}},
+    {"delay2ode",
+        {{"N", "p"},
+         help_delay2ode}},
+    {"dstool",
+        {{},
+         help_dstool}},
+    {"evf",
+        {{"par"},
+         help_evf}},
+    {"gsl",
+        {{"demo", "func"},
+         help_gsl}},
+    {"help",
+        {{},
+         help_help}},
+    {"javascript",
+        {{"order", "demo"},
+         help_javascript}},
+    {"latex",
+        {{},
+         help_latex}},
+    {"lsoda",
+        {{"demo", "func", "parstyle"},
+         help_lsoda}},
+    {"matcont",
+        {{},
+         help_matcont}},
+    {"matlab",
+        {{"demo", "evf", "func", "parstyle"},
+         help_matlab}},
+    {"octave",
+        {{"demo", "func", "parstyle"},
+         help_octave}},
+    {"pddecont",
+        {{},
+         help_pddecont}},
+    {"pydstool",
+        {{"demo"},
+         help_pydstool}},
+    {"pygsl",
+        {{"demo", "func"},
+         help_pygsl}},
+    {"r",
+        {{"demo", "func"},
+         help_r}},
+    {"radau5",
+        {{"demo"},
+         help_radau5}},
+    {"scilab",
+        {{"demo", "func", "parstyle"},
+         help_scilab}},
+    {"scipy",
+        {{"demo", "func"},
+         help_scipy}},
+    {"taylor",
+        {{"order"},
+         help_taylor}},
+    {"xml",
+        {{},
+         help_xml}},
+    {"xpp",
+        {{"extra"},
+         help_xpp}}
 };
 
-int checkcommand(const string& s)
+
+bool checkcommand(const string& s)
 {
-    size_t i;
-
-    i = distance(begin(commands), find(begin(commands), end(commands), s));
-    if (i == commands.size()) {
-        return -1;
-    }
-    return (int) i;
+    return commands.find(s) != commands.end();
 }
 
 
@@ -155,7 +185,7 @@ void printcommands(ostream &c)
         if (i > 0 && i % 8 == 0) {
             c << "\n    ";
         }
-        c << cmd;
+        c << cmd.first;
         i += 1;
     }
     c << endl;
@@ -174,15 +204,13 @@ void printuse()
 
 int help(const string& command)
 {
-    int m;
-    m = checkcommand(command);
-    if (m < 0) {
+    if (!checkcommand(command)) {
         cout << "VFGEN error: \"" << command << "\" is not a valid command.\n";
         cout << "VFGEN commands are:\n";
         printcommands(cout);
         return -1;
     }
-    cout << help_text[command];
+    cout << commands[command].help_text;
 
     return 0;
 }
@@ -201,9 +229,8 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
-
-
     string commandstr(argv[1]);
+
     //
     // Check for the help command.
     //
@@ -251,9 +278,7 @@ int main(int argc, char **argv)
         } while (pos < extrastr.length());
     }
 
-
-    int command = checkcommand(commandstr);
-    if (command == -1) {
+    if (!checkcommand(commandstr)) {
         cout << "vfgen: unknown command: " << commandstr << endl;
         printuse();
         exit(-1);
@@ -275,7 +300,8 @@ int main(int argc, char **argv)
         // cerr << endl;
         bool validopt = false;
         vector<string>::const_iterator w;
-        for (w = command_options[commandstr].begin(); w != command_options[commandstr].end(); ++w) {
+        auto command_options = commands[commandstr].options;
+        for (w = command_options.begin(); w != command_options.end(); ++w) {
             if (optstr == *w) {
                 validopt = true;
                 break;
