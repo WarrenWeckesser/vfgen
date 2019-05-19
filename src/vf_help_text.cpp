@@ -464,6 +464,12 @@ const string help_taylor =
 "order=[integer]\n"
 "    The order of the Taylor polynomial. The default is order=5.\n";
 
+const string help_xml =
+"use: vfgen xml vector_field_file.vf\n"
+"This command regenerates an XML version of the input file and writes\n"
+"it to the terminal.\n"
+"Options: none.\n";
+
 const string help_xpp =
 "use: vfgen xpp vector_field_file.vf\n"
 "     vfgen xpp:option=value,...,option=value vector_field_file.vf\n\n"
@@ -488,7 +494,7 @@ map<const string, const string> help_text = {
     {"auto",        help_auto},
     {"check",       help_check},
     {"cvode",       help_cvode},
-    {"ode23",       help_dde23},
+    {"dde23",       help_dde23},
     {"ddebiftool",  help_ddebiftool},
     {"dde_solver",  help_dde_solver},
     {"delay2ode",   help_delay2ode},
@@ -510,5 +516,6 @@ map<const string, const string> help_text = {
     {"scilab",      help_scilab},
     {"scipy",       help_scipy},
     {"taylor",      help_taylor},
+    {"xml", 		help_xml},
     {"xpp",         help_xpp}
 };

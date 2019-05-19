@@ -105,7 +105,31 @@ const vector<string> commands = {
         "xpp"
 };
 
-map<string, vector<string>> command_options;
+//
+//  Allowed command options:
+//
+map<string, vector<string>> command_options = {
+    {"auto", {"lang"}},
+    {"cvode", {"demo", "func", "version"}},
+    {"dde23", {"demo", "parstyle"}},
+    {"ddebiftool", {"path"}},
+    {"dde_solver", {"demo"}},
+    {"delay2ode", {"N", "p"}},
+    {"evf", {"par"}},
+    {"gsl", {"demo", "func"}},
+    {"javascript", {"order", "demo"}},
+    {"lsoda", {"demo", "func", "parstyle"}},
+    {"matlab", {"demo", "evf", "func", "parstyle"}},
+    {"octave", {"demo", "func", "parstyle"}},
+    {"pydstool", {"demo"}},
+    {"pygsl", {"demo", "func"}},
+    {"r", {"demo", "func"}},
+    {"radau5", {"demo"}},
+    {"scilab", {"demo", "func", "parstyle"}},
+    {"scipy", {"demo", "func"}},
+    {"taylor", {"order"}},
+    {"xpp", {"extra"}}
+};
 
 int checkcommand(const string& s)
 {
@@ -177,47 +201,7 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
-    //
-    //  Allowed command options:
-    //
-    command_options["auto"].push_back("lang");
-    command_options["cvode"].push_back("demo");
-    command_options["cvode"].push_back("func");
-    command_options["cvode"].push_back("version");
-    command_options["dde23"].push_back("demo");
-    command_options["dde23"].push_back("parstyle");
-    command_options["ddebiftool"].push_back("path");
-    command_options["dde_solver"].push_back("demo");
-    command_options["delay2ode"].push_back("N");
-    command_options["delay2ode"].push_back("p");
-    command_options["evf"].push_back("par");
-    command_options["gsl"].push_back("demo");
-    command_options["gsl"].push_back("func");
-    command_options["javascript"].push_back("order");
-    command_options["javascript"].push_back("demo");
-    command_options["lsoda"].push_back("demo");
-    command_options["lsoda"].push_back("func");
-    command_options["lsoda"].push_back("parstyle");
-    command_options["matlab"].push_back("demo");
-    command_options["matlab"].push_back("evf");
-    command_options["matlab"].push_back("func");
-    command_options["matlab"].push_back("parstyle");
-    command_options["octave"].push_back("demo");
-    command_options["octave"].push_back("func");
-    command_options["octave"].push_back("parstyle");
-    command_options["pydstool"].push_back("demo");
-    command_options["pygsl"].push_back("demo");
-    command_options["pygsl"].push_back("func");
-    command_options["r"].push_back("demo");
-    command_options["r"].push_back("func");
-    command_options["radau5"].push_back("demo");
-    command_options["scilab"].push_back("demo");
-    command_options["scilab"].push_back("func");
-    command_options["scilab"].push_back("parstyle");
-    command_options["scipy"].push_back("demo");
-    command_options["scipy"].push_back("func");
-    command_options["taylor"].push_back("order");
-    command_options["xpp"].push_back("extra");
+
 
     string commandstr(argv[1]);
     //
