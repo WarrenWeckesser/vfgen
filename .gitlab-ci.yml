@@ -1,0 +1,30 @@
+# use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: gcc
+
+build:
+  stage: build
+  before_script:
+    - apt update && apt -y install cmake libmxml-dev libginac-dev
+  script:
+    - cd cmake_build
+    - cmake ../src
+    - make
+  #
+  #artifacts:
+  #  paths:
+  #    - cmake_build/vfgen
+  #
+  # depending on your build setup it's most likely a good idea to cache outputs
+  # to reduce the build time
+  # cache:
+  #   paths:
+  #     - "*.o"
+
+# run tests using the binary built before
+test:
+  stage: test
+  script:
+    - cd cmake_build
+    - ./vfgen help
