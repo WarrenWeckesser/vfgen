@@ -11,7 +11,7 @@ build:
     - cd cmake_build
     - cmake ../src
     - make
-    - ./vfgen help
+    - ./vfgen help help
   #
   #artifacts:
   #  paths:
