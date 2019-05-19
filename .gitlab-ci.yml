@@ -11,6 +11,7 @@ build:
     - cd cmake_build
     - cmake ../src
     - make
+    - ./vfgen help
   #
   #artifacts:
   #  paths:
@@ -23,8 +24,9 @@ build:
   #     - "*.o"
 
 # run tests using the binary built before
-test:
-  stage: test
-  script:
-    - cd cmake_build
-    - ./vfgen help
+# (This doesn't work--the binary probably needs to be saved somewhere.)
+#test:
+#  stage: test
+#  script:
+#    - cd cmake_build
+#    - ./vfgen help
