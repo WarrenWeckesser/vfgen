@@ -6,12 +6,15 @@ image: gcc
 build:
   stage: build
   before_script:
-    - apt update && apt -y install cmake libmxml-dev libginac-dev
+    - apt update && apt -y install cmake libmxml-dev libginac-dev octave
   script:
     - cd cmake_build
     - cmake ../src
     - make
     - ./vfgen help help
+    - cd ../tests/test_octave
+    - ../../cmake_build/vfgen octave linearosc.vf
+    - octave test_octave.m
   #
   #artifacts:
   #  paths:

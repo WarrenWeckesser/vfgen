@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<VectorField
+    Name="linearosc"
+    Description="Linear oscillator">
+<StateVariable
+    Name="x"
+    Description="x"
+    Formula="-y"
+    DefaultInitialCondition="1.0" />
+<StateVariable
+    Name="y"
+    Description="y"
+    Formula="x"
+    DefaultInitialCondition="0.0" />
+<Function
+    Name="func"
+    Description="squared magnitude"
+    Formula="x^2 + y^2" />
+</VectorField>
