@@ -14,7 +14,7 @@ build:
     - ./vfgen help help
     - cd ../tests/test_octave
     - ../../cmake_build/vfgen octave linearosc.vf
-    - octave test_octave.m
+    - octave --no-gui --no-window-system test_octave.m
   #
   #artifacts:
   #  paths:
