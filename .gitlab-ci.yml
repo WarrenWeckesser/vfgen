@@ -3,27 +3,24 @@
 # see https://hub.docker.com/_/gcc/
 image: gcc
 
-before_script:
-  - apt update && apt -y install cmake libmxml-dev libginac-dev
-
-test_octave:
+test:
   script:
-    - apt -y install octave
+    - echo "Installing vfgen"
+    - apt-get -y update && apt-get -y install cmake libmxml-dev libginac-dev
     - cd cmake_build
     - cmake ../src
     - make
     - make install
-    - cd ../tests/test_octave
-    - vfgen octave linearosc.vf
-    - octave --no-gui --no-window-system test_octave.m
-
-test_help:
-  script:
-    - cd cmake_build
-    - cmake ../src
-    - make
-    - make install
+    - cd ..
+    - echo "Installing octave"
+    - apt-get -y install octave
+    - echo "Testing help"
     - vfgen help help
+    - echo "Testing octave"
+    - cd tests/test_octave
+    - vfgen octave ../vf/linearosc.vf
+    - octave --no-gui --no-window-system test_octave.m
+    - cd ..
 
   #
   #artifacts:
