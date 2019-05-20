@@ -16,10 +16,15 @@ test:
     - apt-get -y install octave
     - echo "Testing help"
     - vfgen help help
+    - cd tests
     - echo "Testing octave"
-    - cd tests/test_octave
+    - cd test_octave
     - vfgen octave ../vf/linearosc.vf
     - octave --no-gui --no-window-system test_octave.m
+    - cd ..
+    - echo "Testing lsoda"
+    - cd test_lsoda
+    - bash run_test.sh
     - cd ..
 
   #
