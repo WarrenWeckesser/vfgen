@@ -1,6 +1,6 @@
 
 echo "Installing libgsl"
-DEBIAN_FRONTEND=noninteractive apt-get -yq install libgsl-dev
+apt-get -yq install libgsl-dev
 
 echo "Running vfgen to generated code for gsl"
 vfgen gsl ../vf/linearosc.vf
