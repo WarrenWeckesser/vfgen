@@ -22,6 +22,10 @@ test:
     - cd test_lsoda
     - bash run_test.sh
     - cd ..
+    - echo "Testing gsl"
+    - cd test_gsl
+    - bash run_test.sh
+    - cd ..
 
   #
   #artifacts:
