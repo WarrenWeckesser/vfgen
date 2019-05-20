@@ -1,6 +1,6 @@
 
 echo "Installing octave"
-apt-get -yq install octave
+apt-get -yqq install octave
 
 echo "Testing octave"
 cd test_octave
