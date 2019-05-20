@@ -22,7 +22,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-PROJECT(vfgen CXX)
+project(vfgen CXX)
 #
 # Reminders:
 #
@@ -43,46 +43,49 @@ PROJECT(vfgen CXX)
 #SET(VFGEN_VERSION_MINOR "5")
 #SET(VFGEN_VERSION_PATCH "0-dev")
 #SET(VFGEN_VERSION ${VFGEN_VERSION_MAJOR}.${VFGEN_VERSION_MINOR}.${VFGEN_VERSION_PATCH})
-FILE(STRINGS "../version.txt" VFGEN_VERSION)
-ADD_DEFINITIONS(-DVERSION="${VFGEN_VERSION}")
-IF(CMAKE_COMPILER_IS_GNUCXX)
-    ADD_DEFINITIONS(-Wall)
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+
+file(STRINGS "../version.txt" VFGEN_VERSION)
+add_definitions(-DVERSION="${VFGEN_VERSION}")
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+    add_definitions(-Wall)
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 #
 # For convenience, define the list of C++ files in a macro.
 #
-SET(VFGEN_CPP_SRC_FILES codegen_utils.cpp ginac_aux_functions.cpp strutils.cpp MyVec.cpp vf_adolc.cpp vf_auto.cpp vf.cpp vf_cvode.cpp vf_dde23.cpp vf_ddebiftool.cpp vf_dde_solver.cpp vf_delay2ode.cpp vf_differentials.cpp vf_dstool.cpp vf_evf.cpp vfgen.cpp vf_gsl.cpp vf_javascript.cpp vf_latex.cpp vf_lsoda.cpp vf_matcont.cpp vf_matlab.cpp vf_octave.cpp vf_pddecont.cpp vf_pydstool.cpp vf_pygsl.cpp vf_r.cpp vf_radau5.cpp vf_scilab.cpp vf_scipy.cpp vf_taylor.cpp vf_xml.cpp vf_xpp.cpp)
+set(VFGEN_CPP_SRC_FILES codegen_utils.cpp ginac_aux_functions.cpp strutils.cpp MyVec.cpp vf_adolc.cpp vf_auto.cpp vf.cpp vf_cvode.cpp vf_dde23.cpp vf_ddebiftool.cpp vf_dde_solver.cpp vf_delay2ode.cpp vf_differentials.cpp vf_dstool.cpp vf_evf.cpp vfgen.cpp vf_gsl.cpp vf_javascript.cpp vf_latex.cpp vf_lsoda.cpp vf_matcont.cpp vf_matlab.cpp vf_octave.cpp vf_pddecont.cpp vf_pydstool.cpp vf_pygsl.cpp vf_r.cpp vf_radau5.cpp vf_scilab.cpp vf_scipy.cpp vf_taylor.cpp vf_xml.cpp vf_xpp.cpp)
 
-ADD_EXECUTABLE(vfgen ${VFGEN_CPP_SRC_FILES})
+add_executable(vfgen ${VFGEN_CPP_SRC_FILES})
 
 #
 # Look for the required libraries.
 # VFGEN requires Mini-XML (www.easysw.com/~mike/mxml) and GiNaC (www.ginac.de).
 #
-FIND_PATH(GINAC_INCLUDE_DIR ginac/ginac.h /usr/local/include /usr/include)
-FIND_PATH(MXML_INCLUDE_DIR mxml.h /usr/local/include /usr/include)
+find_path(GINAC_INCLUDE_DIR ginac/ginac.h /usr/local/include /usr/include)
+find_path(MXML_INCLUDE_DIR mxml.h /usr/local/include /usr/include)
 
-FIND_LIBRARY(GINAC_LIBRARY ginac /usr/local/lib /usr/lib)
-FIND_LIBRARY(MXML_LIBRARY mxml /usr/local/lib /usr/lib)
+find_library(GINAC_LIBRARY ginac /usr/local/lib /usr/lib)
+find_library(MXML_LIBRARY mxml /usr/local/lib /usr/lib)
 
-IF(GINAC_INCLUDE_DIR AND GINAC_LIBRARY)
-    MESSAGE("Found ginac.")
-ELSE(GINAC_INCLUDE_DIR AND GINAC_LIBRARY)
-    MESSAGE(SEND_ERROR "missing ginac library")
-ENDIF(GINAC_INCLUDE_DIR AND GINAC_LIBRARY)
-IF(MXML_INCLUDE_DIR AND MXML_LIBRARY)
-    MESSAGE("Found mxml.")
-ELSE(MXML_INCLUDE_DIR AND MXML_LIBRARY)
-    MESSAGE(SEND_ERROR "missing mxml library")
-ENDIF(MXML_INCLUDE_DIR AND MXML_LIBRARY)
+if(GINAC_INCLUDE_DIR AND GINAC_LIBRARY)
+    message("Found ginac.")
+else(GINAC_INCLUDE_DIR AND GINAC_LIBRARY)
+    message(SEND_ERROR "missing ginac library")
+endif(GINAC_INCLUDE_DIR AND GINAC_LIBRARY)
 
-INCLUDE_DIRECTORIES(${GINAC_INCLUDE_DIR} ${MXML_INCLUDE_DIR})
+if(MXML_INCLUDE_DIR AND MXML_LIBRARY)
+    message("Found mxml.")
+else(MXML_INCLUDE_DIR AND MXML_LIBRARY)
+    message(SEND_ERROR "missing mxml library")
+endif(MXML_INCLUDE_DIR AND MXML_LIBRARY)
 
-TARGET_LINK_LIBRARIES(vfgen ${GINAC_LIBRARY} ${MXML_LIBRARY})
+include_directories(${GINAC_INCLUDE_DIR} ${MXML_INCLUDE_DIR})
 
-SET(CMAKE_INSTALL_PREFIX $ENV{CMAKE_INSTALL_PREFIX})
-INSTALL(TARGETS vfgen RUNTIME DESTINATION bin)
+target_link_libraries(vfgen ${GINAC_LIBRARY} ${MXML_LIBRARY})
+
+set(CMAKE_INSTALL_PREFIX $ENV{CMAKE_INSTALL_PREFIX})
+install(TARGETS vfgen RUNTIME DESTINATION bin)
 
 
 #SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "VFGEN is a vector field source code generator.")
