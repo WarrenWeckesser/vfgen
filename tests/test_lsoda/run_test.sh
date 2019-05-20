@@ -1,5 +1,5 @@
 echo "Fetching LSODA from netlib."
-curl -O "http://www.netlib.org/odepack/{opkdmain.f,opkda1.f,opkda2.f}"
+curl -s -S -O "http://www.netlib.org/odepack/{opkdmain.f,opkda1.f,opkda2.f}"
 
 echo "Running vfgen to generate Fortran routines for LSODA."
 vfgen lsoda ../vf/linearosc.vf
