@@ -41,9 +41,11 @@ static void PrintArgDescription(ofstream &fout,lst varname_list, lst parname_lis
         fout << "                  y_[" << i << "] is " << varname_list[i] << endl;
     }
     fout << "        t_ :  time\n";
-    fout << "        p_ :  vector of the parameters\n";
-    for (unsigned i = 0; i < parname_list.nops(); ++i) {
-        fout << "                  p_[" << i << "] is " << parname_list[i] << endl;
+    if (parname_list.nops() > 0) {
+        fout << "        p_ :  vector of the parameters\n";
+        for (unsigned i = 0; i < parname_list.nops(); ++i) {
+            fout << "                  p_[" << i << "] is " << parname_list[i] << endl;
+        }
     }
 }
 
@@ -106,16 +108,22 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "    from scipy.integrate import odeint\n";
     fout << "    import " << Name() << endl;
     fout << endl;
-    fout << "    params = [";
-    PrintNameList(fout,parname_list);
-    fout << "]   # Assume the parameters have been set elsewhere\n";
+    if (np > 0) {
+        fout << "    params = [";
+        PrintNameList(fout,parname_list);
+        fout << "]   # Assume the parameters have been set elsewhere\n";
+    }
     fout << "    t = [i/10.0 for i in range(0, 101)]\n";
     fout << "    ic = ";
     for (int i = 0; i < nv; ++i) {
         fout << ((i == 0) ? "[1.0" : ",0.0");
     }
     fout << "]\n";
-    fout << "    sol = odeint(" << Name() << ".vectorfield, ic, t, args=(params,), Dfun=" << Name() << ".jacobian)\n";
+    fout << "    sol = odeint(" << Name() << ".vectorfield, ic, t,";
+    if (np > 0) {
+        fout << " args=(params,),";
+    }
+    fout << " Dfun=" << Name() << ".jacobian)\n";
     fout << endl;
     PrintVFGENComment(fout,"");
     fout << endl;
@@ -131,7 +139,11 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "# The vector field." << endl;
     fout << "#" << endl;
     fout << endl;
-    fout << "def " << "vectorfield(y_,t_,p_):" << endl;
+    fout << "def vectorfield(y_, t_";
+    if (np > 0) {
+        fout << ", p";
+    }
+    fout << "):" << endl;
     fout << "    \"\"\"\n";
     fout << "    The vector field function for the vector field \"" << Name() << "\"\n";
     PrintArgDescription(fout,varname_list,parname_list);
@@ -143,8 +155,10 @@ void VectorField::PrintSciPy(map<string,string> options)
     AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
     GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
     fout << endl;
-    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
-    fout << endl;
+    if (np > 0) {
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
+        fout << endl;
+    }
     AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, "");
     if (na > 0) {
         fout << endl;
@@ -165,7 +179,12 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "#  The Jacobian." << endl;
     fout << "#" << endl;
     fout << endl;
-    fout << "def jacobian(y_, t_, p_):" << endl;
+    fout << "def jacobian(y_, t_";
+    if (np > 0) {
+        fout << ", p_";
+    }
+    fout << "):" << endl;
+    
     fout << "    \"\"\"\n";
     fout << "    The Jacobian of the vector field \"" << Name() << "\"\n";
     PrintArgDescription(fout,varname_list,parname_list);
@@ -175,7 +194,9 @@ void VectorField::PrintSciPy(map<string,string> options)
     }
     AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
     GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
-    GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
+    if (np > 0) {
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
+    }
     fout << endl;
     fout << "    # Create the Jacobian matrix:" << endl; 
     fout << "    jac_ = numpy.zeros((" << nv << "," << nv << "))" << endl; 
@@ -202,7 +223,11 @@ void VectorField::PrintSciPy(map<string,string> options)
             fout << "# User function: " << funcname_list[n] << endl;
             fout << "#" << endl;
             fout << endl;
-            fout << "def " << funcname_list[n] << "(y_, t_, p_):" << endl;
+            fout << "def " << funcname_list[n] << "(y_, t_";
+            if (np > 0) {
+                fout << ", p_";
+            }
+            fout << "):" << endl;
             fout << "    \"\"\"\n";
             fout << "    The user-defined function \"" << funcname_list[n] << "\" for the vector field \"" << Name() << "\"\n";
             PrintArgDescription(fout, varname_list, parname_list);
@@ -213,8 +238,10 @@ void VectorField::PrintSciPy(map<string,string> options)
             AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
             GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
             fout << endl;
-            GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
-            fout << endl;
+            if (np > 0) {
+                GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, "");
+                fout << endl;
+            }
             AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, "");
             if (na > 0) {
                 fout << endl;
@@ -263,8 +290,10 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "    print('    -h    Print this message.')" << endl;
         tout << "    for i in range(N_):" << endl;
         tout << "        print('    '+varnames_[i]+'=<initial_condition>  Default value is ', def_y_[i])" << endl;
-        tout << "    for i in range(P_):" << endl;
-        tout << "        print('    '+parnames_[i]+'=<parameter_value>    Default value is ', def_p_[i])" << endl;
+        if (np > 0) {
+            tout << "    for i in range(P_):" << endl;
+            tout << "        print('    '+parnames_[i]+'=<parameter_value>    Default value is ', def_p_[i])" << endl;
+        }
         tout << "    print('    abserr=<absolute_error_tolerance>   Default value is ', abserr)" << endl;
         tout << "    print('    relerr=<relative_error_tolerance>   Default value is ', relerr)" << endl;
         tout << "    print('    stoptime=<stop_time>                Default value is ', stoptime)" << endl;
@@ -280,8 +309,14 @@ void VectorField::PrintSciPy(map<string,string> options)
         }
         AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
         tout << "N_ = " << nv << "\n" ;
-        tout << "P_ = " << np << "\n" ;
-        tout << "# Default values for the initial conditions, parameters and solver parameters\n";
+        if (np > 0) {
+            tout << "P_ = " << np << "\n" ;
+        }
+        tout << "# Default values for the initial conditions";
+        if (np > 0) {
+            tout << ", parameters";
+        }
+        tout << " and solver parameters\n";
         tout << "def_y_ = [";
         for (int i = 0; i < nv; ++i) {
             tout << vardefic_list[i];
@@ -290,28 +325,34 @@ void VectorField::PrintSciPy(map<string,string> options)
             }
         }
         tout << "]\n" ;
-        tout << "def_p_ = [" ;
-        for (int i = 0; i < np; ++i) {
-            tout << pardefval_list[i] ;
-            if (i != np-1) {
-                tout << ", " ;
+        if (np > 0) {
+            tout << "def_p_ = [" ;
+            for (int i = 0; i < np; ++i) {
+                tout << pardefval_list[i] ;
+                if (i != np-1) {
+                    tout << ", " ;
+                }
             }
+            tout << "]\n" ;
         }
-        tout << "]\n" ;
         tout << "abserr = 1.0e-8\n";
         tout << "relerr = 1.0e-6\n";
         tout << "stoptime = 10.0\n";
         tout << "numpoints = 250\n";
         MakePythonListOfStrings(tout,"varnames_",varname_list,"");
-        MakePythonListOfStrings(tout,"parnames_",parname_list,"");
+        if (np > 0) {
+            MakePythonListOfStrings(tout,"parnames_",parname_list,"");
+        }
         tout << endl;
         tout << "# Create a dict of all the options that can be given on the command line.\n";
         tout << "# Set the values to the default value of option.\n";
         tout << "options = {}" << endl;
         tout << "for i in range(N_):" << endl;
         tout << "    options[varnames_[i]] = def_y_[i]" << endl;
-        tout << "for i in range(P_):" << endl;
-        tout << "    options[parnames_[i]] = def_p_[i]" << endl;
+        if (np > 0) {
+            tout << "for i in range(P_):" << endl;
+            tout << "    options[parnames_[i]] = def_p_[i]" << endl;
+        }
         tout << "options['abserr'] = abserr" << endl;
         tout << "options['relerr'] = relerr" << endl;
         tout << "options['stoptime'] = stoptime" << endl;
@@ -337,13 +378,19 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "            use()" << endl;
         tout << "            sys.exit()" << endl;
         tout << endl;
-        tout << "# Get the values for the initial conditions and parameters from the options dict.\n";
+        tout << "# Get the values for the initial conditions";
+        if (np > 0) {
+            tout << " and parameters";
+        }
+        tout << " from the options dict.\n";
         tout << "y_ = []" << endl;
         tout << "for i in range(N_):" << endl;
         tout << "    y_ = y_ + [options[varnames_[i]]]" << endl;
-        tout << "p_ = []" << endl;
-        tout << "for i in range(P_):" << endl;
-        tout << "    p_ = p_ + [options[parnames_[i]]]" << endl;
+        if (np > 0) {
+            tout << "p_ = []" << endl;
+            tout << "for i in range(P_):" << endl;
+            tout << "    p_ = p_ + [options[parnames_[i]]]" << endl;
+        }
         tout << endl;
         tout << "# Create the time samples for the output of the ODE solver." << endl;
         tout << "tfinal = options['stoptime']" << endl;
@@ -354,10 +401,14 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "t = [tfinal*float(i)/(N-1) for i in range(N)]" << endl;
         tout << endl;
         tout << "# Call the ODE solver.\n";
-        tout << "ysol = odeint(" << Name() << ".vectorfield,y_,t,args=(p_,),Dfun=" << Name() << ".jacobian,atol=options['abserr'],rtol=options['relerr'])\n";
+        tout << "ysol = odeint(" << Name() << ".vectorfield, y_, t";
+        if (np > 0) {
+            tout << ", args=(p_,)";
+        }
+        tout << ", Dfun=" << Name() << ".jacobian, atol=options['abserr'], rtol=options['relerr'])\n";
         tout << endl;
         tout << "# Print the solution.\n";
-        tout << "for t1,y1 in zip(t,ysol):\n";
+        tout << "for t1, y1 in zip(t, ysol):\n";
         tout << "    print(t1, ";
         for (int i = 0; i < nv; ++i) {
             tout << "y1[" << i << "], ";
@@ -365,7 +416,11 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "end=' ')\n";
         tout << "    print(";
         for (int i = 0; i < nf; ++i) {
-            tout << Name() << "." << funcname_list[i] << "(y1, t1, p_)";
+            tout << Name() << "." << funcname_list[i] << "(y1, t1";
+            if (np > 0) {
+                tout << ", p_";
+            }
+            tout << ")";
             if (i < nf-1) {
                 tout << ",";
             }
