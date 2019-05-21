@@ -253,6 +253,7 @@ class VectorField : public Symbol
 
     void Print(void);
     void PrintGSL(std::map<std::string,std::string> options);
+    void PrintBoostOdeint(std::map<std::string,std::string> options);
     void PrintCVODE(std::map<std::string,std::string> options);
     void PrintScilab(std::map<std::string,std::string> options);
     void PrintADOLC(std::map<std::string,std::string> options);

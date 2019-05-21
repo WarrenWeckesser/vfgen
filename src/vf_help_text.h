@@ -24,6 +24,20 @@ constexpr char help_auto[] =
 "    For AUTO2000, use C (the default).  For AUTO07p, either C or FORTRAN\n"
 "    may be used.\n";
 
+constexpr char help_boostodeint[] =
+"use:  vfgen boostodeint vector_field_file.vf\n"
+"      vfgen boostodeint:option=value vector_fild_file.vf\n\n"
+"This command generates C++ files to be used with the Boost Odeint\n"
+"library.\n\n"
+"Options: (default is listed first)\n"
+"demo=no|yes\n"
+"    If yes, create a main program that demonstrates the use of\n"
+"    the Boost Odeint code.\n"
+"system=default|implicit\n"
+"    Determines the type of system to be solved.  Boost Odeint has several\n"
+"    type of systems.  The default is used with the standard explicit solvers.\n"
+"    Implicit systems require a Jacobian, and are used by the stiff solvers.\n";
+
 constexpr char help_check[] =
 "use: vfgen check vector_field_file.vf\n\n"
 "This command prints information from the vector field file.  It can be used to\n"

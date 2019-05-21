@@ -86,6 +86,9 @@ map<string, command_info> commands = {
     {"auto",
         {{"lang"},
          help_auto}},
+    {"boostodeint",
+        {{"demo", "system"},
+         help_boostodeint}},
     {"check",
         {{},
          help_check}},
@@ -308,7 +311,7 @@ int main(int argc, char **argv)
             }
         }
         if (!validopt) {
-            cerr << "Errror: \"" << optstr << "\" is not a valid option for the " << commandstr << " command.\n";
+            cerr << "Error: \"" << optstr << "\" is not a valid option for the " << commandstr << " command.\n";
             bad_opt = true;
         }
     }
@@ -343,6 +346,9 @@ int main(int argc, char **argv)
     }
     else if (commandstr == "xml") {
         vf.PrintXML("xml");
+    }
+    else if (commandstr == "boostodeint") {
+        vf.PrintBoostOdeint(options);
     }
     else if (commandstr == "delay2ode") {
         if (vf.IsDelay == true) {
