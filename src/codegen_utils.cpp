@@ -24,6 +24,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <regex>
 #include <ctime>
 #include <ginac/ginac.h>
 
@@ -209,6 +210,35 @@ void AssignNameValueLists(std::ofstream &fout, const char *skip,
     }
 }
 
+void PrintList(ofstream &fout, lst values)
+{
+    int n;
+
+    n = values.nops();
+    for (int i = 0; i < n; ++i) {
+        if (i > 0) {
+            fout << ", ";
+        }
+        fout << values[i];
+    }
+}
+
+void PrintTransformedList(ofstream &fout, const string t, lst values)
+{
+    int n;
+    regex marker("\\$");
+
+    n = values.nops();
+    for (int i = 0; i < n; ++i) {
+        stringstream s;
+        if (i > 0) {
+            fout << ", ";
+        }
+        s << values[i];
+        fout << regex_replace(t, marker, s.str());
+    }
+}
+
 void PrintNameList(ofstream &fout, lst names)
 {
     int n;
@@ -216,7 +246,7 @@ void PrintNameList(ofstream &fout, lst names)
     n = names.nops();
     for (int i = 0; i < n; ++i) {
         if (i > 0) {
-            fout << ",";
+            fout << ", ";
         }
         fout << names[i];
     }

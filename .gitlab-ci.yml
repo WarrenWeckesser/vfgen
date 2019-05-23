@@ -1,5 +1,5 @@
 # use the official gcc image, based on debian
-# can use verions as well, like gcc:5.2
+# can use versions as well, like gcc:5.2
 # see https://hub.docker.com/_/gcc/
 image: gcc
 
@@ -25,6 +25,11 @@ test:
     - echo "Testing gsl"
     - cd test_gsl
     - bash run_test.sh
+    - cd ..
+    - echo "Testing boostodeint"
+    - cd test_boostodeint
+    - bash run_test_boostodeint_default_noparams.sh
+    - bash run_test_boostodeint_default_params.sh
     - cd ..
 
   #

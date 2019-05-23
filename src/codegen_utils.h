@@ -33,14 +33,16 @@ void CDeclare_double(std::ofstream &fout, GiNaC::lst names);
 void MakeCArrayOfStrings(std::ofstream &fout, const char *var, GiNaC::lst names);
 void MakePythonListOfStrings(std::ofstream &fout, const char *var, GiNaC::lst names, const char *pre);
 void GetFromVector(std::ofstream &fout, const char *skip, GiNaC::lst names, const char *assignop,
-					const char *vector, const char *braces, int istart, const char *term);
+                    const char *vector, const char *braces, int istart, const char *term);
 void GetFromVector2(std::ofstream &fout, const char *skip, GiNaC::lst names, const char *assignop,
-					const char *vector, const char *bropen, const char *brclose, int istart, const char *term);
+                    const char *vector, const char *bropen, const char *brclose, int istart, const char *term);
 void SetVectorFromNames(std::ofstream &fout, const char *skip, const char *vector, GiNaC::lst names,
                       const char *braces, int istart, const char *term);
 void AssignNameValueLists(std::ofstream &fout, const char *skip,
-						  GiNaC::lst names, const char *assignop, GiNaC::lst values,
-						  const char *term);
+                          GiNaC::lst names, const char *assignop, GiNaC::lst values,
+                          const char *term);
+void PrintList(std::ofstream &fout, GiNaC::lst names);
+void PrintTransformedList(std::ofstream &fout, const std::string, GiNaC::lst names);
 void PrintNameList(std::ofstream &fout, GiNaC::lst names);
 void PrintPi(std::ofstream &fout);
 void PrintMultilineComment(std::ofstream &fout, const std::string &comment,

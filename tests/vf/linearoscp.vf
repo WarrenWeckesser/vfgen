@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<VectorField
+    Name="linearoscp"
+    Description="Linear oscillator, with frequency parameter omega">
+<Parameter
+    Name="omega"
+    DefaultValue="1"
+    Description="frequency" />
+<StateVariable
+    Name="x"
+    Description="x"
+    Formula="-omega*y"
+    DefaultInitialCondition="1.0" />
+<StateVariable
+    Name="y"
+    Description="y"
+    Formula="omega*x"
+    DefaultInitialCondition="0.0" />
+<Function
+    Name="func"
+    Description="squared magnitude"
+    Formula="x^2 + y^2" />
+</VectorField>
