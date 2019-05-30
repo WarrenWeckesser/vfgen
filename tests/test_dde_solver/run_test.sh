@@ -15,6 +15,9 @@ gfortran test_dde_solver.f90 sdd.o dde_solver_m.o -o test_dde_solver
 echo "Running test_dde_solver."
 ./test_dde_solver > out 2>&1
 
+echo "Showing out."
+cat out
+
 if [ -s out ]; then
     exit -1
 fi

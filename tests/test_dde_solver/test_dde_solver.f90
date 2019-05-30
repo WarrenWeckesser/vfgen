@@ -42,6 +42,7 @@ OPTS = DDE_SET(RE=relerr,AE=abserr)
 
 SOL = DDE_SOLVER(NVAR,sdd_ddes,sdd_beta,sdd_history,TSPAN,OPTIONS=OPTS)
 
+F = "(D20.12, D20.12, D20.12,  D20.12)"
 e = dexp(1.0D0)
 
 do I = 1, SOL%NPTS
@@ -54,9 +55,8 @@ do I = 1, SOL%NPTS
     else
         exact = (e / (3.0D0 - dlog(t + 1.0D0)))**e
     end if
+    write(*,FMT=F) t, y, exact, y - exact
     if (dabs(y - exact) .gt. 1.0D-9) then
-        F = "(D20.12, D20.12, D20.12,  D20.12)"
-        write(*,FMT=F) t, y, exact, y - exact
         stop 'FAIL'
     end if
 end do
