@@ -102,7 +102,7 @@ map<string, command_info> commands = {
         {{"path"},
          help_ddebiftool}},
     {"dde_solver",
-        {{"demo"},
+        {{"demo", "version"},
          help_dde_solver}},
     {"delay2ode",
         {{"N", "p"},

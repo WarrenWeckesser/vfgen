@@ -43,12 +43,24 @@ using namespace GiNaC;
 void VectorField::PrintDDE_SOLVER(map<string,string> options)
 {
     int nc, np, nv, na;
+    int version;
 
     nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
     na = exprname_list.nops();
 
+    if ((options["version"] == "") || (options["version"] == "2")) {
+        version = 2;
+    }
+    else if (options["version"] == "1") {
+        version = 1;
+    }
+    else {
+        cerr << "vfgen DDE_SOLVER command: unknown version specified: " << options["version"] << endl;
+        cerr << "Versions of DDE_SOLVER supported by VFGEN are 1 and 2.  The default is 2." << endl;
+        exit(-1);
+    }
     //
     //  Create the vector field function.
     //
@@ -107,8 +119,22 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     fout << "    SUBROUTINE " << Name() << "_ddes(" << IndependentVariable << ",x_,Zlags_,vf_)\n";
     fout << "    ! Arguments\n";
     fout << "    DOUBLE PRECISION :: " << IndependentVariable << endl;
-    fout << "    DOUBLE PRECISION, DIMENSION(NEQN) :: x_, vf_\n";
-    fout << "    DOUBLE PRECISION, DIMENSION(NEQN,NLAGS) :: Zlags_\n";
+    fout << "    DOUBLE PRECISION, DIMENSION(";
+    if (version == 2) {
+        fout << ":";
+    }
+    else {
+        fout << "NEQN";
+    }
+    fout << ") :: x_, vf_\n";
+    fout << "    DOUBLE PRECISION, DIMENSION(";
+    if (version == 2) {
+        fout << ":,:";
+    }
+    else {
+        fout << "NEQN,NLAGS";
+    }
+    fout << ") :: Zlags_\n";
     fout << "    INTENT(IN) :: " << IndependentVariable << ", x_, Zlags_\n";
     fout << "    INTENT(OUT) :: vf_\n";
     fout << "    ! Local variables\n";
@@ -172,7 +198,14 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     // DDE history function starts here
     fout << "    SUBROUTINE " << Name() << "_history(" << IndependentVariable << ",x_)\n";
     fout << "    DOUBLE PRECISION :: " << IndependentVariable << endl;
-    fout << "    DOUBLE PRECISION, DIMENSION(NEQN) :: x_\n";
+    fout << "    DOUBLE PRECISION, DIMENSION(";
+    if (version == 2) {
+        fout << ":";
+    }
+    else {
+        fout << "NEQN";
+    }
+    fout << ") :: x_\n";
     fout << "    INTENT(IN) :: " << IndependentVariable << endl;
     fout << "    INTENT(OUT) :: x_\n";
     fout << endl;
@@ -191,8 +224,22 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "    SUBROUTINE " << Name() << "_beta(" << IndependentVariable << ",x_,bval_)\n";
         fout << "    ! Arguments\n";
         fout << "    DOUBLE PRECISION :: " << IndependentVariable << endl;
-        fout << "    DOUBLE PRECISION, DIMENSION(NEQN) :: x_\n";
-        fout << "    DOUBLE PRECISION, DIMENSION(NLAGS) :: bval_\n";
+        fout << "    DOUBLE PRECISION, DIMENSION(";
+        if (version == 2) {
+            fout << ":";
+        }
+        else {
+            fout << "NEQN";
+        }
+        fout << ") :: x_\n";
+        fout << "    DOUBLE PRECISION, DIMENSION(";
+        if (version == 2) {
+            fout << ":";
+        }
+        else {
+            fout << "NLAGS";
+        }
+        fout << ") :: bval_\n";
         fout << "    INTENT(IN) :: " << IndependentVariable << ", x_\n";
         fout << "    INTENT(OUT) :: bval_\n";
         fout << "    ! Local variables\n";

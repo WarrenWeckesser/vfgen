@@ -18,6 +18,10 @@ test:
     - cd test_octave
     - bash run_test.sh
     - cd ..
+    - echo "Testing dde_solver"
+    - cd test_dde_solver
+    - bash run_test.sh
+    - cd ..
     - echo "Testing lsoda"
     - cd test_lsoda
     - bash run_test.sh

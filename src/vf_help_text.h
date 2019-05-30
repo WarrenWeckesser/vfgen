@@ -114,7 +114,11 @@ constexpr char help_dde_solver[] =
 "demo=no|yes\n"
 "    If the option demo=yes is given, the file [name]_demo.f90 is created.\n"
 "    This program will use [name].f90 to generate a solution to the delay\n"
-"    equations.\n";
+"    equations.\n"
+"version=2|1\n"
+"    Which version of DDE_SOLVER to use.  'Version 2' refers to the version\n"
+"    modified in 2017 to use assumed-shape arrays in the function interfaces.\n"
+"    'Version 1' refers to the version prior to those changes.\n";
 
 constexpr char help_delay2ode[] =
 "use: vfgen delay2ode vector_field_file.vf\n"
