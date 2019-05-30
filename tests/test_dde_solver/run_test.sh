@@ -13,7 +13,9 @@ gfortran -c sdd.f90
 gfortran test_dde_solver.f90 sdd.o dde_solver_m.o -o test_dde_solver
 
 echo "Running test_dde_solver."
-./test_dde_solver 2> out
+gdb ./test_dde_solver -x gdb_commands
+
+echo "FAIL" > out
 
 echo "Showing out."
 cat out
