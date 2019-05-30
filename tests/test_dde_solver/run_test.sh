@@ -8,9 +8,9 @@ echo "Showing gfortran version."
 gfortran --version
 
 echo "Building test_dde_solver."
-gfortran -c dde_solver_m.f90
-gfortran -c sdd.f90
-gfortran test_dde_solver.f90 sdd.o dde_solver_m.o -o test_dde_solver
+gfortran -g -c dde_solver_m.f90
+gfortran -g -c sdd.f90
+gfortran -g test_dde_solver.f90 sdd.o dde_solver_m.o -o test_dde_solver
 
 echo "Running test_dde_solver."
 gdb ./test_dde_solver -x gdb_commands
