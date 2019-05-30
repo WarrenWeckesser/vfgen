@@ -35,7 +35,7 @@ constexpr char help_boostodeint[] =
 "    the Boost Odeint code.\n"
 "system=default|implicit\n"
 "    Determines the type of system to be solved.  Boost Odeint has several\n"
-"    type of systems.  The default is used with the standard explicit solvers.\n"
+"    types of systems.  The default is used with the standard explicit solvers.\n"
 "    Implicit systems require a Jacobian, and are used by the stiff solvers.\n";
 
 constexpr char help_check[] =
