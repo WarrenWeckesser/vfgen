@@ -6,7 +6,7 @@ image: gcc:8.3
 test:
   script:
     - echo "Installing vfgen"
-    - apt-get -y update && apt-get -y install cmake libmxml-dev libginac-dev gdb
+    - apt-get -y update && apt-get -y install cmake libmxml-dev libginac-dev
     - cd cmake_build
     - cmake ../src
     - make
