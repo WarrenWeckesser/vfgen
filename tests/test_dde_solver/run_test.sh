@@ -13,7 +13,7 @@ gfortran -c sdd.f90
 gfortran test_dde_solver.f90 sdd.o dde_solver_m.o -o test_dde_solver
 
 echo "Running test_dde_solver."
-./test_dde_solver > out 2>&1
+./test_dde_solver 2> out
 
 echo "Showing out."
 cat out
