@@ -6,7 +6,7 @@ image: gcc
 test:
   script:
     - echo "Installing vfgen"
-    - apt-get -y update && apt-get -y install cmake libmxml-dev libginac-dev
+    - apt-get -y update && apt-get -y install cmake libmxml-dev libginac-dev gdb
     - cd cmake_build
     - cmake ../src
     - make
