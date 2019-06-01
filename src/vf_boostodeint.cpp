@@ -66,7 +66,6 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     int np;
     int nc, nv; //na, nf;
 
-    symbol t(IndependentVariable);
     np = parname_list.nops();
     nc = conname_list.nops();
     nv = varname_list.nops();
@@ -168,10 +167,13 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
             for (int j = 0; j < nv; ++j) {
                 symbol v = ex_to<symbol>(varname_list[j]);
                 ex df = f.diff(v);
-                //// Skip zero elements.  CVODE initializes jac_ to zero before calling the Jacobian function.
-                //if (df != 0)
                 fout << "    J_(" << i << ", " << j << ") = " << f.diff(v) << ";" << endl;
             }
+        }
+        for (int i = 0; i < nv; ++i) {
+            ex f = iterated_subs(varvecfield_list[i], expreqn_list);
+            ex dfdt = f.diff(IndVar);
+            fout << "    dfdt_(" << i << ") = " << dfdt << ";" << endl;
         }
         fout << "}" << endl;
     }
