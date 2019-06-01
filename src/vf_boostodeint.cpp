@@ -56,6 +56,7 @@ using namespace GiNaC;
  *         Then pass sys to the integration function.
  */
 
+
 //
 // PrintBoostOdeint -- The Boost Odeint Code Generator.
 //
@@ -63,17 +64,17 @@ using namespace GiNaC;
 void VectorField::PrintBoostOdeint(map<string,string> options)
 {
     int np;
-    //int nc, nv, na, nf;
+    int nc, nv; //na, nf;
 
     symbol t(IndependentVariable);
     np = parname_list.nops();
-    //nc = conname_list.nops();
-    //nv = varname_list.nops();
+    nc = conname_list.nops();
+    nv = varname_list.nops();
     //na = exprname_list.nops();
     //nf = funcname_list.nops();
 
-    if ((options["system"] != "default") && (options["system"] != "")) {
-        cerr << "Sorry, only 'system=default' is implemented.\n";
+    if ((options["system"] == "implicit") && (np > 0)) {
+        cerr << "Sorry, 'system=implicit' is only implemented for systems with no parameters.\n";
         exit(-1);
     }
     string filename = Name()+"_vf.cpp";
@@ -120,6 +121,61 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     fout << "}" << endl;
     fout << endl;
 
+    if ((options["system"] == "implicit") && (np == 0)) {
+        //
+        // Print the Jacobian function.
+        //
+        fout << "//" << endl;
+        fout << "//  The Jacobian." << endl;
+        fout << "//" << endl;
+        fout << endl;
+
+        fout << "void " << Name() << "_jac(";
+        fout << "const state_type &x_, ";
+        fout << "matrix_type &J_, ";
+        fout << "const double &t_, ";
+        fout << "state_type &dfdt_";
+        fout << ")" << endl;
+
+        fout << "{" << endl;
+        if (HasPi) {
+            fout << "    const double Pi = M_PI;\n";
+        }
+        for (int i = 0; i < nc; ++i) {
+            fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
+        }
+
+        CDeclare(fout, "double", varname_list);
+        //CDeclare(fout, "double", parname_list);
+
+        //fout << "    realtype *p_;" << endl;
+        //fout << endl;
+        //fout << "    p_ = (realtype *) params;" << endl;
+        //fout << endl;
+        GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
+        //for (int i = 0; i < nv; ++i) {
+        //    fout << "    ";
+        //    fout.width(10);
+        //    fout << varname_list[i];
+        //    fout.width(0);
+        //    fout << " = NV_Ith_S(y_," << i << ");" << endl;
+        //}
+        //fout << endl;
+        //GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
+        //fout << endl;
+        for (int i = 0; i < nv; ++i) {
+            ex f = iterated_subs(varvecfield_list[i], expreqn_list);
+            for (int j = 0; j < nv; ++j) {
+                symbol v = ex_to<symbol>(varname_list[j]);
+                ex df = f.diff(v);
+                //// Skip zero elements.  CVODE initializes jac_ to zero before calling the Jacobian function.
+                //if (df != 0)
+                fout << "    J_(" << i << ", " << j << ") = " << f.diff(v) << ";" << endl;
+            }
+        }
+        fout << "}" << endl;
+    }
+
     //
     // Print the class declaration to pout.
     //
@@ -135,10 +191,20 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     pout << "#ifndef " << Name() << "_VF_H" << endl;
     pout << "#define " << Name() << "_VF_H" << endl;
     pout << endl;
-    pout << "#include <vector>" << endl;
+    if (options["system"] != "implicit") {
+        pout << "#include <vector>" << endl;
+    }
     pout << "#include <math.h>" << endl;
     pout << endl;
-    pout << "typedef std::vector<double> state_type;" << endl;
+    if (options["system"] == "implicit") {
+        pout << "#include <boost/numeric/odeint.hpp>" << endl;
+        pout << endl;
+        pout << "typedef boost::numeric::ublas::vector<double> state_type;" << endl;
+        pout << "typedef boost::numeric::ublas::matrix<double> matrix_type;" << endl;
+    }
+    else {
+        pout << "typedef std::vector<double> state_type;" << endl;
+    }
     pout << endl;
     //
     //  Print the vector field class.
@@ -170,6 +236,10 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     if (np > 0) {
         pout << "};" << endl;
     }
+    if ((options["system"] == "implicit") && (np == 0)) {
+        pout << "void " << Name() + "_jac";
+        pout << "(const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_);" << endl;
+    }
     pout << endl;
     pout << "#endif" << endl;
 
@@ -184,7 +254,9 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
         tout << "#include <vector>" << endl;
         tout << "#include <cmath>" << endl;
         tout << "#include <boost/numeric/odeint.hpp>" << endl;
-        tout << "#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>" << endl;
+        if (options["system"] != "implicit") {
+            tout << "#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>" << endl;
+        }
         tout << endl;
         tout << "#include \"" << Name() << "_vf.h\"" << endl;
         tout << endl;
@@ -208,28 +280,52 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
         }
         AssignNameValueLists(tout, "    const double ", conname_list, "=", convalue_list, ";");
 
-        tout << "    state_type y_{";
-        PrintList(tout, vardefic_list);
-        tout << "};" << endl;
+        if (options["system"] == "implicit") {
+            tout << "    state_type y_(" << nv << ");" << endl;
+        }
+        else {
+            tout << "    state_type y_{";
+            PrintList(tout, vardefic_list);
+            tout << "};" << endl;
+        }
         tout << "    double t0 = 0.0;" << endl;
-        tout << "    double tfinal = 100.0;" << endl;
+        tout << "    double tfinal = 10.0;" << endl;
         tout << "    double dt = 0.01;" << endl;
-
         tout << endl;
-        tout << "    bulirsch_stoer_dense_out<state_type> stepper(1e-9, 1e-9, 1.0, 0.0);" << endl;
         
+        if (options["system"] == "implicit") {
+            for (int i = 0; i < nv; ++i) {
+                tout << "    y_[" << i << "] = " << vardefic_list[i] << ";" << endl;
+            }
+        }
+        tout << endl;
+
+        if (options["system"] != "implicit") {
+            tout << "    bulirsch_stoer_dense_out<state_type> stepper(1e-9, 1e-9, 1.0, 0.0);" << endl;
+        }
+
         if (np > 0) {
             tout << "    auto " << Name() << " = " << Name() + "_vf(";
             PrintList(tout, pardefval_list);
             tout << ");" << endl;
         }
 
-        tout << "    integrate_const(stepper, ";
+        if (options["system"] == "implicit") {
+            tout << "    integrate_const(make_dense_output<rosenbrock4<double>>(1e-9, 1e-9), ";
+        }
+        else {
+            tout << "    integrate_const(stepper, ";
+        }
         if (np > 0) {
             tout << Name();
         }
         else {
-            tout << Name() + "_vf";
+            if (options["system"] == "implicit") {
+                tout << "make_pair(" << Name() << "_vf, " << Name() << "_jac)";
+            }
+            else {
+                tout << Name() + "_vf";
+            }
         }
         tout << ", y_, t0, tfinal, dt, writer);" << endl;
         tout << "}" << endl;
