@@ -35,6 +35,7 @@ test:
     - apt-get -y install libboost-math-dev
     - bash run_test_boostodeint_default_noparams.sh
     - bash run_test_boostodeint_default_params.sh
+    - bash run_test_boostodeint_implicit_noparams.sh
     - cd ..
 
   #
