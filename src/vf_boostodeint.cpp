@@ -419,18 +419,31 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
         else {
             tout << "    integrate_const(stepper, ";
         }
-        if (np > 0) {
-            tout << Name();
-        }
-        else {
-            if (options["system"] == "implicit") {
+
+        if (options["system"] == "implicit") {
+            if (np == 0) {
                 tout << "make_pair(" << Name() << "_vf, " << Name() << "_jac)";
             }
-            else {
+            else {  // "implicit" and np > 0
+                tout << endl;
+                tout << "        make_pair(" << endl;
+                tout << "            [&" << Name() << "](const state_type &x_, state_type &dxdt_, const double t_)" << endl;
+                tout << "            {" << Name() << "." << Name() << "_rhs(x_, dxdt_, t_);}," << endl;
+                tout << "            [&" << Name() << "](const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_)" << endl;
+                tout << "            {" << Name() << "." << Name() << "_jac(x_, J_, t_, dfdt_);}" << endl;
+                tout << "        )";
+            }
+        }
+        else { // Not "implicit"
+            if (np == 0) {
                 tout << Name() + "_vf";
+            }
+            else {
+                tout << Name();
             }
         }
         tout << ", y_, t0, tfinal, dt, writer);" << endl;
+
         tout << "}" << endl;
         tout.close(); 
     }
