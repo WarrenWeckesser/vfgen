@@ -36,6 +36,7 @@ test:
     - bash run_test_boostodeint_default_noparams.sh
     - bash run_test_boostodeint_default_params.sh
     - bash run_test_boostodeint_implicit_noparams.sh
+    - bash run_test_boostodeint_implicit_params.sh
     - cd ..
 
   #
