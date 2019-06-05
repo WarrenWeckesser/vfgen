@@ -1,6 +1,6 @@
 #
 #  File:   Makefile.vfgen
-#  Author: Warren Weckesser, www.warrenweckesser.net
+#  Author: Warren Weckesser, https://warrenweckesser.github.io
 #
 #  This is a Makefile for VFGEN.  To use this file, enter the command
 #     make -f Makefile.vfgen

@@ -6,16 +6,16 @@ other computational tools.  Given a specification of an ordinary or delay
 differential equation, VFGEN can generate source code that defines the
 equations for a wide assortment of solvers and tools.
 
-* _Web page:_ `www.warrenweckesser.net/vfgen`
+* _Web page:_ `https://warrenweckesser.github.io/vfgen`
 * _License:_  GPL-2
-* _Author:_   Warren Weckesser, `www.warrenweckesser.net`
+* _Author:_   Warren Weckesser, `https://warrenweckesser.github.io`
 * _Email:_    vfgen DOT help AT gmail com  (fix the obvious minor obfuscation)
 
 This file is in the top directory for the source code distribution of the
 program VFGEN.  This README gives the steps necessary to build VFGEN from
 the source code.  Before building from source, check the web page
-www.warrenweckesser.net/vfgen; a compiled binary may be available for your
-system.
+https://warrenweckesser.github.io/vfgen; a compiled binary may be available
+for your system.
 
 Before you can build VFGEN, you must have installed these libraries:
 
