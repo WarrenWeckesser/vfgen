@@ -320,7 +320,7 @@ constexpr char help_octave[] =
 "parstyle=global|vector|list\n"
 "    This option controls how parameters are passed to the vector field and\n"
 "    Jacobian functions. By default (parstyle=global), a global variable is used.\n"
-"    If parstyle=vector, the parameters passed to the functions in a single array.\n"
+"    If parstyle=vector, the parameters are passed to the functions in a single array.\n"
 "    If parstyle=list, the parameters are passed as separate arguments.\n"
 "demo=no|yes\n"
 "    If the option demo=yes is given, the file [name]_demo.m is created.\n"
