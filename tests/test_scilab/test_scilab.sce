@@ -3,7 +3,7 @@
 //
 
 // Load the vector field definition and the jacobian.
-exec('linearosc.m');
+exec('linearosc.sci');
 
 
 // --- Initial conditions ---
