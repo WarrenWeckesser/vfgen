@@ -44,6 +44,10 @@ test:
     - cd test_scilab
     - bash run_test.sh
     - cd ..
+    - echo "Testing scipy"
+    - cd test_scipy
+    - bash run_test.sh
+    - cd ..
 
   #
   #artifacts:
