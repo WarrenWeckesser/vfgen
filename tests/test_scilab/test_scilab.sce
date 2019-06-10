@@ -22,5 +22,4 @@ sol = ode(x0, t0, t, 1e-9, 1e-12, linearosc_vf, linearosc_jac);
 final = sol(:, $);
 expected = [-1; 0];
 pass = max(abs(final - expected)) < 1e-6;
-pass = %f;
 exit(pass - 1);
