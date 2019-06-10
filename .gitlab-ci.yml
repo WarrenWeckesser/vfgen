@@ -5,7 +5,7 @@ image: gcc:8.3
 
 test:
   script:
-    - apt-get -y update && apt-get -y install lsb_release
+    - apt-get -y update && apt-get -y install lsb-release
     - lsb_release -irc
     - echo "Installing vfgen"
     - apt-get -y install cmake libmxml-dev libginac-dev
