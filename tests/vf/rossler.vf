@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<VectorField
+    Name="rossler" >
+<Parameter
+    Name="a"
+    DefaultValue="0.17" />
+<Parameter
+    Name="b"
+    DefaultValue="0.4" />
+<Parameter
+    Name="c"
+    DefaultValue="8.5" />
+<StateVariable
+    Name="x"
+    Formula="-(y+z)"
+    DefaultInitialCondition="0.01" />
+<StateVariable
+    Name="y"
+    Formula="x+a*y"
+    DefaultInitialCondition="0" />
+<StateVariable
+    Name="z"
+    Formula="b + (x-c)*z"
+    DefaultInitialCondition="0" />
+<Function
+    Name="yvalue"
+    Formula="y" />
+</VectorField>
