@@ -47,6 +47,8 @@ project(vfgen CXX)
 file(STRINGS "../version.txt" VFGEN_VERSION)
 add_definitions(-DVERSION="${VFGEN_VERSION}")
 
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-Wall)
 endif(CMAKE_COMPILER_IS_GNUCXX)
