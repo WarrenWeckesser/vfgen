@@ -20,13 +20,7 @@ for your system.
 Before you can build VFGEN, you must have installed these libraries:
 
 * GiNaC    (`http://www.ginac.de`)
-* Mini-XML (`http://www.minixml.org`)
-
-*Note*: Version 2.5 of the Mini-XML library has a spelling error in one of
-its configuration files. If you install Mini-XML version 2.5 from source,
-the spelling error causes the build of VFGEN to fail. To fix this, reinstall
-version 2.5 of Mini-XML  after changing `@PHTREAD_LIBS@` to `@PTHREAD_LIBS@`
-in the file `mxml.pc.in`.
+* Mini-XML 3.0 or greater(`http://www.minixml.org`)
 
 If you are using Linux, binary packages (.deb and .rpm) are available for
 these libraries.  Check your standard repositories.  Be sure you install

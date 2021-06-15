@@ -170,8 +170,10 @@ int VectorField::ReadXML(string xmlfilename)
     }
     else {
         bad_attr = false;
-        for (int i = 0; i < node->value.element.num_attrs; ++i) {
-            string attr = node->value.element.attrs[i].name;
+        for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
+            const char *name;
+            mxmlElementGetAttrByIndex(node, i, &name);
+            string attr(name);
             if (attr != "Name" && attr != "IndependentVariable" && attr != "Description") {
                 cerr << "Error: The VectorField element has an unknown attribute: " << attr << endl;
                 bad_attr = true;
@@ -223,8 +225,10 @@ int VectorField::ReadXML(string xmlfilename)
          node != NULL;
          node = mxmlFindElement(node,tree,"Constant",NULL,NULL,MXML_DESCEND)) {
         bad_attr = false;
-        for (int i = 0; i < node->value.element.num_attrs; ++i) {
-            string attr = node->value.element.attrs[i].name;
+        for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
+            const char *name;
+            mxmlElementGetAttrByIndex(node, i, &name);
+            string attr(name);
             if (attr != "Name" && attr != "Value" && attr != "Description" && attr != "Latex") {
                 cerr << "Error: A Constant element has an unknown attribute: " << attr << endl;
                 bad_attr = true;
@@ -280,8 +284,11 @@ int VectorField::ReadXML(string xmlfilename)
          node != NULL;
          node = mxmlFindElement(node,tree,"Parameter",NULL,NULL,MXML_DESCEND)) {
         bad_attr = false;
-        for (int i = 0; i < node->value.element.num_attrs; ++i) {
-            string attr = node->value.element.attrs[i].name;
+        for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
+            const char *name;
+            mxmlElementGetAttrByIndex(node, i, &name);
+            string attr(name);
+            // string attr = node->value.element.attrs[i].name;
             if (attr != "Name" && attr != "DefaultValue" && attr != "Description" && attr != "Latex") {
                 cerr << "Error: A Parameter element has an unknown attribute: " << attr << endl;
                 bad_attr = true;
@@ -332,8 +339,10 @@ int VectorField::ReadXML(string xmlfilename)
          node != NULL;
          node = mxmlFindElement(node,tree,"Expression",NULL,NULL,MXML_DESCEND)) {
         bad_attr = false;
-        for (int i = 0; i < node->value.element.num_attrs; ++i) {
-            string attr = node->value.element.attrs[i].name;
+        for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
+            const char *name;
+            mxmlElementGetAttrByIndex(node, i, &name);
+            string attr(name);
             if (attr != "Name" && attr != "Formula" && attr != "Description" && attr != "Latex") {
                 cerr << "Error: An Expression element has an unknown attribute: " << attr << endl;
                 bad_attr = true;
@@ -389,8 +398,10 @@ int VectorField::ReadXML(string xmlfilename)
          node != NULL;
          node = mxmlFindElement(node,tree,"StateVariable",NULL,NULL,MXML_DESCEND)) {
         bad_attr = false;
-        for (int i = 0; i < node->value.element.num_attrs; ++i) {
-            string attr = node->value.element.attrs[i].name;
+        for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
+            const char *name;
+            mxmlElementGetAttrByIndex(node, i, &name);
+            string attr(name);
             if (attr != "Name" && attr != "DefaultInitialCondition" && attr != "Description"
                   && attr != "Formula" && attr != "PeriodFrom" && attr != "PeriodTo"
                   && attr != "DefaultHistory" && attr != "Latex") {
@@ -478,8 +489,10 @@ int VectorField::ReadXML(string xmlfilename)
          node != NULL;
          node = mxmlFindElement(node,tree,"Function",NULL,NULL,MXML_DESCEND)) {
         bad_attr = false;
-        for (int i = 0; i < node->value.element.num_attrs; ++i) {
-            string attr = node->value.element.attrs[i].name;
+        for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
+            const char *name;
+            mxmlElementGetAttrByIndex(node, i, &name);
+            string attr(name);
             if (attr != "Name" && attr != "Formula" && attr != "Description") {
                 cerr << "Error: A Function element has an unknown attribute: " << attr << endl;
                 bad_attr = true;
