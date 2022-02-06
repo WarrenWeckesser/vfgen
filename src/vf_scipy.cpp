@@ -33,14 +33,20 @@
 using namespace std;
 using namespace GiNaC;
 
-static void PrintArgDescription(ofstream &fout,lst varname_list, lst parname_list)
+static void PrintArgDescription(ofstream &fout,lst varname_list, lst parname_list,
+                                bool tfirst)
 {
     fout << "    Arguments:\n";
+    if (tfirst) {
+        fout << "        t_ :  time\n";
+    }
     fout << "        y_ :  vector of the state variables:\n";
     for (unsigned i = 0; i < varname_list.nops(); ++i) {
         fout << "                  y_[" << i << "] is " << varname_list[i] << endl;
     }
-    fout << "        t_ :  time\n";
+    if (!tfirst) {
+        fout << "        t_ :  time\n";
+    }
     if (parname_list.nops() > 0) {
         fout << "        p_ :  vector of the parameters\n";
         for (unsigned i = 0; i < parname_list.nops(); ++i) {
@@ -156,7 +162,7 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "):" << endl;
     fout << "    \"\"\"\n";
     fout << "    The vector field function for the vector field \"" << Name() << "\"\n";
-    PrintArgDescription(fout,varname_list,parname_list);
+    PrintArgDescription(fout, varname_list, parname_list, options["tfirst"] == "yes");
     fout << "    \"\"\"\n";
     // fout << endl;
     if (HasPi) {
@@ -203,7 +209,7 @@ void VectorField::PrintSciPy(map<string,string> options)
     
     fout << "    \"\"\"\n";
     fout << "    The Jacobian of the vector field \"" << Name() << "\"\n";
-    PrintArgDescription(fout,varname_list,parname_list);
+    PrintArgDescription(fout, varname_list, parname_list, options["tfirst"] == "yes");
     fout << "    \"\"\"\n";
     if (HasPi) {
         fout << "    Pi = pi\n";
@@ -252,7 +258,7 @@ void VectorField::PrintSciPy(map<string,string> options)
             fout << "):" << endl;
             fout << "    \"\"\"\n";
             fout << "    The user-defined function \"" << funcname_list[n] << "\" for the vector field \"" << Name() << "\"\n";
-            PrintArgDescription(fout, varname_list, parname_list);
+            PrintArgDescription(fout, varname_list, parname_list, options["tfirst"] == "yes");
             fout << "    \"\"\"\n";
             if (HasPi) {
                 fout << "    Pi = pi\n";
