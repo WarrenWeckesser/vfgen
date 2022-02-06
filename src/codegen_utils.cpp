@@ -32,7 +32,7 @@ using namespace std;
 using namespace GiNaC;
 
 static const char *datetimefmt = "Generated on %2d-%3s-%04d at %02d:%02d";
-static char datetimebuf[40]; // Must be enough space to hold a copy of datetimefmt
+static char datetimebuf[48]; // Must be enough space to hold a copy of datetimefmt
 
 char *DateTimeMsg()
 {
@@ -43,7 +43,7 @@ char *DateTimeMsg()
 
     time(&now_t);
     now = *(localtime(&now_t));
-    sprintf(datetimebuf,datetimefmt,
+    snprintf(datetimebuf, sizeof(datetimebuf), datetimefmt,
                   now.tm_mday, months[now.tm_mon], now.tm_year+1900,
                   now.tm_hour, now.tm_min);
     return(datetimebuf);
