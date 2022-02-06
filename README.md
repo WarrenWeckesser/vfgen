@@ -9,7 +9,6 @@ equations for a wide assortment of solvers and tools.
 * _Web page:_ `https://warrenweckesser.github.io/vfgen`
 * _License:_  GPL-2
 * _Author:_   Warren Weckesser, `https://warrenweckesser.github.io`
-* _Email:_    vfgen DOT help AT gmail com  (fix the obvious minor obfuscation)
 
 This file is in the top directory for the source code distribution of the
 program VFGEN.  This README gives the steps necessary to build VFGEN from
