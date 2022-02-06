@@ -156,7 +156,7 @@ map<string, command_info> commands = {
         {{"demo", "func", "parstyle"},
          help_scilab}},
     {"scipy",
-        {{"demo", "func"},
+        {{"demo", "func", "tfirst"},
          help_scipy}},
     {"taylor",
         {{"order"},

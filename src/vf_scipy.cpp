@@ -120,6 +120,9 @@ void VectorField::PrintSciPy(map<string,string> options)
     }
     fout << "]\n";
     fout << "    sol = odeint(" << Name() << ".vectorfield, ic, t,";
+    if (options["tfirst"] == "yes") {
+        fout << " tfirst=True,";
+    }
     if (np > 0) {
         fout << " args=(params,),";
     }
@@ -139,9 +142,16 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "# The vector field." << endl;
     fout << "#" << endl;
     fout << endl;
-    fout << "def vectorfield(y_, t_";
+    fout << "def vectorfield(";
+    if (options["tfirst"] == "yes") {
+        fout << "t_, y_";
+    }
+    else {
+        fout << "y_, t_";
+    }
+
     if (np > 0) {
-        fout << ", p";
+        fout << ", p_";
     }
     fout << "):" << endl;
     fout << "    \"\"\"\n";
@@ -179,7 +189,13 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "#  The Jacobian." << endl;
     fout << "#" << endl;
     fout << endl;
-    fout << "def jacobian(y_, t_";
+    fout << "def jacobian(";
+    if (options["tfirst"] == "yes") {
+        fout << "t_, y_";
+    }
+    else {
+        fout << "y_, t_";
+    }
     if (np > 0) {
         fout << ", p_";
     }
@@ -223,7 +239,13 @@ void VectorField::PrintSciPy(map<string,string> options)
             fout << "# User function: " << funcname_list[n] << endl;
             fout << "#" << endl;
             fout << endl;
-            fout << "def " << funcname_list[n] << "(y_, t_";
+            fout << "def " << funcname_list[n];
+            if (options["tfirst"] == "yes") {
+                fout << "(t_, y_";
+            }
+            else {
+                fout << "(y_, t_";
+            }
             if (np > 0) {
                 fout << ", p_";
             }
@@ -402,10 +424,13 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << endl;
         tout << "# Call the ODE solver.\n";
         tout << "ysol = odeint(" << Name() << ".vectorfield, y_, t";
+        if (options["tfirst"] == "yes") {
+            tout << ", tfirst=True";
+        }
         if (np > 0) {
             tout << ", args=(p_,)";
         }
-        tout << ", Dfun=" << Name() << ".jacobian, atol=options['abserr'], rtol=options['relerr'])\n";
+        tout << ",\n              Dfun=" << Name() << ".jacobian, atol=options['abserr'], rtol=options['relerr'])\n";
         tout << endl;
         tout << "# Print the solution.\n";
         tout << "for t1, y1 in zip(t, ysol):\n";
@@ -416,7 +441,13 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "end=' ')\n";
         tout << "    print(";
         for (int i = 0; i < nf; ++i) {
-            tout << Name() << "." << funcname_list[i] << "(y1, t1";
+            tout << Name() << "." << funcname_list[i];
+            if (options["tfirst"] == "yes") {
+                tout << "(t1, y1";
+            }
+            else {
+                tout << "(y1, t1";
+            }
             if (np > 0) {
                 tout << ", p_";
             }
