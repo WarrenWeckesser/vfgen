@@ -469,7 +469,7 @@ constexpr char help_scipy[] =
 "    any of the solvers from scipy.integrate.  To use them with odeint(),\n"
 "    include the argument `tfirst=True`.  The options applies to *all* the\n"
 "    generated functions: the main system definition, the Jacobian, and any\n"
-"    additional user-defined functions.";
+"    additional user-defined functions.\n";
 
 constexpr char help_taylor[] =
 "use: vfgen taylor vector_field_file.vf\n"
