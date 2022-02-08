@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: make and run
       run: |
-        sudo apt-get -y update && apt-get -y install lsb-release
+        sudo apt-get -y update && sudo apt-get -y install lsb-release
         lsb_release -irc
         echo "Installing vfgen"
         sudo apt-get -y install cmake libmxml-dev libginac-dev
