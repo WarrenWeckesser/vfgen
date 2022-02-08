@@ -1,6 +1,6 @@
 name: Test commands
 
-on: workflow_dispatch
+on: [push, pull_request]
 
 jobs:
   build:
@@ -11,10 +11,10 @@ jobs:
     - uses: actions/checkout@v1
     - name: make and run
       run: |
-        apt-get -y update && apt-get -y install lsb-release
+        sudo apt-get -y update && apt-get -y install lsb-release
         lsb_release -irc
         echo "Installing vfgen"
-        apt-get -y install cmake libmxml-dev libginac-dev
+        sudo apt-get -y install cmake libmxml-dev libginac-dev
         cd cmake_build
         cmake ../src
         make
