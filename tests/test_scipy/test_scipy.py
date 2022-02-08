@@ -11,7 +11,6 @@ import linearosc
 z0 = np.array([1, 0])
 t = np.array([0, np.pi])
 
-# Call the ODE solver.
 ysol = odeint(linearosc.vectorfield, z0, t, Dfun=linearosc.jacobian,
               atol=1e-12, rtol=1e-9)
 
