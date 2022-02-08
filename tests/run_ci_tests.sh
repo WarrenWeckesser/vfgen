@@ -93,11 +93,11 @@ then
 fi
 cd ..
 
-echo "Testing R"
-cd test_r
-bash run_test.sh
-if [ $? -ne 0 ]
-then
-    exit -1
-fi
-cd ..
+# echo "Testing R"
+# cd test_r
+# bash run_test.sh
+# if [ $? -ne 0 ]
+# then
+#     exit -1
+# fi
+# cd ..
