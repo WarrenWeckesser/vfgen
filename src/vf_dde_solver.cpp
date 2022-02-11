@@ -5,7 +5,6 @@
 //  This file defines the VectorField::PrintDDE_SOLVER method.
 //
 //
-//
 //  Copyright (C) 2008 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -382,6 +381,8 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "DO I = 1, SOL%NPTS\n";
         fout << "    WRITE(*,FMT=F) SOL%T(I), (SOL%Y(I,J),J=1,NEQN)\n";
         fout << "END DO\n";
+        fout << endl;
+        fout << "CALL RELEASE_ARRAYS(SOL, OPTS)\n";
         fout << endl;
         fout << "END PROGRAM " << Name() << "_demo\n";
         fout.close();
