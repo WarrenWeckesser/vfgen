@@ -20,7 +20,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12...3.18.4)
 
 project(vfgen CXX)
 #
