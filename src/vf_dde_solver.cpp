@@ -91,10 +91,10 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     }
     fout << "}" << endl;
     fout << endl;
-    fout << "MODULE DEFINE_" << Name() << "_DDEs\n";
+    fout << "module define_" << Name() << "_ddes\n";
     fout << endl;
-    fout << "    IMPLICIT NONE\n";
-    fout << "    INTEGER, PARAMETER :: NEQN=" << nv << ", NLAGS=" << Delays.size() << endl;
+    fout << "    implicit none\n";
+    fout << "    integer, parameter :: NEQN=" << nv << ", NLAGS=" << Delays.size() << endl;
     //
     // Constants. (Declared as global variables.)
     //
@@ -109,16 +109,16 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     //
     if (parname_list.nops() > 0) {
         fout << "    ! Parameters\n";
-        Declare(fout, "    ","DOUBLE PRECISION", parname_list,"");
+        Declare(fout, "    ","double precision", parname_list,"");
     }
     fout << endl;
-    fout << "CONTAINS\n";
+    fout << "contains\n";
     fout << endl;
     // DDE function definition starts here.
-    fout << "    SUBROUTINE " << Name() << "_ddes(" << IndependentVariable << ",x_,Zlags_,vf_)\n";
+    fout << "    subroutine " << Name() << "_ddes(" << IndependentVariable << ", x_, Zlags_, vf_)\n";
     fout << "    ! Arguments\n";
-    fout << "    DOUBLE PRECISION :: " << IndependentVariable << endl;
-    fout << "    DOUBLE PRECISION, DIMENSION(";
+    fout << "    double precision :: " << IndependentVariable << endl;
+    fout << "    double precision, dimension(";
     if (version == 2) {
         fout << ":";
     }
@@ -126,26 +126,26 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "NEQN";
     }
     fout << ") :: x_, vf_\n";
-    fout << "    DOUBLE PRECISION, DIMENSION(";
+    fout << "    double precision, dimension(";
     if (version == 2) {
         fout << ":,:";
     }
     else {
-        fout << "NEQN,NLAGS";
+        fout << "NEQN, NLAGS";
     }
     fout << ") :: Zlags_\n";
-    fout << "    INTENT(IN) :: " << IndependentVariable << ", x_, Zlags_\n";
-    fout << "    INTENT(OUT) :: vf_\n";
+    fout << "    intent(in) :: " << IndependentVariable << ", x_, Zlags_\n";
+    fout << "    intent(out) :: vf_\n";
     fout << "    ! Local variables\n";
     if (nc > 0) {
-        Declare(fout,"    ","DOUBLE PRECISION",conname_list,"");
+        Declare(fout, "    ", "double precision", conname_list, "");
     }
     if (na > 0) {
-        Declare(fout,"    ","DOUBLE PRECISION",exprname_list,"");
+        Declare(fout, "    ", "double precision", exprname_list, "");
     }
-    Declare(fout,"    ","DOUBLE PRECISION",varname_list,"");
+    Declare(fout, "    ", "double precision", varname_list, "");
     if (HasPi) {
-        fout << "    DOUBLE PRECISION Pi\n";
+        fout << "    double precision Pi\n";
     }
     if (HasPi) {
         fout << "    Pi = 3.1415926535897932385D0\n";
@@ -191,13 +191,13 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         F90Write(fout, os.str());
     }
     fout << endl;
-    fout << "    RETURN\n";
-    fout << "    END SUBROUTINE " << Name() << "_ddes\n";
+    fout << "    return\n";
+    fout << "    end subroutine " << Name() << "_ddes\n";
     fout << endl;
     // DDE history function starts here
-    fout << "    SUBROUTINE " << Name() << "_history(" << IndependentVariable << ",x_)\n";
-    fout << "    DOUBLE PRECISION :: " << IndependentVariable << endl;
-    fout << "    DOUBLE PRECISION, DIMENSION(";
+    fout << "    subroutine " << Name() << "_history(" << IndependentVariable << ",x_)\n";
+    fout << "    double precision :: " << IndependentVariable << endl;
+    fout << "    double precision, dimension(";
     if (version == 2) {
         fout << ":";
     }
@@ -205,8 +205,8 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "NEQN";
     }
     fout << ") :: x_\n";
-    fout << "    INTENT(IN) :: " << IndependentVariable << endl;
-    fout << "    INTENT(OUT) :: x_\n";
+    fout << "    intent(in) :: " << IndependentVariable << endl;
+    fout << "    intent(out) :: x_\n";
     fout << endl;
     for (int i = 0; i < nv; ++i) {
         ostringstream os;
@@ -215,15 +215,15 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         F90Write(fout, os.str());        
     }
     fout << endl;
-    fout << "    RETURN\n";
-    fout << "    END SUBROUTINE " << Name() << "_history\n";
+    fout << "    return\n";
+    fout << "    end subroutine " << Name() << "_history\n";
     fout << endl;
     if (HasNonconstantDelay) {
         // If there is a nonconstant delay, create the BETA subroutine
-        fout << "    SUBROUTINE " << Name() << "_beta(" << IndependentVariable << ",x_,bval_)\n";
+        fout << "    subroutine " << Name() << "_beta(" << IndependentVariable << ",x_,bval_)\n";
         fout << "    ! Arguments\n";
-        fout << "    DOUBLE PRECISION :: " << IndependentVariable << endl;
-        fout << "    DOUBLE PRECISION, DIMENSION(";
+        fout << "    double precision :: " << IndependentVariable << endl;
+        fout << "    double precision, dimension(";
         if (version == 2) {
             fout << ":";
         }
@@ -231,7 +231,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
             fout << "NEQN";
         }
         fout << ") :: x_\n";
-        fout << "    DOUBLE PRECISION, DIMENSION(";
+        fout << "    double precision, dimension(";
         if (version == 2) {
             fout << ":";
         }
@@ -239,16 +239,16 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
             fout << "NLAGS";
         }
         fout << ") :: bval_\n";
-        fout << "    INTENT(IN) :: " << IndependentVariable << ", x_\n";
-        fout << "    INTENT(OUT) :: bval_\n";
+        fout << "    intent(in) :: " << IndependentVariable << ", x_\n";
+        fout << "    intent(out) :: bval_\n";
         fout << "    ! Local variables\n";
         if (nc > 0) {
-            Declare(fout,"    ","DOUBLE PRECISION",conname_list,"");
+            Declare(fout, "    ", "double precision", conname_list, "");
         }
         if (na > 0) {
-            Declare(fout,"    ","DOUBLE PRECISION",exprname_list,"");
+            Declare(fout, "    ", "double precision", exprname_list, "");
         }
-        Declare(fout,"    ","DOUBLE PRECISION",varname_list,"");
+        Declare(fout, "    ", "double precision", varname_list, "");
         // Constants...
         if (nc > 0) {
             AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
@@ -276,10 +276,10 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
             os << "    bval_(" << i+1 << ") = " << IndVar - Delays[i] << endl;
             F90Write(fout, os.str());
         }
-        fout << "    END SUBROUTINE " << Name() << "_beta\n";
+        fout << "    end subroutine " << Name() << "_beta\n";
         fout << endl;
     }
-    fout << "END MODULE DEFINE_" << Name() << "_DDEs\n";
+    fout << "end module define_" << Name() << "_ddes\n";
     fout.close();
 
     if (options["demo"] == "yes") {
@@ -302,34 +302,34 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "!" << endl;
         fout << "!" << endl;
         fout << endl;
-        fout << "PROGRAM " << Name() << "_demo\n";
+        fout << "program " << Name() << "_demo\n";
         fout << endl;
-        fout << "USE DEFINE_" << Name() << "_DDEs\n";
-        fout << "USE DDE_SOLVER_M\n";
+        fout << "use define_" << Name() << "_DDEs\n";
+        fout << "use dde_solver_m\n";
         fout << endl;
-        fout << "IMPLICIT NONE\n";
+        fout << "implicit none\n";
         fout << endl;
-        fout << "INTEGER, DIMENSION(2) :: NVAR = (/NEQN,NLAGS/)\n";
+        fout << "integer, dimension(2) :: NVAR = (/NEQN, NLAGS/)\n";
         fout << endl;
-        fout << "TYPE(DDE_SOL) :: SOL\n";
-        fout << "TYPE(DDE_OPTS) :: OPTS\n";
+        fout << "type(dde_sol) :: sol\n";
+        fout << "type(dde_opts) :: opts\n";
         fout << endl;
         if (!HasNonconstantDelay) {
-            fout << "DOUBLE PRECISION, DIMENSION(" << Delays.size() << ") :: LAGS\n";
+            fout << "double precision, dimension(" << Delays.size() << ") :: lags\n";
         }
         if (np > 0) {
-            fout << "DOUBLE PRECISION, DIMENSION(" << np << ") :: p_\n";
+            fout << "double precision, dimension(" << np << ") :: p_\n";
         }
-        fout << "DOUBLE PRECISION, DIMENSION(2) :: TSPAN\n";
+        fout << "double precision, dimension(2) :: tspan\n";
         fout << endl;
-        fout << "INTEGER :: I,J\n";
-        fout << "CHARACTER(7+6*NEQN) :: F\n";
-        fout << "DOUBLE PRECISION :: relerr, abserr, stoptime\n";
+        fout << "integer :: i, j\n";
+        fout << "character(7+6*NEQN) :: f\n";
+        fout << "double precision :: relerr, abserr, stoptime\n";
         if (HasPi) {
-            fout << "DOUBLE PRECISION :: Pi\n";
+            fout << "double precision :: Pi\n";
         }
         if (nc > 0) {
-            Declare(fout,"","DOUBLE PRECISION ::",conname_list,"");
+            Declare(fout, "", "double precision ::", conname_list, "");
         }
         fout << endl;
 
@@ -359,32 +359,32 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
             // If there are only constant delays, put them in the array LAGS
             fout << "! Initialize the array of lags\n";
             for (unsigned k = 0; k < Delays.size(); ++k) {
-                fout << "LAGS(" << k+1 << ") = " << Delays[k] << endl;
+                fout << "lags(" << k+1 << ") = " << Delays[k] << endl;
             }
         }
         fout << endl;
-        fout << "TSPAN(1) = 0.0\n";
-        fout << "TSPAN(2) = stoptime\n";
-        fout << "OPTS = DDE_SET(RE=relerr,AE=abserr)\n";
+        fout << "tspan(1) = 0.0\n";
+        fout << "tspan(2) = stoptime\n";
+        fout << "opts = dde_set(re=relerr, ae=abserr)\n";
         fout << endl;
         string lags_arg;
         if (HasNonconstantDelay) {
             lags_arg = Name() + "_beta";
         }
         else {
-            lags_arg = "LAGS";
+            lags_arg = "lags";
         } 
-        fout << "SOL = DDE_SOLVER(NVAR," << Name() << "_ddes," << lags_arg <<
-             "," << Name() << "_history,TSPAN,OPTIONS=OPTS)\n";
+        fout << "sol = dde_solver(NVAR, " << Name() << "_ddes, " << lags_arg <<
+             ", " << Name() << "_history, tspan, options=opts)\n";
         fout << endl;
-        fout << "F = \"(E17.8\"//REPEAT(\",E17.8\",NEQN)//\")\"\n";
-        fout << "DO I = 1, SOL%NPTS\n";
-        fout << "    WRITE(*,FMT=F) SOL%T(I), (SOL%Y(I,J),J=1,NEQN)\n";
-        fout << "END DO\n";
+        fout << "f = \"(E17.8\"//REPEAT(\",E17.8\",NEQN)//\")\"\n";
+        fout << "do I = 1, sol%npts\n";
+        fout << "    write(*, fmt=f) sol%t(i), (sol%y(i,j), j=1,NEQN)\n";
+        fout << "end do\n";
         fout << endl;
-        fout << "CALL RELEASE_ARRAYS(SOL, OPTS)\n";
+        fout << "call release_arrays(sol, opts)\n";
         fout << endl;
-        fout << "END PROGRAM " << Name() << "_demo\n";
+        fout << "end program " << Name() << "_demo\n";
         fout.close();
     }
 }
