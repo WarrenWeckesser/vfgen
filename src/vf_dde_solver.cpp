@@ -304,8 +304,23 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << endl;
         fout << "program " << Name() << "_demo\n";
         fout << endl;
-        fout << "use define_" << Name() << "_DDEs\n";
-        fout << "use dde_solver_m\n";
+        fout << "use define_" << Name() << "_ddes, only: &\n";
+        fout << "            NEQN, NLAGS, ";
+        if (parname_list.nops() > 0) {
+            PrintList(fout, parname_list);
+            fout << ", ";
+        }
+        fout << "&\n";
+        fout << "            " << Name() << "_ddes, &\n";
+        fout << "            " << Name() << "_history";
+        if (HasNonconstantDelay) {
+            fout << ", &\n";
+            fout << "            " << Name() << "_beta\n";
+        }
+        else {
+            fout << "\n";
+        }
+        fout << "use dde_solver_m, only: dde_sol, dde_opts, dde_set, dde_solver, release_arrays\n";
         fout << endl;
         fout << "implicit none\n";
         fout << endl;
