@@ -66,7 +66,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << endl;
     fout << "from math import *" << endl;
     fout << "import numpy" << endl;
-    fout << endl;
+    fout << endl << endl;
     //
     //  Print the vector field function.
     //
@@ -74,7 +74,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << "# The vector field." << endl;
     fout << "#" << endl;
     fout << endl;
-    fout << "def " << "vectorfield(" << IndependentVariable << ",x_,args):" << endl;
+    fout << "def " << "vectorfield(" << IndependentVariable << ", x_, args):" << endl;
     fout << "    \"\"\"\n";
     fout << "    The vector field function for the vector field \"" << Name() << "\"\n";
     fout << "    \"\"\"\n";
@@ -96,7 +96,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     }
     fout << endl;
     fout << "    return f_" << endl;
-    fout << endl;
+    fout << endl << endl;
 
     //
     // Print the Jacobian function.
@@ -122,19 +122,19 @@ void VectorField::PrintPyGSL(map<string,string> options)
     }
     fout << endl;
     fout << "    # Create the Jacobian matrix, initialized with zeros." << endl; 
-    fout << "    jac_ = numpy.zeros((" << nv << "," << nv << "))" << endl; 
+    fout << "    jac_ = numpy.zeros((" << nv << ", " << nv << "))" << endl;
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
             if (df != 0) {
-                fout << "    jac_[" << i << "," << j << "] = " << df << endl;
+                fout << "    jac_[" << i << ", " << j << "] = " << df << endl;
             }
         }
     }
     fout << endl;
-    fout << "    dfdt_ = numpy.zeros((2,),dtype=numpy.float)" << endl;
+    fout << "    dfdt_ = numpy.zeros((2,), dtype=numpy.float)" << endl;
     symbol t(IndependentVariable);
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
@@ -144,14 +144,14 @@ void VectorField::PrintPyGSL(map<string,string> options)
         }
     }
     fout << endl;
-    fout << "    return jac_,dfdt_" << endl;
+    fout << "    return jac_, dfdt_" << endl;
 
     if (options["func"] == "yes") {
         //
         // Print the user-defined functions.
         //
         for (int n = 0; n < nf; ++n) {
-            fout << endl;
+            fout << endl << endl;
             fout << "#" << endl;
             fout << "# User function: " << funcname_list[n] << endl;
             fout << "#" << endl;
@@ -207,20 +207,19 @@ void VectorField::PrintPyGSL(map<string,string> options)
         }
         tout << "from pygsl import odeiv" << endl;
         tout << "import " << Name() << endl;
-        tout << endl;
-
+        tout << endl << endl;
         tout << "def use():" << endl;
-        tout << "    print 'use: ',sys.argv[0],' [options]'" << endl;
-        tout << "    print 'options:'" << endl;
-        tout << "    print '    -h    Print this message.'" << endl;
+        tout << "    print('use: ', sys.argv[0], ' [options]')" << endl;
+        tout << "    print('options:')" << endl;
+        tout << "    print('    -h    Print this message.')" << endl;
         tout << "    for vname in varnames_:" << endl;
-        tout << "        print '    '+vname+'=<initial_condition>  Default value is ',def_options[vname]" << endl;
+        tout << "        print('    '+vname+'=<initial_condition>  Default value is ', def_options[vname])" << endl;
         tout << "    for pname in parnames_:" << endl;
-        tout << "        print '    '+pname+'=<parameter_value>    Default value is ',def_options[pname]" << endl;
-        tout << "    print '    abserr=<absolute_error_tolerance>  Default value is ',def_options['abserr']" << endl;
-        tout << "    print '    relerr=<relative_error_tolerance>  Default value is ',def_options['relerr']" << endl;
-        tout << "    print '    stoptime=<stop_time>               Default value is ',def_options['stoptime']" << endl;
-        tout << endl;
+        tout << "        print('    '+pname+'=<parameter_value>    Default value is ', def_options[pname])" << endl;
+        tout << "    print('    abserr=<absolute_error_tolerance>  Default value is ', def_options['abserr'])" << endl;
+        tout << "    print('    relerr=<relative_error_tolerance>  Default value is ', def_options['relerr'])" << endl;
+        tout << "    print('    stoptime=<stop_time>               Default value is ', def_options['stoptime'])" << endl;
+        tout << endl << endl;
 
         tout << "#" << endl;
         tout << "# Main script begins here..." << endl;
@@ -236,7 +235,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
 
         MakePythonListOfStrings(tout,"varnames_",varname_list,"");
         MakePythonListOfStrings(tout,"parnames_",parname_list,"");
-        tout << "solver_param_names_ = [\"abserr\",\"relerr\",\"stoptime\"]\n" ;
+        tout << "solver_param_names_ = [\"abserr\", \"relerr\", \"stoptime\"]\n" ;
         tout << endl;
         tout << "#" << endl;
         tout << "# Set the default values of everything in options dict." << endl;
@@ -267,7 +266,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "        sys.exit()" << endl;
         tout << "    eqloc = a.find('=')" << endl;
         tout << "    if (eqloc == -1):" << endl;
-        tout << "        print 'Invalid argument (missing =): ', a" << endl;
+        tout << "        print('Invalid argument (missing =): ', a)" << endl;
         tout << "        use()" << endl;
         tout << "        sys.exit()" << endl;
         tout << "    else:" << endl;
@@ -276,7 +275,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "        if var in options:" << endl;
         tout << "            options[var] = float(val)" << endl;
         tout << "        else:" << endl;
-        tout << "            print 'Unknown argument: ', a" << endl;
+        tout << "            print('Unknown argument: ', a)" << endl;
         tout << "            use()" << endl;
         tout << "            sys.exit()" << endl;
         tout << endl;
@@ -284,7 +283,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         for (int i = 0; i < nv; ++i) {
             tout << "options['" << varname_list[i] << "']";
             if (nv == 1 || i < nv-1) {
-                tout << ",";
+                tout << ", ";
             }
         }
         tout << ")" << endl;
@@ -292,45 +291,45 @@ void VectorField::PrintPyGSL(map<string,string> options)
         for (int i = 0; i < np; ++i) {
             tout << "options['" << parname_list[i] << "']";
             if (np == 1 || i < np-1) {
-                tout << ",";
+                tout << ", ";
             }
         }
         tout << ")" << endl;
         tout << endl;
         tout << "# Create the GSL ODE solver" << endl;
-        tout << "step    = odeiv.step_rk8pd(N_," + Name() + ".vectorfield," + Name() + ".jacobian,args=p_)" << endl;
-        tout << "control = odeiv.control_y_new(step,options['abserr'],options['relerr'])" << endl;
-        tout << "evolve  = odeiv.evolve(step,control,N_)" << endl;
+        tout << "step    = odeiv.step_rk8pd(N_, " + Name() + ".vectorfield, " + Name() + ".jacobian, args=p_)" << endl;
+        tout << "control = odeiv.control_y_new(step, options['abserr'], options['relerr'])" << endl;
+        tout << "evolve  = odeiv.evolve(step, control, N_)" << endl;
         tout << endl;
         tout << "stoptime = options['stoptime']" << endl;
         tout << "# Initial step size is stoptime/500" << endl;
         tout << "h = stoptime/500.0" << endl;
         tout << "t = 0" << endl;
         tout << "# Print the initial condition\n";
-        tout << "print t";
+        tout << "print(t";
         for (int i = 0; i < nv; ++i) {
-            tout << ",y_[" << i << "]";
+            tout << ", y_[" << i << "]";
         }
         if (options["func"] == "yes") {
             for (int i = 0; i < nf; ++i) {
-                tout << "," << Name() << "." << funcname_list[i] << "(t,y_,args=p_)";
+                tout << ", " << Name() << "." << funcname_list[i] << "(t, y_, args=p_)";
             }
         }
-        tout << endl;
+        tout << ")" << endl;
         tout << "# Call evolve.apply(...) until the solution reaches stoptime" << endl;
         tout << "while t < stoptime:" << endl;
-        tout << "    t, h, y_ = evolve.apply(t,stoptime,h,y_)" << endl;
+        tout << "    t, h, y_ = evolve.apply(t, stoptime, h, y_)" << endl;
         // tout << "    y_ = y_[0]" << endl;
-        tout << "    print t";
+        tout << "    print(t";
         for (int i = 0; i < nv; ++i) {
-            tout << ",y_[" << i << "]";
+            tout << ", y_[" << i << "]";
         }
         if (options["func"] == "yes") {
             for (int i = 0; i < nf; ++i) {
-                tout << "," << Name() << "." << funcname_list[i] << "(t,y_,args=p_)";
+                tout << ", " << Name() << "." << funcname_list[i] << "(t, y_, args=p_)";
             }
         }
-        tout << endl;
+        tout << ")" << endl;
         tout.close();
     }
 }
