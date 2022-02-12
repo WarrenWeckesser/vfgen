@@ -23,4 +23,4 @@ y = [1.0, 0.0]
 while t < stoptime:
     t, h, y = evolve.apply(t, stoptime, h, y)
 
-assert_allclose(y, [-1, 0], rtol=1e-8, atol=1e-19)
+assert_allclose(y, [-1, 0], rtol=1e-8, atol=1e-9)
