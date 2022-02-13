@@ -1,3 +1,4 @@
+set -e
 
 ## gsl should already be installed when this script is run.
 #echo "Installing libgsl"

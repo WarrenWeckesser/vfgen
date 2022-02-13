@@ -1,3 +1,5 @@
+set -e
+
 echo "Fetching dde_solver_m.f90 from github."
 curl -s -S -O https://raw.githubusercontent.com/WarrenWeckesser/dde_solver/master/dde_solver_m.f90
 

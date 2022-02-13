@@ -1,3 +1,4 @@
+set -e
 
 echo "Running vfgen."
 vfgen boostodeint ../vf/linearoscp.vf

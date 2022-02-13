@@ -1,3 +1,4 @@
+set -e
 
 echo "Installing swig, setuptools, wheel, numpy and pygsl"
 apt-get -yqq install swig
