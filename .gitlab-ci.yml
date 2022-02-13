@@ -1,7 +1,7 @@
 # use the official gcc image, based on debian
 # can use versions as well, like gcc:5.2
 # see https://hub.docker.com/_/gcc/
-image: gcc:8.3
+image: gcc:10.3
 
 test:
   script:
