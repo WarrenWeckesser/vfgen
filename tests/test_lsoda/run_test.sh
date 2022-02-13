@@ -7,7 +7,8 @@ echo "Running vfgen to generate Fortran routines for LSODA."
 vfgen lsoda ../vf/linearosc.vf
 
 echo "Building test_lsoda."
-gfortran -c -w -fallow-argument-mismatch opkdmain.f opkda1.f opkda2.f
+gfortran --version
+gfortran -c -std=legacy -w opkdmain.f opkda1.f opkda2.f
 gfortran -c test_lsoda.f
 gfortran -c linearosc_rhs.f
 gfortran test_lsoda.o linearosc_rhs.o opkdmain.o opkda1.o opkda2.o -o test_lsoda
