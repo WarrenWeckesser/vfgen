@@ -52,10 +52,10 @@ test:
     - cd test_scipy
     - bash run_test.sh
     - cd ..
-    - echo "Testing R"
-    - cd test_r
-    - bash run_test.sh
-    - cd ..
+    # - echo "Testing R"
+    # - cd test_r
+    # - bash run_test.sh
+    # - cd ..
 
   #
   #artifacts:
