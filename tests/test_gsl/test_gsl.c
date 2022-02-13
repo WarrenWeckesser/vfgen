@@ -15,7 +15,7 @@
 #include <math.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_matrix.h>
-#include <gsl/gsl_odeiv.h>
+#include <gsl/gsl_odeiv2.h>
 
 #include "linearosc_gvf.h"
 
@@ -26,11 +26,11 @@ int main (int argc, char *argv[])
     const int N = 2;
     double z[N];
 
-    const gsl_odeiv_step_type *T  = gsl_odeiv_step_rk8pd;
-    gsl_odeiv_step    *step    = gsl_odeiv_step_alloc(T, N);
-    gsl_odeiv_control *control = gsl_odeiv_control_y_new(1e-12, 1e-9);
-    gsl_odeiv_evolve  *evolve  = gsl_odeiv_evolve_alloc(N);
-    gsl_odeiv_system sys = {linearosc_vf, linearosc_jac, N, params};
+    const gsl_odeiv2_step_type *T  = gsl_odeiv2_step_rk8pd;
+    gsl_odeiv2_step    *step    = gsl_odeiv2_step_alloc(T, N);
+    gsl_odeiv2_control *control = gsl_odeiv2_control_y_new(1e-12, 1e-9);
+    gsl_odeiv2_evolve  *evolve  = gsl_odeiv2_evolve_alloc(N);
+    gsl_odeiv2_system sys = {linearosc_vf, linearosc_jac, N, params};
 
     double t  = 0.0;
     double t1 = M_PI;
@@ -39,8 +39,8 @@ int main (int argc, char *argv[])
     z[1] = 0.0;
     int fail = 0;
     while (t < t1) {
-        int status = gsl_odeiv_evolve_apply(evolve, control, step,
-                                            &sys, &t, t1, &h, z);
+        int status = gsl_odeiv2_evolve_apply(evolve, control, step,
+                                             &sys, &t, t1, &h, z);
         if (status != GSL_SUCCESS) {
             fprintf(stderr, "status=%d\n", status);
             fail = 1;
@@ -48,9 +48,9 @@ int main (int argc, char *argv[])
         }
     }
 
-    gsl_odeiv_evolve_free(evolve);
-    gsl_odeiv_control_free(control);
-    gsl_odeiv_step_free(step);
+    gsl_odeiv2_evolve_free(evolve);
+    gsl_odeiv2_control_free(control);
+    gsl_odeiv2_step_free(step);
 
     if (fail) {
         return -1;

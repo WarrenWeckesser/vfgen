@@ -49,12 +49,12 @@ void VectorField::PrintGSL(map<string,string> options)
     na = exprname_list.nops();
     nf = funcname_list.nops();
 
-    string filename = Name()+"_gvf.c";
+    string filename = Name() + "_gvf.c";
     ofstream fout;
     fout.open(filename.c_str());
     fout << csrc << left;
 
-    string pfilename = Name()+"_gvf.h";
+    string pfilename = Name() + "_gvf.h";
     ofstream pout;
     pout.open(pfilename.c_str());
     pout << csrc << left;
@@ -83,7 +83,6 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "#include <math.h>" << endl;
     fout << "#include <gsl/gsl_errno.h>" << endl;
     fout << "#include <gsl/gsl_matrix.h>" << endl;
-    fout << "#include <gsl/gsl_odeiv.h>" << endl;
     fout << endl;
     //
     //  Print the vector field function.
@@ -151,7 +150,7 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << endl;
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
-    fout << "    gsl_matrix_view dfdy_mat = gsl_matrix_view_array(jac_," << nv << "," << nv << ");" << endl;
+    fout << "    gsl_matrix_view dfdy_mat = gsl_matrix_view_array(jac_, " << nv << ", " << nv << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdy_mat.matrix;" << endl;
     fout << endl;
     for (int i = 0; i < nv; ++i) {
@@ -197,7 +196,7 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << endl;
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
-    fout << "    gsl_matrix_view dfdp_mat = gsl_matrix_view_array(jacp_," << nv << "," << np << ");" << endl;
+    fout << "    gsl_matrix_view dfdp_mat = gsl_matrix_view_array(jacp_, " << nv << ", " << np << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdp_mat.matrix;" << endl;
     fout << endl;
     for (int i = 0; i < nv; ++i) {
@@ -286,7 +285,7 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "#include <math.h>" << endl;
         tout << "#include <gsl/gsl_errno.h>" << endl;
         tout << "#include <gsl/gsl_matrix.h>" << endl;
-        tout << "#include <gsl/gsl_odeiv.h>" << endl;
+        tout << "#include <gsl/gsl_odeiv2.h>" << endl;
         tout << endl;
         tout << "#include \"" << pfilename << "\"\n";
         tout << endl;
@@ -406,11 +405,11 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "        }\n" ;
         tout << "    }\n" ;
         tout << endl;
-        tout << "    const gsl_odeiv_step_type *T_  = gsl_odeiv_step_rk8pd;\n" ;
-        tout << "    gsl_odeiv_step    *step_    = gsl_odeiv_step_alloc(T_, N_);\n" ;
-        tout << "    gsl_odeiv_control *control_ = gsl_odeiv_control_y_new(solver_param_[0], solver_param_[1]);\n" ;
-        tout << "    gsl_odeiv_evolve  *evolve_  = gsl_odeiv_evolve_alloc(N_);\n" ;
-        tout << "    gsl_odeiv_system sys_ = {" << Name() << "_vf, " << Name() << "_jac, N_, &(p_[0])};\n";
+        tout << "    const gsl_odeiv2_step_type *T_  = gsl_odeiv2_step_rk8pd;\n" ;
+        tout << "    gsl_odeiv2_step    *step_    = gsl_odeiv2_step_alloc(T_, N_);\n" ;
+        tout << "    gsl_odeiv2_control *control_ = gsl_odeiv2_control_y_new(solver_param_[0], solver_param_[1]);\n" ;
+        tout << "    gsl_odeiv2_evolve  *evolve_  = gsl_odeiv2_evolve_alloc(N_);\n" ;
+        tout << "    gsl_odeiv2_system sys_ = {" << Name() << "_vf, " << Name() << "_jac, N_, &(p_[0])};\n";
         tout << endl;
         tout << "    double t_  = 0.0;\n" ;
         tout << "    double t1_ = solver_param_[2];\n" ;
@@ -418,7 +417,7 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << endl;
         tout << "    while (t_ < t1_) {\n" ;
         tout << "        int j_;\n" ;
-        tout << "        int status_ = gsl_odeiv_evolve_apply(evolve_, control_, step_, &sys_, &t_, t1_, &h_, y_);\n" ;
+        tout << "        int status_ = gsl_odeiv2_evolve_apply(evolve_, control_, step_, &sys_, &t_, t1_, &h_, y_);\n" ;
         tout << "        if (status_ != GSL_SUCCESS) {\n" ;
         tout << "            fprintf(stderr, \"status=%d\\n\", status_);\n" ;
         tout << "            break;\n" ;
@@ -435,9 +434,9 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "        printf(\"\\n\");\n";
         tout << "    }\n" ;
         tout << endl;
-        tout << "    gsl_odeiv_evolve_free(evolve_);\n" ;
-        tout << "    gsl_odeiv_control_free(control_);\n" ;
-        tout << "    gsl_odeiv_step_free(step_);\n" ;
+        tout << "    gsl_odeiv2_evolve_free(evolve_);\n" ;
+        tout << "    gsl_odeiv2_control_free(control_);\n" ;
+        tout << "    gsl_odeiv2_step_free(step_);\n" ;
         tout << "    return 0;\n" ;
         tout << "}\n" ;
         tout.close();
