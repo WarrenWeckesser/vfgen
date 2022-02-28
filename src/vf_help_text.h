@@ -32,11 +32,16 @@ constexpr char help_boostodeint[] =
 "Options: (default is listed first)\n"
 "demo=no|yes\n"
 "    If yes, create a main program that demonstrates the use of\n"
-"    the Boost Odeint code.\n"
+"    the Boost Odeint code.  A Makefile is also generated.\n"
+"func=no|yes\n"
+"    By default, any user function defined in the vector field file is not\n"
+"    defined in [name]_vf.cpp.  If the option func=yes is given, the method\n"
+"    [name]() will be defined.\n"
 "system=default|implicit\n"
 "    Determines the type of system to be solved.  Boost Odeint has several\n"
 "    types of systems.  The default is used with the standard explicit solvers.\n"
-"    Implicit systems require a Jacobian, and are used by the stiff solvers.\n";
+"    Implicit systems require a Jacobian, and are used by the stiff solvers.\n"
+"    This option only affects the generated demo code.\n";
 
 constexpr char help_check[] =
 "use: vfgen check vector_field_file.vf\n\n"

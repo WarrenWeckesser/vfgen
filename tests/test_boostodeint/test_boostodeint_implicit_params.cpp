@@ -19,11 +19,9 @@ int main(int argc, char *argv[])
     z[1] = 0.0;
 
     auto vf = linearoscp_vf(2.0);
-    auto sys = make_pair(
-        [&vf](const state_type &x_, state_type &dxdt_, const double t_)
-        {vf.linearoscp_rhs(x_, dxdt_, t_);},
+    auto sys = make_pair(vf,
         [&vf](const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_)
-        {vf.linearoscp_jac(x_, J_, t_, dfdt_);}
+            {vf.jac(x_, J_, t_, dfdt_);}
     );
     size_t nsteps = integrate_adaptive(
         make_dense_output<rosenbrock4<double>>(1e-12, 1e-10),

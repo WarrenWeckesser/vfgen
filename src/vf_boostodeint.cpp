@@ -63,14 +63,13 @@ using namespace GiNaC;
 
 void VectorField::PrintBoostOdeint(map<string,string> options)
 {
-    int np;
-    int nc, nv; //na, nf;
+    int nc, np, nv, na, nf;
 
     np = parname_list.nops();
     nc = conname_list.nops();
     nv = varname_list.nops();
-    //na = exprname_list.nops();
-    //nf = funcname_list.nops();
+    na = exprname_list.nops();
+    nf = funcname_list.nops();
 
     string filename = Name()+"_vf.cpp";
     ofstream fout;
@@ -93,161 +92,100 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     PrintVFGENComment(fout, "//  ");
     fout << "//" << endl;
     fout << endl;
+    fout << "#include <cmath>" << endl;
     fout << "#include \"" << pfilename << "\"" << endl;
     fout << endl;
-    if (options["system"] != "implicit") {
-        if (np == 0) {
-            fout << "void " << Name() << "_vf";
-            fout << "(const state_type &x_, state_type &dxdt_, const double t_)" << endl;
-            fout << "{" << endl;
-            if (HasPi) {
-                fout << "    const double Pi = M_PI;\n";
-            }
-            AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
-            CDeclare_double(fout, varname_list);
-            CDeclare_double(fout, exprname_list);
-            fout << endl;
-            GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
-            fout << endl;
-            AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, ";");
-            SetVectorFromNames(fout, "    ", "dxdt_", varvecfield_list, "[]", 0, ";");
-            fout << "}" << endl;
-            fout << endl;
-        }
-        else { // np > 0
-            fout << "void " << Name() << "_vf";
-            fout << "::operator()";
-            fout << "(const state_type &x_, state_type &dxdt_, const double t_)" << endl;
-            fout << "{" << endl;
-            if (HasPi) {
-                fout << "    const double Pi = M_PI;\n";
-            }
-            AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
-            CDeclare_double(fout, varname_list);
-            CDeclare_double(fout, exprname_list);
-            fout << endl;
-            GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
-            fout << endl;
-            AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, ";");
-            SetVectorFromNames(fout, "    ", "dxdt_", varvecfield_list, "[]", 0, ";");
-            fout << "}" << endl;
-            fout << endl;
+    fout << "void " << Name() << "_vf";
+    fout << "::operator()";
+    fout << "(const state_type &x_, state_type &dxdt_, const double t_)" << endl;
+    fout << "{" << endl;
+    if (HasPi) {
+        fout << "    const double Pi = M_PI;\n";
+    }
+    AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
+    CDeclare_double(fout, varname_list);
+    CDeclare_double(fout, exprname_list);
+    fout << endl;
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
+    fout << endl;
+    AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, ";");
+    SetVectorFromNames(fout, "    ", "dxdt_", varvecfield_list, "[]", 0, ";");
+    fout << "}" << endl;
+    fout << endl;
+
+    //
+    // Print the Jacobian function.
+    //
+    fout << "//" << endl;
+    fout << "//  The Jacobian." << endl;
+    fout << "//" << endl;
+    fout << endl;
+
+    fout << "void " << Name() << "_vf::jac(";
+    fout << "const state_type &x_, ";
+    fout << "matrix_type &J_, ";
+    fout << "const double &t_, ";
+    fout << "state_type &dfdt_";
+    fout << ")" << endl;
+    fout << "{" << endl;
+    if (HasPi) {
+        fout << "    const double Pi = M_PI;\n";
+    }
+    for (int i = 0; i < nc; ++i) {
+        fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
+    }
+
+    CDeclare(fout, "double", varname_list);
+    GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
+    for (int i = 0; i < nv; ++i) {
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
+        for (int j = 0; j < nv; ++j) {
+            symbol v = ex_to<symbol>(varname_list[j]);
+            ex df = f.diff(v);
+            fout << "    J_(" << i << ", " << j << ") = " << f.diff(v) << ";" << endl;
         }
     }
-    else { // options["system"] == "implicit"
-        if (np == 0) {
-            fout << "void " << Name() << "_vf";
-            fout << "(const state_type &x_, state_type &dxdt_, const double t_)" << endl;
-            fout << "{" << endl;
-            if (HasPi) {
-                fout << "    const double Pi = M_PI;\n";
-            }
-            AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
-            CDeclare_double(fout, varname_list);
-            CDeclare_double(fout, exprname_list);
-            fout << endl;
-            GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
-            fout << endl;
-            AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, ";");
-            SetVectorFromNames(fout, "    ", "dxdt_", varvecfield_list, "[]", 0, ";");
-            fout << "}" << endl;
-            fout << endl;
-            //
-            // Print the Jacobian function.
-            //
-            fout << "//" << endl;
-            fout << "//  The Jacobian." << endl;
-            fout << "//" << endl;
-            fout << endl;
+    for (int i = 0; i < nv; ++i) {
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
+        ex dfdt = f.diff(IndVar);
+        fout << "    dfdt_(" << i << ") = " << dfdt << ";" << endl;
+    }
+    fout << "}" << endl;
 
-            fout << "void " << Name() << "_jac(";
-            fout << "const state_type &x_, ";
-            fout << "matrix_type &J_, ";
-            fout << "const double &t_, ";
-            fout << "state_type &dfdt_";
-            fout << ")" << endl;
+    if ((options["func"] == "yes") && (nf > 0)) {
+        //
+        // Print the user-defined functions.
+        //
+        fout << endl;
+        fout << "//" << endl;
+        fout << "//  User-defined functions. " << endl;
+        fout << "//" << endl;
+        fout << endl;
+        for (int n = 0; n < nf; ++n) {
+            fout << "double " << Name() << "_vf::" << funcname_list[n] << "(const state_type &x_, double t_)" << endl;
             fout << "{" << endl;
             if (HasPi) {
                 fout << "    const double Pi = M_PI;\n";
             }
             for (int i = 0; i < nc; ++i) {
-                fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
+                fout << "    const double " << conname_list[i]  << convalue_list[i] << ";" << endl;
             }
-
             CDeclare(fout, "double", varname_list);
-            GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
-            for (int i = 0; i < nv; ++i) {
-                ex f = iterated_subs(varvecfield_list[i], expreqn_list);
-                for (int j = 0; j < nv; ++j) {
-                    symbol v = ex_to<symbol>(varname_list[j]);
-                    ex df = f.diff(v);
-                    fout << "    J_(" << i << ", " << j << ") = " << f.diff(v) << ";" << endl;
-                }
-            }
-            for (int i = 0; i < nv; ++i) {
-                ex f = iterated_subs(varvecfield_list[i], expreqn_list);
-                ex dfdt = f.diff(IndVar);
-                fout << "    dfdt_(" << i << ") = " << dfdt << ";" << endl;
-            }
-            fout << "}" << endl;
-        }
-        else {
-            fout << "void " << Name() << "_vf::" << Name() << "_rhs";
-            fout << "(const state_type &x_, state_type &dxdt_, const double t_)" << endl;
-            fout << "{" << endl;
-            if (HasPi) {
-                fout << "    const double Pi = M_PI;\n";
-            }
-            AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
-            CDeclare_double(fout, varname_list);
-            CDeclare_double(fout, exprname_list);
+            CDeclare(fout, "double", exprname_list);
             fout << endl;
             GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
             fout << endl;
-            AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, ";");
-            SetVectorFromNames(fout, "    ", "dxdt_", varvecfield_list, "[]", 0, ";");
-            fout << "}" << endl;
-            fout << endl;
-            //
-            // Print the Jacobian function.
-            //
-            fout << "//" << endl;
-            fout << "//  The Jacobian." << endl;
-            fout << "//" << endl;
-            fout << endl;
-
-            fout << "void " << Name() << "_vf::" << Name() << "_jac(";
-            fout << "const state_type &x_, ";
-            fout << "matrix_type &J_, ";
-            fout << "const double &t_, ";
-            fout << "state_type &dfdt_";
-            fout << ")" << endl;
-            fout << "{" << endl;
-            if (HasPi) {
-                fout << "    const double Pi = M_PI;\n";
+            for (int i = 0; i < na; ++i) {
+                fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
+            if (na > 0) {
+                fout << endl;
             }
-
-            CDeclare(fout, "double", varname_list);
-            GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
-            for (int i = 0; i < nv; ++i) {
-                ex f = iterated_subs(varvecfield_list[i], expreqn_list);
-                for (int j = 0; j < nv; ++j) {
-                    symbol v = ex_to<symbol>(varname_list[j]);
-                    ex df = f.diff(v);
-                    fout << "    J_(" << i << ", " << j << ") = " << f.diff(v) << ";" << endl;
-                }
-            }
-            for (int i = 0; i < nv; ++i) {
-                ex f = iterated_subs(varvecfield_list[i], expreqn_list);
-                ex dfdt = f.diff(IndVar);
-                fout << "    dfdt_(" << i << ") = " << dfdt << ";" << endl;
-            }
+            fout << "    return " << funcformula_list[n] << ";" << endl;
             fout << "}" << endl;
         }
     }
+
     fout.close();
 
     //
@@ -266,85 +204,51 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     pout << "#define " << Name() << "_VF_H" << endl;
     pout << endl;
     
-    if (options["system"] != "implicit") {
-        pout << "#include <vector>" << endl;
-        pout << endl;
-        pout << "typedef std::vector<double> state_type;" << endl;
-        pout << endl;
-        if (np == 0) {
-            //
-            //  Print the vector field function.
-            //
-            pout << "//" << endl;
-            pout << "//  The vector field." << endl;
-            pout << "//" << endl;
-            pout << endl;
-            pout << "void " << Name() + "_vf";
-            pout << "(const state_type &x_, state_type &dxdt_, const double t_);" << endl;
-        }
-        else {  // np > 0
-            //
-            //  Print the vector field class.
-            //
-            pout << "//" << endl;
-            pout << "//  The vector field." << endl;
-            pout << "//" << endl;
-            pout << endl;
+    pout << "#include <boost/numeric/odeint.hpp>" << endl;
+    pout << endl;
+    pout << "typedef boost::numeric::ublas::vector<double> state_type;" << endl;
+    pout << "typedef boost::numeric::ublas::matrix<double> matrix_type;" << endl;
+    pout << endl;
 
-            pout << "class " << Name() << "_vf" << endl;
-            pout << "{" << endl;
-            CDeclare_double(pout, parname_list);
-            pout << endl;
-            pout << "public:" << endl;
-            pout << "    " << Name() + "_vf" << "(";
-            PrintTransformedList(pout, "double $_", parname_list);
-            pout << ") : ";
-            PrintTransformedList(pout, "$($_)", parname_list);
-            pout << " {}" << endl;
-            pout << endl;
-            pout << "    void operator()";
-            pout << "(const state_type &x_, state_type &dxdt_, const double t_);" << endl;
-            pout << "};" << endl;
+    //
+    //  Print the vector field class.
+    //
+    pout << "//" << endl;
+    pout << "//  The vector field." << endl;
+    pout << "//" << endl;
+    pout << endl;
+
+    pout << "class " << Name() << "_vf" << endl;
+    pout << "{" << endl;
+
+    if (np > 0) {
+        CDeclare_double(pout, parname_list);
+        pout << endl;
+    }
+
+    pout << "public:" << endl;
+
+    if (np > 0) {
+        pout << "    " << Name() + "_vf" << "(";
+        PrintTransformedList(pout, "double $_", parname_list);
+        pout << ") : ";
+        PrintTransformedList(pout, "$($_)", parname_list);
+        pout << " {}" << endl;
+        pout << endl;
+    }
+
+    pout << "    void operator()";
+    pout << "(const state_type &x_, state_type &dxdt_, const double t_);" << endl;
+    pout << "    void jac";
+    pout << "(const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_);" << endl;
+    if (options["func"] == "yes") {
+        for (int n = 0; n < nf; ++n) {
+            pout << "    double " << funcname_list[n]
+                 << "(const state_type &x_, double t_);" << endl;
         }
     }
-    else { // options["system"] == "implicit"
-        pout << "#include <boost/numeric/odeint.hpp>" << endl;
-        pout << endl;
-        pout << "typedef boost::numeric::ublas::vector<double> state_type;" << endl;
-        pout << "typedef boost::numeric::ublas::matrix<double> matrix_type;" << endl;
-        pout << endl;
-        //
-        //  Print the vector field class.
-        //
-        pout << "//" << endl;
-        pout << "//  The vector field." << endl;
-        pout << "//" << endl;
-        pout << endl;
-        if (np == 0) {
-            pout << "void " << Name() + "_vf";
-            pout << "(const state_type &x_, state_type &dxdt_, const double t_);" << endl;
-            pout << "void " << Name() + "_jac";
-            pout << "(const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_);" << endl;
-        }
-        else {  // np > 0
-            pout << "class " << Name() << "_vf" << endl;
-            pout << "{" << endl;
-            CDeclare_double(pout, parname_list);
-            pout << endl;
-            pout << "public:" << endl;
-            pout << "    " << Name() + "_vf" << "(";
-            PrintTransformedList(pout, "double $_", parname_list);
-            pout << ") : ";
-            PrintTransformedList(pout, "$($_)", parname_list);
-            pout << " {}" << endl;
-            pout << endl;
-            pout << "    void " << Name() << "_rhs";
-            pout << "(const state_type &x_, state_type &dxdt_, const double t_);" << endl;
-            pout << "    void " << Name() + "_jac";
-            pout << "(const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_);" << endl;
-            pout << "};" << endl;
-        }
-    }
+    pout << "};" << endl;
+
     pout << endl;
     pout << "#endif" << endl;
     pout.close();
@@ -383,23 +287,15 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
         }
         AssignNameValueLists(tout, "    const double ", conname_list, "=", convalue_list, ";");
 
-        if (options["system"] == "implicit") {
-            tout << "    state_type y_(" << nv << ");" << endl;
-        }
-        else {
-            tout << "    state_type y_{";
-            PrintList(tout, vardefic_list);
-            tout << "};" << endl;
-        }
+        tout << "    state_type y_(" << nv << ");" << endl;
+
         tout << "    double t0 = 0.0;" << endl;
         tout << "    double tfinal = 10.0;" << endl;
         tout << "    double dt = 0.01;" << endl;
         tout << endl;
         
-        if (options["system"] == "implicit") {
-            for (int i = 0; i < nv; ++i) {
-                tout << "    y_[" << i << "] = " << vardefic_list[i] << ";" << endl;
-            }
+        for (int i = 0; i < nv; ++i) {
+            tout << "    y_[" << i << "] = " << vardefic_list[i] << ";" << endl;
         }
         tout << endl;
 
@@ -407,11 +303,9 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
             tout << "    bulirsch_stoer_dense_out<state_type> stepper(1e-9, 1e-9, 1.0, 0.0);" << endl;
         }
 
-        if (np > 0) {
-            tout << "    auto " << Name() << " = " << Name() + "_vf(";
-            PrintList(tout, pardefval_list);
-            tout << ");" << endl;
-        }
+        tout << "    auto " << Name() << " = " << Name() + "_vf(";
+        PrintList(tout, pardefval_list);
+        tout << ");" << endl;
 
         if (options["system"] == "implicit") {
             tout << "    integrate_const(make_dense_output<rosenbrock4<double>>(1e-9, 1e-9), ";
@@ -421,30 +315,35 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
         }
 
         if (options["system"] == "implicit") {
-            if (np == 0) {
-                tout << "make_pair(" << Name() << "_vf, " << Name() << "_jac)";
-            }
-            else {  // "implicit" and np > 0
-                tout << endl;
-                tout << "        make_pair(" << endl;
-                tout << "            [&" << Name() << "](const state_type &x_, state_type &dxdt_, const double t_)" << endl;
-                tout << "            {" << Name() << "." << Name() << "_rhs(x_, dxdt_, t_);}," << endl;
-                tout << "            [&" << Name() << "](const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_)" << endl;
-                tout << "            {" << Name() << "." << Name() << "_jac(x_, J_, t_, dfdt_);}" << endl;
-                tout << "        )";
-            }
+            tout << endl;
+            tout << "        make_pair(" << Name() << "," << endl;
+            tout << "            [&" << Name() << "](const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_)" << endl;
+            tout << "            {" << Name() << ".jac(x_, J_, t_, dfdt_);}" << endl;
+            tout << "        )";
         }
         else { // Not "implicit"
-            if (np == 0) {
-                tout << Name() + "_vf";
-            }
-            else {
-                tout << Name();
-            }
+            tout << Name();
         }
         tout << ", y_, t0, tfinal, dt, writer);" << endl;
 
         tout << "}" << endl;
-        tout.close(); 
+        tout.close();
+
+        string makefilename = "Makefile." + Name() + "_demo";
+        ofstream mout;
+        mout.open(makefilename.c_str());
+        mout << "# Makefile for " << Name() << "_demo" << endl;
+        mout << endl;
+        mout << "OBJFILES = " << Name() + "_demo.o" << " " << Name() + "_vf.o" << endl;
+        mout << endl;
+        mout << Name() + "_demo: $(OBJFILES)" << endl;
+        mout << "\t$(CXX) $(OBJFILES) $(LDFLAGS) -o $@" << endl;
+        mout << endl;
+        mout << Name() + "_demo.o: " << tfilename << " " << Name() + "_vf.h" << endl;
+        mout << "\t$(CXX) $(CXXFLAGS) -c " << tfilename << endl;
+        mout << endl;
+        mout << Name() + "_vf.o: " << filename << " " << Name() + "_vf.h" << endl;
+        mout << "\t$(CXX) $(CXXFLAGS) -c " << filename << endl;
+        mout.close();
     }
 }

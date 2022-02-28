@@ -11,10 +11,13 @@ using namespace boost::numeric::odeint;
 
 int main(int argc, char *argv[])
 {
-    state_type z{1.0, 0.0};
+    state_type z(2);
     double t0 = 0.0;
     double tfinal = M_PI;
     double dt0 = 0.1;
+
+    z[0] = 1.0;
+    z[1] = 0.0;
 
     auto linearoscp = linearoscp_vf(2.0);
 

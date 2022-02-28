@@ -39,7 +39,6 @@ using namespace GiNaC;
 
 void VectorField::PrintCVODE(map<string,string> options)
 {
-
     int nc, np, nv, na, nf;
 
     if (options.count("version") > 0 && options["version"] != "2.3.0" && options["version"] != "2.4.0"

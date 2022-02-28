@@ -18,10 +18,14 @@ int main(int argc, char *argv[])
     z[0] = 1.0;
     z[1] = 0.0;
 
+    auto linearosc = linearosc_vf();
+    auto sys = make_pair(linearosc,
+                         [&linearosc](const state_type &x_, matrix_type &J_, const double &t_, state_type &dfdt_)
+                             {linearosc.jac(x_, J_, t_, dfdt_);});
+
     size_t nsteps = integrate_adaptive(
         make_dense_output<rosenbrock4<double>>(1e-12, 1e-10),
-        make_pair(linearosc_vf, linearosc_jac),
-        z, t0, tfinal, dt);
+        sys, z, t0, tfinal, dt);
 
     if ((fabs(z[0] + 1) < 1e-9) && (fabs(z[1]) < 1e-9)) {
         return 0;

@@ -87,7 +87,7 @@ map<string, command_info> commands = {
         {{"lang"},
          help_auto}},
     {"boostodeint",
-        {{"demo", "system"},
+        {{"demo", "func", "system"},
          help_boostodeint}},
     {"check",
         {{},
