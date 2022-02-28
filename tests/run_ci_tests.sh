@@ -23,7 +23,9 @@ echo "------------------------------"
 echo "Testing lsoda"
 echo "------------------------------"
 cd test_lsoda
-bash run_test.sh
+bash download_lsoda.sh
+bash run_test_linearosc.sh
+bash run_test_pidecay.sh
 cd ..
 
 echo "------------------------------"

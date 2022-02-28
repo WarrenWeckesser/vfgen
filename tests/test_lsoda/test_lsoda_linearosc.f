@@ -1,8 +1,8 @@
 c
-c test_lsoda.f
+c test_lsoda_linearosc.f
 c
 c Fortran 77 program that uses LSODA to solve the differential equations
-c defined in the vector field 'linearosc'
+c defined in the vector field 'linearosc'.
 c
 c
       program linearosc
@@ -56,7 +56,9 @@ c     --- Call DLSODA in a loop to compute the solution ---
      &           linearosc_jac, jt_)
           if (istate_ .lt. 0) goto 80
 40    continue
-      if ((abs(y_(1) + 1) .gt. 1D-9) .or. (abs(y_(2)) .gt. 1D-9)) then
+      x = y_(1)
+      y = y_(2)
+      if ((abs(x + 1.0D0) .gt. 1D-9) .or. (abs(y) .gt. 1D-9)) then
           stop 'FAIL'
       endif
       stop

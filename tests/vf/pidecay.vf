@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<VectorField
+    Name="pidecay">
+<StateVariable
+    Name="x"
+    Formula="-Pi*x"
+    DefaultInitialCondition="1.0" />
+</VectorField>

@@ -94,7 +94,15 @@ void VectorField::PrintLSODA(map<string,string> options)
         F77Declare(fout,exprname_list);
     }
     F77Declare(fout,varname_list);
+    if (HasPi) {
+        fout << "      double precision Pi\n";
+    }
     fout << endl;
+    if (HasPi) {
+        fout << "      Pi = ";
+        PrintPi(fout);
+        fout << "D0" << endl;
+    }
     if (nc > 0) {
         fout << "c     --- Constants ---\n";
     }
@@ -159,7 +167,13 @@ void VectorField::PrintLSODA(map<string,string> options)
         F77Declare(fout,parname_list);
     }
     F77Declare(fout,varname_list);
-    fout << endl;
+    if (HasPi) {
+        fout << "      double precision Pi\n";
+        fout << endl;
+        fout << "      Pi = ";
+        PrintPi(fout);
+        fout << "D0" << endl;
+    }
     if (nc > 0) {
         fout << "c     --- Constants ---\n";
     }
