@@ -2,6 +2,8 @@
 # test_r.R
 #
 
+options(repos=structure(c(CRAN="https://cloud.r-project.org")))
+
 install.packages("deSolve")
 
 library(deSolve)
