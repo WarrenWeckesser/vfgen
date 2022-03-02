@@ -2,6 +2,8 @@
 # test_r.R
 #
 
+install.packages("deSolve")
+
 library(deSolve)
 
 # Load the vector field definition and the jacobian.
