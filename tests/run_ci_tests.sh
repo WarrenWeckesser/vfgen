@@ -74,9 +74,9 @@ cd test_pygsl
 bash run_test.sh
 cd ..
 
-# echo "------------------------------"
-# echo "Testing R"
-# echo "------------------------------"
-# cd test_r
-# bash run_test.sh
-# cd ..
+echo "------------------------------"
+echo "Testing R"
+echo "------------------------------"
+cd test_r
+bash run_test.sh
+cd ..

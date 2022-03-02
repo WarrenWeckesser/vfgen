@@ -1,10 +1,7 @@
 set -e
 
-echo "Installing R and the desolve package"
-apt-get update
-apt-get -y install r-base r-cran-desolve
-
-echo "Testing R"
+echo "Running vfgen"
 vfgen r ../vf/linearosc.vf
 
+echo "Running R test code"
 R -f test_r.R --vanilla --slave
