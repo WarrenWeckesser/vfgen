@@ -295,7 +295,7 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     fout << " ]\n";
     // Function definition starts here.
     fout << "%" << endl;
-    fout << "function vf_ = sys_rhs(Zlags_,par_)";
+    fout << "function vf_ = sys_rhs(Zlags_, par_)";
 
     if (HasPi) {
         fout << "    Pi = pi;\n";
@@ -388,7 +388,7 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
     dout << "% (In the comments below, \"wrt\" means \"with respect to\".)\n";
     // Function definition starts here.
     dout << "%" << endl;
-    dout << "function jac_ = sys_deri(Zlags_,par_,nx_,np_,v_)";
+    dout << "function jac_ = sys_deri(Zlags_, par_, nx_, np_, v_)";
 
     if (HasPi) {
         dout << "    Pi = pi;\n";
