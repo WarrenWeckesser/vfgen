@@ -429,17 +429,17 @@ void VectorField::PrintDDEBIFTOOL(map<string,string> options)
         vf0.push_back(f);
     }
 
-    dout << "    if length(nx_) == 1 & length(np_) == 0 & isempty(v_)\n";
+    dout << "    if length(nx_) == 1 && length(np_) == 0 && isempty(v_)\n";
     dout << "        jac_ = zeros(" << nv << "," << nv << ");\n";
     DDEBT_PrintJacobians(dout, vf0);
-    dout << "    elseif length(nx_) == 0 & length(np_) == 1 & isempty(v_)\n";
+    dout << "    elseif length(nx_) == 0 && length(np_) == 1 && isempty(v_)\n";
     dout << "        jac_ = zeros(" << nv << ",1);\n";
     DDEBT_PrintParDerivs(dout, vf0);
-    dout << "    elseif length(nx_) == 1 & length(np_) == 1 & isempty(v_)\n";
+    dout << "    elseif length(nx_) == 1 && length(np_) == 1 && isempty(v_)\n";
     dout << "        % mixed state variable and parameter derivatives\n";
     dout << "        jac_ = zeros(" << nv << "," << nv << ");\n";
     DDEBT_PrintXandParJacobians(dout,vf0);
-    dout << "    elseif length(nx_) == 2 & length(np_) == 0 & ~isempty(v_)\n";
+    dout << "    elseif length(nx_) == 2 && length(np_) == 0 && ~isempty(v_)\n";
     dout << "        jac_ = zeros(" << nv << "," << nv << ");\n";
     DDEBT_PrintHessiansTimesV(dout,vf0);
     dout << "    else\n";
