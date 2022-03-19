@@ -260,6 +260,7 @@ class VectorField : public Symbol
     void PrintAUTO(std::map<std::string,std::string> options);
     void PrintDSTool(void);
     void PrintEVF(std::map<std::string,std::string> options);
+    void PrintJavaMath(std::map<std::string,std::string> options);
     void PrintMATCONT(std::map<std::string,std::string> options);
     void PrintMATLAB(std::map<std::string,std::string> options);
     void PrintOctave(std::map<std::string,std::string> options);

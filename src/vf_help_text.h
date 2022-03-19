@@ -205,6 +205,28 @@ constexpr char help_help[] =
 "    vfgen help cvode\n"
 "prints a description of the cvode command.\n";
 
+constexpr char help_javamath[] =
+"use: vfgen javamath vector_field_file.vf\n"
+"     vfgen javamath:option=value vector_field_file.vf\n\n"
+"This command generates a Java file containing a class to be used with\n"
+"the ODE solvers of the Apache Commons Math library.\n"
+"The output file that defines the system of differential equations is\n"
+"[name]ODE.java, where [name] is the name of the vector field given in\n"
+"the vector field file.\n"
+"\n"
+"Options: (default is listed first)\n"
+"demo=no|yes\n"
+"    If the option demo=yes is given, two more files are created:\n"
+"        [name]Solver.java\n"
+"        build-and-run-[name]Solve.sh\n"
+"    The Java file contains a simple example of the use of an Apache\n"
+"    Commons Math ODE solver to solve the differential equations.\n"
+"    When [name]Solver.java is run, the solution is printed to the\n"
+"    terminal.  The bash script contains a few commands to build and\n"
+"    run the solver.  Experienced Java programmers can ignore this\n"
+"    file, and instead use whatever IDE they are familiar with to\n"
+"    build and run the demo program.\n";
+
 constexpr char help_javascript[] =
 "use: vfgen javascript vector_field_file.vf\n"
 "     vfgen javascript:option=value,... vector_field_file.vf\n\n"

@@ -4,7 +4,7 @@
 //  by Warren Weckesser
 //
 //
-//  Copyright (C) 2008-2014 Warren Weckesser
+//  Copyright (C) 2008-2022 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License, Version 2, as
@@ -119,6 +119,9 @@ map<string, command_info> commands = {
     {"help",
         {{},
          help_help}},
+    {"javamath",
+        {{"demo"},
+         help_javamath}},
     {"javascript",
         {{"order", "demo"},
          help_javascript}},
@@ -542,6 +545,14 @@ int main(int argc, char **argv)
     else if (commandstr == "javascript") {
         if (vf.IsDelay == false) {
             vf.PrintJavascript(options);
+        }
+        else {
+            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
+        }
+    }
+    else if (commandstr == "javamath") {
+        if (vf.IsDelay == false) {
+            vf.PrintJavaMath(options);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
