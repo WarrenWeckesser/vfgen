@@ -2,7 +2,8 @@ bin_PROGRAMS = vfgen
 vfgen_SOURCES = vfgen.cpp vf.cpp vf_adolc.cpp vf_auto.cpp vf_boostodeint.cpp \
                 vf_cvode.cpp vf_dde23.cpp vf_dde_solver.cpp                  \
                 vf_ddebiftool.cpp vf_delay2ode.cpp vf_differentials.cpp      \
-                vf_dstool.cpp vf_evf.cpp vf_gsl.cpp vf_javascript.cpp        \
+                vf_dstool.cpp vf_evf.cpp vf_gsl.cpp                          \
+                vf_javamath.cpp vf_javascript.cpp                            \
                 vf_latex.cpp vf_lsoda.cpp  vf_matcont.cpp vf_matlab.cpp      \
                 vf_octave.cpp vf_pddecont.cpp vf_pydstool.cpp vf_pygsl.cpp   \
                 vf_r.cpp vf_radau5.cpp vf_scilab.cpp vf_scipy.cpp            \
