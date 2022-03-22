@@ -13,3 +13,7 @@ src/Makefile
 src/Makefile.in
 src/vfgen
 src/.deps
+cmake_build/CMakeCache.txt
+cmake_build/CMakeFiles/
+cmake_build/cmake_install.cmake
+cmake_build/vfgen
