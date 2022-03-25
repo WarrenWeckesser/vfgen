@@ -40,6 +40,9 @@
 using namespace std;
 using namespace GiNaC;
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, int r, lst vf, lst expreqn, lst vars, lst params);
 

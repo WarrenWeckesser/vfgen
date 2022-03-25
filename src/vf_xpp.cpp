@@ -31,6 +31,10 @@
 #include "vf.h"
 #include "vf_utils.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 using namespace std;
 using namespace GiNaC;
 
