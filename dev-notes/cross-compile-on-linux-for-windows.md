@@ -37,8 +37,8 @@ ginac
 Using `ginac-1.8.3.tar.bz2`.
 
 ```
-export CLN_CFLAGS=-I/home/warren/local-win/include
-export CLN_LIBS="-L/home/warren/local-win/lib -lcln"
+export CLN_CFLAGS=-I$HOME/local-win/include
+export CLN_LIBS="-L$HOME/local-win/lib -lcln"
 ./configure --host=x86_64-w64-mingw32 --prefix=$HOME/local-win --disable-shared
 make
 make install
@@ -52,10 +52,10 @@ In the vfgen git repo, run the commands that create `configure`
 (given in README.md), then run `./configure` and `make` as follows:
 
 ```
-export MXML_CFLAGS=-I/home/warren/local-win/include
-export MXML_LIBS="-L/home/warren/local-win/lib -lmxml"
-export GINAC_CFLAGS=-I/home/warren/local-win/include
-export GINAC_LIBS="-L/home/warren/local-win/lib -lginac -lcln"
+export MXML_CFLAGS=-I$HOME/local-win/include
+export MXML_LIBS="-L$HOME/local-win/lib -lmxml"
+export GINAC_CFLAGS=-I$HOME/local-win/include
+export GINAC_LIBS="-L$HOME/local-win/lib -lginac -lcln"
 ./configure --host=x86_64-w64-mingw32 --prefix=$HOME/local-win
 make LDFLAGS=-static
 ```
