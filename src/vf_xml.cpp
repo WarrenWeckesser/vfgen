@@ -148,22 +148,22 @@ int VectorField::ReadXML(string xmlfilename)
     bool bad_attr;
 
     xmlfile = fopen(xmlfilename.c_str(),"r");
-    if (xmlfile == NULL) {
+    if (xmlfile == nullptr) {
        // Failed to open the file.
        cerr << "Error: Unable to open " << xmlfilename << "\n";
        exit(-1);
     }
-    tree = mxmlLoadFile(NULL,xmlfile,MXML_NO_CALLBACK);
+    tree = mxmlLoadFile(nullptr,xmlfile,MXML_NO_CALLBACK);
     fclose(xmlfile);
-    if (tree == NULL) {
+    if (tree == nullptr) {
         cerr << "Error: Unable to load the vector field from the file " << xmlfilename << ".\n";
         cerr << "There may be an error in the XML definition of the vector field.\n";
         mxmlDelete(tree);
         exit(-1);
     }
 
-    node = mxmlFindElement(tree,tree,"VectorField",NULL,NULL,MXML_DESCEND);
-    if (node == NULL) {
+    node = mxmlFindElement(tree,tree,"VectorField",nullptr,nullptr,MXML_DESCEND);
+    if (node == nullptr) {
         cerr << "Error: No VectorField element found in XML defintion.\n";
         mxmlDelete(tree);
         exit(-1);
@@ -184,7 +184,7 @@ int VectorField::ReadXML(string xmlfilename)
         }
         const char *attr;
         attr = mxmlElementGetAttr(node,"Name");
-        if (attr == NULL) {
+        if (attr == nullptr) {
             cerr << "Error: The VectorField element has no Name attribute.\n";
             mxmlDelete(tree);
             exit(-1);
@@ -199,12 +199,12 @@ int VectorField::ReadXML(string xmlfilename)
             Name(s);
         }
         attr = mxmlElementGetAttr(node,"Description");
-        if (attr != NULL) {
+        if (attr != nullptr) {
             string s(attr);
             Description(s);
         }
         attr = mxmlElementGetAttr(node,"IndependentVariable");
-        if (attr == NULL) {
+        if (attr == nullptr) {
             IndependentVariable = "t";
         }
         else {
@@ -221,9 +221,9 @@ int VectorField::ReadXML(string xmlfilename)
     //
     // Get the constants
     //
-    for (node = mxmlFindElement(tree,tree,"Constant",NULL,NULL,MXML_DESCEND);
-         node != NULL;
-         node = mxmlFindElement(node,tree,"Constant",NULL,NULL,MXML_DESCEND)) {
+    for (node = mxmlFindElement(tree,tree,"Constant",nullptr,nullptr,MXML_DESCEND);
+         node != nullptr;
+         node = mxmlFindElement(node,tree,"Constant",nullptr,nullptr,MXML_DESCEND)) {
         bad_attr = false;
         for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
             const char *name;
@@ -240,7 +240,7 @@ int VectorField::ReadXML(string xmlfilename)
         } 
         const char *attr;
         attr = mxmlElementGetAttr(node,"Name");
-        if (attr == NULL) {
+        if (attr == nullptr) {
             cerr << "Error: A Constant element has no Name attribute.\n";
             mxmlDelete(tree);
             exit(-1);
@@ -255,12 +255,12 @@ int VectorField::ReadXML(string xmlfilename)
             Constant *c = new Constant(name);
             AddConstant(c);
             attr = mxmlElementGetAttr(node,"Description");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string descr(attr);
                 c->Description(descr);
             }
             attr = mxmlElementGetAttr(node,"Value");
-            if (attr == NULL) {
+            if (attr == nullptr) {
                 cerr << "Error: The Constant element with Name=\"" << c->Name() << "\" has no Value attribute.\n";
                 mxmlDelete(tree);
                 exit(-1);
@@ -270,7 +270,7 @@ int VectorField::ReadXML(string xmlfilename)
                 c->Value(val);
             }
             attr = mxmlElementGetAttr(node,"Latex");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string latex(attr);
                 c->Latex(latex);
             }
@@ -280,9 +280,9 @@ int VectorField::ReadXML(string xmlfilename)
     //
     // Get the parameters
     //
-    for (node = mxmlFindElement(tree,tree,"Parameter",NULL,NULL,MXML_DESCEND);
-         node != NULL;
-         node = mxmlFindElement(node,tree,"Parameter",NULL,NULL,MXML_DESCEND)) {
+    for (node = mxmlFindElement(tree,tree,"Parameter",nullptr,nullptr,MXML_DESCEND);
+         node != nullptr;
+         node = mxmlFindElement(node,tree,"Parameter",nullptr,nullptr,MXML_DESCEND)) {
         bad_attr = false;
         for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
             const char *name;
@@ -300,7 +300,7 @@ int VectorField::ReadXML(string xmlfilename)
         }
         const char *attr;
         attr = mxmlElementGetAttr(node,"Name");
-        if (attr == NULL) {
+        if (attr == nullptr) {
             cerr << "Error: A Parameter element has no Name attribute.\n";
             mxmlDelete(tree);
             exit(-1);
@@ -315,17 +315,17 @@ int VectorField::ReadXML(string xmlfilename)
             Parameter *p = new Parameter(name);
             AddParameter(p);
             attr = mxmlElementGetAttr(node,"Description");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string descr(attr);
                 p->Description(descr);
             }
             attr = mxmlElementGetAttr(node,"DefaultValue");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string defval(attr);
                 p->DefaultValue(defval);
             }
             attr = mxmlElementGetAttr(node,"Latex");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string latex(attr);
                 p->Latex(latex);
             }
@@ -335,9 +335,9 @@ int VectorField::ReadXML(string xmlfilename)
     //
     // Get the auxiliary expressions
     //
-    for (node = mxmlFindElement(tree,tree,"Expression",NULL,NULL,MXML_DESCEND);
-         node != NULL;
-         node = mxmlFindElement(node,tree,"Expression",NULL,NULL,MXML_DESCEND)) {
+    for (node = mxmlFindElement(tree,tree,"Expression",nullptr,nullptr,MXML_DESCEND);
+         node != nullptr;
+         node = mxmlFindElement(node,tree,"Expression",nullptr,nullptr,MXML_DESCEND)) {
         bad_attr = false;
         for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
             const char *name;
@@ -354,7 +354,7 @@ int VectorField::ReadXML(string xmlfilename)
         }
         const char *attr;
         attr = mxmlElementGetAttr(node,"Name");
-        if (attr == NULL) {
+        if (attr == nullptr) {
             cerr << "Error: An Expression element has no Name attribute.\n";
             mxmlDelete(tree);
             exit(-1);
@@ -369,12 +369,12 @@ int VectorField::ReadXML(string xmlfilename)
             Expression *e = new Expression(name);
             AddExpression(e);
             attr = mxmlElementGetAttr(node,"Description");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string descr(attr);
                 e->Description(descr);
             }
             attr = mxmlElementGetAttr(node,"Formula");
-            if (attr == NULL) {
+            if (attr == nullptr) {
                 cerr << "Error: The Expression with Name=\"" << e->Name() << "\" has no Formula attribute.\n";
                 mxmlDelete(tree);
                 exit(-1);
@@ -384,7 +384,7 @@ int VectorField::ReadXML(string xmlfilename)
                 e->Formula(f);
             }
             attr = mxmlElementGetAttr(node,"Latex");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string latex(attr);
                 e->Latex(latex);
             }
@@ -394,9 +394,9 @@ int VectorField::ReadXML(string xmlfilename)
     //
     // Get the state variables
     //
-    for (node = mxmlFindElement(tree,tree,"StateVariable",NULL,NULL,MXML_DESCEND);
-         node != NULL;
-         node = mxmlFindElement(node,tree,"StateVariable",NULL,NULL,MXML_DESCEND)) {
+    for (node = mxmlFindElement(tree,tree,"StateVariable",nullptr,nullptr,MXML_DESCEND);
+         node != nullptr;
+         node = mxmlFindElement(node,tree,"StateVariable",nullptr,nullptr,MXML_DESCEND)) {
         bad_attr = false;
         for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
             const char *name;
@@ -415,7 +415,7 @@ int VectorField::ReadXML(string xmlfilename)
         }
         const char *attr;
         attr = mxmlElementGetAttr(node,"Name");
-        if (attr == NULL) {
+        if (attr == nullptr) {
             cerr << "Error: A StateVariable element has no Name attribute.\n";
             mxmlDelete(tree);
             exit(-1);
@@ -430,12 +430,12 @@ int VectorField::ReadXML(string xmlfilename)
             StateVariable *sv = new StateVariable(name);
             AddStateVariable(sv);
             attr = mxmlElementGetAttr(node,"Description");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string descr(attr);
                 sv->Description(descr);
             }
             attr = mxmlElementGetAttr(node,"Formula");
-            if (attr == NULL) {
+            if (attr == nullptr) {
                 cerr << "Error: The StateVariable with Name=\"" << sv->Name() << "\" has no Formula attribute.\n";
                 mxmlDelete(tree);
                 exit(-1);
@@ -445,12 +445,12 @@ int VectorField::ReadXML(string xmlfilename)
                 sv->Formula(f);
             }
             attr = mxmlElementGetAttr(node,"PeriodFrom");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string pfrom(attr);
                 sv->PeriodicFrom(pfrom);
             }
             attr = mxmlElementGetAttr(node,"PeriodTo");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string pto(attr);
                 sv->PeriodicTo(pto);
             }
@@ -465,17 +465,17 @@ int VectorField::ReadXML(string xmlfilename)
                 exit(-1);
             }
             attr = mxmlElementGetAttr(node,"DefaultInitialCondition");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string ic(attr);
                 sv->DefaultInitialCondition(ic);
             }
             attr = mxmlElementGetAttr(node,"DefaultHistory");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string hist(attr);
                 sv->DefaultHistory(hist);
             }
             attr = mxmlElementGetAttr(node,"Latex");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string latex(attr);
                 sv->Latex(latex);
             }
@@ -485,9 +485,9 @@ int VectorField::ReadXML(string xmlfilename)
     //
     // Get the functions
     //
-    for (node = mxmlFindElement(tree,tree,"Function",NULL,NULL,MXML_DESCEND);
-         node != NULL;
-         node = mxmlFindElement(node,tree,"Function",NULL,NULL,MXML_DESCEND)) {
+    for (node = mxmlFindElement(tree,tree,"Function",nullptr,nullptr,MXML_DESCEND);
+         node != nullptr;
+         node = mxmlFindElement(node,tree,"Function",nullptr,nullptr,MXML_DESCEND)) {
         bad_attr = false;
         for (int i = 0; i < mxmlElementGetAttrCount(node); ++i) {
             const char *name;
@@ -504,7 +504,7 @@ int VectorField::ReadXML(string xmlfilename)
         }
         const char *attr;
         attr = mxmlElementGetAttr(node,"Name");
-        if (attr == NULL) {
+        if (attr == nullptr) {
             cerr << "Error: A Function element has no Name attribute.\n";
             mxmlDelete(tree);
             exit(-1);
@@ -519,12 +519,12 @@ int VectorField::ReadXML(string xmlfilename)
             Function *func = new Function(name);
             AddFunction(func);
             attr = mxmlElementGetAttr(node,"Description");
-            if (attr != NULL) {
+            if (attr != nullptr) {
                 string descr(attr);
                 func->Description(descr);
             }
             attr = mxmlElementGetAttr(node,"Formula");
-            if (attr == NULL) {
+            if (attr == nullptr) {
                 cerr << "Error: The Function element with Name=\"" << func->Name() << "\" has no Formula attibute.\n";
                 mxmlDelete(tree);
                 exit(-1);
