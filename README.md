@@ -27,7 +27,7 @@ the "development" versions of the packages.  In Debian-based systems, these
 usually end with -dev.  Note that GiNaC depends on the arbitrary precision
 numerical library CLN, so you will also have to install CLN.
 
-Also be sure you have pkg-config (www.freedesktop.org/software/pkgconfig)
+Also be sure you have pkg-config (https://www.freedesktop.org/wiki/Software/pkg-config/)
 installed.  Most Linux systems have pkg-config available as a binary package.
 
 There are three methods that you can use to build the program: CMake,
