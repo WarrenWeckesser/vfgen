@@ -6,9 +6,9 @@ other computational tools.  Given a specification of an ordinary or delay
 differential equation, VFGEN can generate source code that defines the
 equations for a wide assortment of solvers and tools.
 
-* _Web page:_ `https://warrenweckesser.github.io/vfgen`
+* _Web page:_ https://warrenweckesser.github.io/vfgen
 * _License:_  GPL-2
-* _Author:_   Warren Weckesser, `https://warrenweckesser.github.io`
+* _Author:_   Warren Weckesser
 
 This file is in the top directory for the source code distribution of the
 program VFGEN.  This README gives the steps necessary to build VFGEN from
@@ -18,8 +18,8 @@ for your system.
 
 Before you can build VFGEN, you must have installed these libraries:
 
-* GiNaC    (`http://www.ginac.de`)
-* Mini-XML 3.0 or greater(`http://www.minixml.org`)
+* GiNaC    (http://www.ginac.de)
+* Mini-XML 3.0 or greater(http://www.minixml.org)
 
 If you are using Linux, binary packages (.deb and .rpm) are available for
 these libraries.  Check your standard repositories.  Be sure you install
@@ -27,7 +27,7 @@ the "development" versions of the packages.  In Debian-based systems, these
 usually end with -dev.  Note that GiNaC depends on the arbitrary precision
 numerical library CLN, so you will also have to install CLN.
 
-Also be sure you have pkg-config (`www.freedesktop.org/software/pkgconfig`)
+Also be sure you have pkg-config (www.freedesktop.org/software/pkgconfig)
 installed.  Most Linux systems have pkg-config available as a binary package.
 
 There are three methods that you can use to build the program: CMake,
@@ -37,9 +37,9 @@ below.
 
 **CMake**
 
-CMake (`http://www.cmake.org/`) is a platform-independent build tool. To build
+CMake (http://www.cmake.org/) is a platform-independent build tool. To build
 VFGEN with CMake, you must have CMake installed, and you must have the GiNaC
-(`http://www.ginac.de/`) and Mini-XML (`http://www.easysw.com/~mike/mxml/`)
+(http://www.ginac.de/) and Mini-XML (http://www.easysw.com/~mike/mxml/)
 libraries installed. (If you are using a debian-based Linux distribution,
 packages for these libraries are available.)  If these libraries are installed
 in either /usr or /usr/local, the following commands (run in the top directory)
