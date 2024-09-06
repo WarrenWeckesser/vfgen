@@ -39,7 +39,7 @@ using namespace GiNaC;
 
 void VectorField::PrintCVODE(map<string,string> options)
 {
-    int nc, np, nv, na, nf;
+    size_t nc, np, nv, na, nf;
 
     if (options.count("version") > 0 && options["version"] != "2.3.0" && options["version"] != "2.4.0"
             && options["version"] != "2.5.0" && options["version"] != "2.6.0" && options["version"] != "2.7.0") {
@@ -142,7 +142,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     if (HasPi) {
         fout << "    const realtype Pi = RCONST(M_PI);\n";
     }
-    for (int i = 0; i < nc; ++i) {
+    for (size_t i = 0; i < nc; ++i) {
         fout << "    const realtype " << conname_list[i] << " = RCONST(" << convalue_list[i] << ");" << endl;
     }
     CDeclare(fout, "realtype", varname_list);
@@ -153,9 +153,10 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << "    p_ = (realtype *) params;" << endl;
     fout << endl;
     // GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
-    for (int i = 0; i < nv; ++i) {
+    size_t width = max_expr_len(varname_list);
+    for (size_t i = 0; i < nv; ++i) {
         fout << "    ";
-        fout.width(10);
+        fout.width(width);
         fout << varname_list[i];
         fout.width(0);
         fout << " = NV_Ith_S(y_," << i << ");" << endl;
@@ -164,13 +165,13 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << endl;
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
-    for (int i = 0; i < na; ++i) {
+    for (size_t i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
     }
     if (na > 0) {
         fout << endl;
     }
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         fout << "    NV_Ith_S(f_," << i << ") = " << varvecfield_list[i] << ";" << endl;
     }
     if (options["version"] != "2.3.0") {
@@ -214,7 +215,7 @@ void VectorField::PrintCVODE(map<string,string> options)
     if (HasPi) {
         fout << "    const realtype Pi = RCONST(M_PI);\n";
     }
-    for (int i = 0; i < nc; ++i) {
+    for (size_t i = 0; i < nc; ++i) {
         fout << "    const realtype " << conname_list[i] << " = RCONST(" << convalue_list[i] << ");" << endl;
     }
     CDeclare(fout,"realtype",varname_list);
@@ -224,9 +225,9 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << "    p_ = (realtype *) params;" << endl;
     fout << endl;
     // GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         fout << "    ";
-        fout.width(10);
+        fout.width(width);
         fout << varname_list[i];
         fout.width(0);
         fout << " = NV_Ith_S(y_," << i << ");" << endl;
@@ -234,9 +235,9 @@ void VectorField::PrintCVODE(map<string,string> options)
     fout << endl;
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j) {
+        for (size_t j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
             // Skip zero elements.  CVODE initializes jac_ to zero before calling the Jacobian function.
@@ -268,7 +269,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         if (HasPi) {
             fout << "    const realtype Pi = RCONST(M_PI);\n";
         }
-        for (int i = 0; i < nc; ++i) {
+        for (size_t i = 0; i < nc; ++i) {
             fout << "    const realtype " << conname_list[i] << " = RCONST(" << convalue_list[i] << ");" << endl;
         }
         CDeclare(fout,"realtype",varname_list);
@@ -279,9 +280,9 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << "    p_ = (realtype *) params;" << endl;
         fout << endl;
         // GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
-        for (int i = 0; i < nv; ++i) {
+        for (size_t i = 0; i < nv; ++i) {
             fout << "    ";
-            fout.width(10);
+            fout.width(width);
             fout << varname_list[i];
             fout.width(0);
             fout << " = NV_Ith_S(y_," << i << ");" << endl;
@@ -289,13 +290,13 @@ void VectorField::PrintCVODE(map<string,string> options)
         fout << endl;
         GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
         fout << endl;
-        for (int i = 0; i < na; ++i) {
+        for (size_t i = 0; i < na; ++i) {
             fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
         }
         if (na > 0) {
             fout << endl;
         }
-        for (int n = 0; n < nf; ++n) {
+        for (size_t n = 0; n < nf; ++n) {
             fout << "    /* " << funcname_list[n] << ":  */" << endl;
             fout << "    func_[" << n << "] = " << funcformula_list[n] << ";" << endl;
         }
@@ -420,11 +421,11 @@ void VectorField::PrintCVODE(map<string,string> options)
         if (HasPi) {
             tout << "    const realtype Pi = RCONST(M_PI);\n";
         }
-        for (int i = 0; i < nc; ++i) {
+        for (size_t i = 0; i < nc; ++i) {
             tout << "    const realtype " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
         tout << "    const realtype def_p_[" << np << "] = {\n" ;
-        for (int i = 0; i < np; ++i) {
+        for (size_t i = 0; i < np; ++i) {
             tout << "        RCONST(" << pardefval_list[i] << ")" ;
             if (i != np-1) {
                 tout << "," ;
@@ -435,7 +436,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         // CDeclare(tout,"realtype",parname_list);
         GetFromVector(tout, "    const realtype ", parname_list, "=", "def_p_", "[]", 0, ";");
         tout << "    realtype def_y_[" << nv << "] = {";
-        for (int i = 0; i < nv; ++i) {
+        for (size_t i = 0; i < nv; ++i) {
             // tout << def_var_value.at(i) ;
             // tout << "RCONST(0.0)" ;
             tout << "RCONST(" << vardefic_list[i] << ")";
@@ -524,7 +525,7 @@ void VectorField::PrintCVODE(map<string,string> options)
         if ((options["func"] == "yes") && (nf > 0)) {
             tout << "    realtype funcval[" << nf << "];\n";
             tout << "    " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
-            for (int i = 0; i < nf; ++i) {
+            for (size_t i = 0; i < nf; ++i) {
                  tout << "    printf(\" %.8e\",funcval[" << i << "]);\n";
             }
         }
@@ -550,7 +551,7 @@ void VectorField::PrintCVODE(map<string,string> options)
 
         if ((options["func"] == "yes") && (nf > 0)) {
             tout << "        " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
-            for (int i = 0; i < nf; ++i) {
+            for (size_t i = 0; i < nf; ++i) {
                  tout << "        printf(\" %.8e\", funcval[" << i << "]);\n";
             }
         }

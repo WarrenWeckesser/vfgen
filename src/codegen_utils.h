@@ -32,6 +32,7 @@ void CDeclare(std::ofstream &fout, std::string typestr, GiNaC::lst names);
 void CDeclare_double(std::ofstream &fout, GiNaC::lst names);
 void MakeCArrayOfStrings(std::ofstream &fout, const char *var, GiNaC::lst names);
 void MakePythonListOfStrings(std::ofstream &fout, const char *var, GiNaC::lst names, const char *pre);
+size_t max_expr_len(GiNaC::lst names);
 void GetFromVector(std::ofstream &fout, const char *skip, GiNaC::lst names, const char *assignop,
                     const char *vector, const char *braces, int istart, const char *term);
 void GetFromVector2(std::ofstream &fout, const char *skip, GiNaC::lst names, const char *assignop,

@@ -26,6 +26,7 @@
 #include <string>
 #include <regex>
 #include <ctime>
+#include <algorithm>
 #include <ginac/ginac.h>
 
 using namespace std;
@@ -148,18 +149,27 @@ void MakePythonListOfStrings(ofstream &fout, const char *var, lst names, const c
     fout << "]" << endl;
 }
 
+size_t max_expr_len(lst names)
+{
+    size_t width = 0;
+    for (size_t i = 0; i < names.nops(); ++i) {
+        ostringstream ss;
+        ss << names[i];
+        width = max(width, static_cast<size_t>(ss.tellp()));
+    }
+    return width;
+}
 
 void GetFromVector(ofstream &fout, const char *skip, lst names,
                    const char *assignop,
                    const char *vector,
                    const char *braces, int istart, const char *term)
 {
-    int n;
-
-    n = names.nops();
-    for (int i = 0; i < n; ++i) {
+    size_t n = names.nops();
+    size_t width = max_expr_len(names);
+    for (size_t i = 0; i < n; ++i) {
         fout << skip;
-        fout.width(10);
+        fout.width(width);
         fout << left << names[i];
         fout.width(0);
         fout << " " << assignop << " " << vector << braces[0] << (i+istart) << braces[1] << term << endl;
@@ -172,12 +182,11 @@ void GetFromVector2(ofstream &fout, const char *skip, lst names,
                     const char *vector,
                     const char *bropen, const char *brclose, int istart, const char *term)
 {
-    int n;
-
-    n = names.nops();
-    for (int i = 0; i < n; ++i) {
+    size_t n = names.nops();
+    size_t width = max_expr_len(names);
+    for (size_t i = 0; i < n; ++i) {
         fout << skip;
-        fout.width(10);
+        fout.width(width);
         fout << left << names[i];
         fout.width(0);
         fout << " " << assignop << " " << vector << bropen << (i+istart) << brclose << term << endl;
