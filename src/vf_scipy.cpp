@@ -303,11 +303,11 @@ void VectorField::PrintSciPy(map<string,string> options)
         PrintVFGENComment(tout,"# ");
         tout << "#\n" ;
         tout << endl;
-        tout << "from __future__ import print_function\n\n";
         tout << "import sys" << endl;
         if (HasPi) {
             tout << "from math import pi" << endl;
         }
+        tout << "import numpy as np" << endl;
         tout << "from scipy.integrate import odeint" << endl;
         tout << "import " << Name() << endl;
         tout << endl << endl;
@@ -426,7 +426,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "if N < 2:\n";
         tout << "    print('The number of points must be at least 2.')\n";
         tout << "    sys.exit()\n";
-        tout << "t = [tfinal*float(i)/(N-1) for i in range(N)]" << endl;
+        tout << "t = np.linspace(0, tfinal, N)\n";
         tout << endl;
         tout << "# Call the ODE solver.\n";
         tout << "ysol = odeint(" << Name() << ".vectorfield, y_, t";
