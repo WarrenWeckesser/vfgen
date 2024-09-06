@@ -81,7 +81,7 @@ struct command_info {
 
 map<string, command_info> commands = {
     {"adolc",
-        {{"suffix"},
+        {{},
          help_adolc}},
     {"auto",
         {{"lang"},
