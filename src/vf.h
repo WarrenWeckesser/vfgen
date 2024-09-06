@@ -256,12 +256,12 @@ class VectorField : public Symbol
     void PrintBoostOdeint(std::map<std::string,std::string> options);
     void PrintCVODE(std::map<std::string,std::string> options);
     void PrintScilab(std::map<std::string,std::string> options);
-    void PrintADOLC(std::map<std::string,std::string> options);
+    void PrintADOLC(/* std::map<std::string,std::string> options */);
     void PrintAUTO(std::map<std::string,std::string> options);
     void PrintDSTool(void);
     void PrintEVF(std::map<std::string,std::string> options);
     void PrintJavaMath(std::map<std::string,std::string> options);
-    void PrintMATCONT(std::map<std::string,std::string> options);
+    void PrintMATCONT(/* std::map<std::string,std::string> options */);
     void PrintMATLAB(std::map<std::string,std::string> options);
     void PrintOctave(std::map<std::string,std::string> options);
     void PrintRode(std::map<std::string,std::string> options);
@@ -273,7 +273,7 @@ class VectorField : public Symbol
     void PrintJavascript(std::map<std::string,std::string> options);
     void PrintTaylor(std::map<std::string,std::string> options);
     void PrintPyGSL(std::map<std::string,std::string> options);
-    void PrintLatex(std::map<std::string,std::string> options);
+    void PrintLatex(/* std::map<std::string,std::string> options */);
     void PrintXPP(std::map<std::string,std::string> options);
 
     void Delay2ODE_ConvertExprToDefHist(GiNaC::ex& f);
@@ -294,7 +294,7 @@ class VectorField : public Symbol
     void PDDEC_PrintJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PDDEC_PrintXandParJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PDDEC_PrintHessiansTimesV(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
-    void PrintPDDECONT(std::map<std::string,std::string> options);
+    void PrintPDDECONT(/* std::map<std::string,std::string> options */);
 };
 
 #endif

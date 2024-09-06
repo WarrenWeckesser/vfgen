@@ -38,7 +38,7 @@ using namespace GiNaC;
 // PrintADOLC -- The ADOLC Code Generator
 //
 
-void VectorField::PrintADOLC(map<string,string> options)
+void VectorField::PrintADOLC(/* map<string,string> options */)
 {
 
     int nc, nv, na;

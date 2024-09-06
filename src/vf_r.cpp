@@ -306,7 +306,7 @@ void VectorField::convert_delay_to_lagvalue(ex& f, lst &lags)
 }
 
 
-static void generate_lag_assignment(ofstream& fout, string name, const lst& lag,
+static void generate_lag_assignment(ofstream& fout, const lst& lag,
         symbol& indvar, ex& history_formula)
 {
     fout << "    if (" << indvar << " < " << lag.op(3) << ") {\n";
@@ -404,7 +404,7 @@ void VectorField::PrintRdede(map<string,string> options)
         for (lst::const_iterator iter = references[i].begin(); iter != references[i].end(); ++iter) {
             lst e = ex_to<lst>(*iter);
             if (!generated.has(e.op(0))) {
-                generate_lag_assignment(fout, Name(), e, IndVar,
+                generate_lag_assignment(fout, e, IndVar,
                     vardefhist_list[e.op(1)-1]);
                 generated = generated + e.op(0);
             }
@@ -417,7 +417,7 @@ void VectorField::PrintRdede(map<string,string> options)
         for (lst::const_iterator iter = references[i].begin(); iter != references[i].end(); ++iter) {
             lst e = ex_to<lst>(*iter);
             if (!generated.has(e.op(0))) {
-                generate_lag_assignment(fout, Name(), e, IndVar,
+                generate_lag_assignment(fout, e, IndVar,
                     vardefhist_list[e.op(1)-1]);
                 generated = generated + e.op(0);
             }

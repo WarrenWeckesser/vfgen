@@ -36,7 +36,7 @@ using namespace GiNaC;
 // PrintLatex -- The Latex Code Generator.
 //
 
-void VectorField::PrintLatex(map<string,string> options)
+void VectorField::PrintLatex(/* map<string,string> options */)
 {
     int nv;
     int i;

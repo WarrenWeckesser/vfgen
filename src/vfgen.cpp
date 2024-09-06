@@ -81,7 +81,7 @@ struct command_info {
 
 map<string, command_info> commands = {
     {"adolc",
-        {{},
+        {{"suffix"},
          help_adolc}},
     {"auto",
         {{"lang"},
@@ -392,7 +392,7 @@ int main(int argc, char **argv)
             cerr << "This system has nonconstant delays. PDDE-CONT is for systems with constant delays.\n";
         }
         else {
-            vf.PrintPDDECONT(options);
+            vf.PrintPDDECONT(/* options */);
         }
     }
     else if (commandstr == "dde_solver") {
@@ -429,7 +429,7 @@ int main(int argc, char **argv)
     }
     else if (commandstr == "matcont") {
         if (vf.IsDelay == false) {
-            vf.PrintMATCONT(options);
+            vf.PrintMATCONT(/* options */);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
@@ -469,7 +469,7 @@ int main(int argc, char **argv)
     }
     else if (commandstr == "adolc") {
         if (vf.IsDelay == false) {
-            vf.PrintADOLC(options);
+            vf.PrintADOLC(/* options */);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
@@ -524,7 +524,7 @@ int main(int argc, char **argv)
         }
     }
     else if (commandstr == "latex") {
-        vf.PrintLatex(options);
+        vf.PrintLatex(/* options */);
     }
     else if (commandstr == "pygsl") {
         if (vf.IsDelay == false) {

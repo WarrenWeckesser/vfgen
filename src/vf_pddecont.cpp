@@ -219,7 +219,7 @@ void VectorField::PDDEC_PrintHessiansTimesV(ofstream &dout, const vector<ex> &vf
 // PrintPDDECONT -- The PDDE-CONT code generator.
 //
 
-void VectorField::PrintPDDECONT(map<string,string> options)
+void VectorField::PrintPDDECONT(/* map<string,string> options */)
 {
     int nc = conname_list.nops();
     int nv = varname_list.nops();

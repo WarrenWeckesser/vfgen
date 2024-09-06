@@ -37,7 +37,7 @@ using namespace GiNaC;
 // PrintMATCONT -- The MATCONT Code Generator.
 //
 
-void VectorField::PrintMATCONT(map<string,string> options)
+void VectorField::PrintMATCONT(/* map<string,string> options */)
 {
     int nc, np, nv, na, nf;
 
