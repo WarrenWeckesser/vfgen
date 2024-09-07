@@ -125,6 +125,9 @@ map<string, command_info> commands = {
     {"javascript",
         {{"order", "demo"},
          help_javascript}},
+    {"julia",
+        {{"demo"},
+         help_julia}},
     {"latex",
         {{},
          help_latex}},
@@ -553,6 +556,14 @@ int main(int argc, char **argv)
     else if (commandstr == "javamath") {
         if (vf.IsDelay == false) {
             vf.PrintJavaMath(options);
+        }
+        else {
+            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
+        }
+    }
+    else if (commandstr == "julia") {
+        if (vf.IsDelay == false) {
+            vf.PrintJulia(options);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";

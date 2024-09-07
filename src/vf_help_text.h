@@ -254,6 +254,23 @@ constexpr char help_javascript[] =
 "order=[integer]\n"
 "    The order of the Taylor polynomial. The default is order=5.\n";
 
+constexpr char help_julia[] =
+"use: vfgen julia vector_field_file.vf\n"
+"     vfgen julia:option=value vector_field_file.vf\n\n"
+"This command generates a Julia file containing a function to be used with\n"
+"the ODE solvers provided by DifferentialEquations.jl.\n"
+"The output file that defines the system of differential equations is\n"
+"[name].jl, where [name] is the name of the vector field given in\n"
+"the vector field file.\n"
+"\n"
+"Options: (default is listed first)\n"
+"demo=no|yes\n"
+"    If the option demo=yes is given, the file [name]_demo.jl is created.\n"
+"    This Julia program generates a plot of a solution to the differential\n"
+"    equations.  The default parameter values and initial conditions are\n"
+"    used.\n";
+
+
 constexpr char help_latex[] =
 "use: vfgen latex vector_field_file.vf\n\n"
 "This command generate a LaTeX fragment for the vector field, in a file called\n"

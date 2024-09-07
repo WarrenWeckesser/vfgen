@@ -261,6 +261,8 @@ class VectorField : public Symbol
     void PrintDSTool(void);
     void PrintEVF(std::map<std::string,std::string> options);
     void PrintJavaMath(std::map<std::string,std::string> options);
+    void PrintJavascript(std::map<std::string,std::string> options);
+    void PrintJulia(std::map<std::string,std::string> options);
     void PrintMATCONT(/* std::map<std::string,std::string> options */);
     void PrintMATLAB(std::map<std::string,std::string> options);
     void PrintOctave(std::map<std::string,std::string> options);
@@ -270,7 +272,6 @@ class VectorField : public Symbol
     void PrintLSODA(std::map<std::string,std::string> options);
     void PrintSciPy(std::map<std::string,std::string> options);
     void PrintPyDSTool(std::map<std::string,std::string> options);
-    void PrintJavascript(std::map<std::string,std::string> options);
     void PrintTaylor(std::map<std::string,std::string> options);
     void PrintPyGSL(std::map<std::string,std::string> options);
     void PrintLatex(/* std::map<std::string,std::string> options */);

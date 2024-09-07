@@ -131,6 +131,22 @@ void MakeCArrayOfStrings(ofstream &fout, const char *var, lst names)
     fout << "};" << endl;
 }
 
+void ListOfStrings(ofstream &fout, lst names, const char *braces, const char *sep)
+{
+    int n;
+    n = names.nops();
+    // XXX Defensive programming would suggest checking that strlen(braces) == 2
+    //     before indexing as done here!
+    fout << braces[0];
+    for (int i = 0; i < n; ++i) {
+        if (i > 0) {
+            fout << sep;
+        }
+        fout << "\"" << names[i] << "\"";
+    }
+    fout << braces[1];
+}
+
 void MakePythonListOfStrings(ofstream &fout, const char *var, lst names, const char *pre)
 {
     int n;
