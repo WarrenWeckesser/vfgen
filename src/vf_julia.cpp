@@ -136,6 +136,7 @@ void VectorField::PrintJulia(map<string,string> options)
         tout <<      "ylabel=ylabels, ";
         tout <<      "layout=(" << nv << ", 1), ";
         tout <<      "legend=false)" << endl;
+        tout << "savefig(\"" << Name() << "_plot.svg\")" << endl;
         tout.close();
     }
 }
