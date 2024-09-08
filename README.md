@@ -19,7 +19,7 @@ for your system.
 Before you can build VFGEN, you must have installed these libraries:
 
 * GiNaC    (http://www.ginac.de)
-* Mini-XML 3.0 or greater(http://www.minixml.org)
+* Mini-XML 3.x, but not 4.x (http://www.minixml.org)
 
 If you are using Linux, binary packages (.deb and .rpm) are available for
 these libraries.  Check your standard repositories.  Be sure you install
