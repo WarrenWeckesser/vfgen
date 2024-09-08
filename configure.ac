@@ -4,8 +4,8 @@
 #  Process this file with autoconf to produce a configure script.
 #
 
-AC_PREREQ(2.59)
-AC_INIT([vfgen], m4_esyscmd_s(cat version.txt), [warren DOT weckesser AT gmail])
+AC_PREREQ([2.71])
+AC_INIT([vfgen],[m4_esyscmd_s(cat version.txt)],[warren DOT weckesser AT gmail])
 
 AC_MSG_NOTICE([[
 ------------------------------------
@@ -68,7 +68,8 @@ AC_MSG_NOTICE([[
 Creating the Makefile...
 ------------------------------------]])
 
-AC_OUTPUT(Makefile src/Makefile)
+AC_CONFIG_FILES([Makefile src/Makefile])
+AC_OUTPUT
 
 AC_MSG_NOTICE([[
 ------------------------------------
