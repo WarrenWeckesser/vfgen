@@ -64,6 +64,12 @@ jobs:
         cd tests/test_octave
         sudo bash run_test.sh
         cd ../..
+    - name: test_pygsl
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test pygsl]')"
+      run: |
+        cd tests/test_pygsl
+        sudo bash run_test.sh
+        cd ../..
     - name: test_scilab
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test scilab]')"
       run: |
