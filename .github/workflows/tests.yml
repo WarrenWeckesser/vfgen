@@ -20,6 +20,21 @@ jobs:
         make install
         cd ..
         # sudo bash run_ci_tests.sh
+    - name: test_boostodeint
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test boostodeint]')"
+      run: |
+        cd tests/test_boostodeint
+        run_test_boostodeint_default_noparams.sh
+        run_test_boostodeint_default_params.sh
+        run_test_boostodeint_implicit_noparams.sh
+        run_test_boostodeint_implicit_params.sh
+        cd ../..
+    - name: test_dde_solver
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test dde_solver]')"
+      run: |
+        cd tests/test_dde_solver
+        sudo bash run_test.sh
+        cd ../..
     - name: test_help
       run: |
         vfgen help help
@@ -34,13 +49,4 @@ jobs:
       run: |
         cd tests/test_evf
         sudo bash run_test.sh
-        cd ../..
-    - name: test_boostodeint
-      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test boostodeint]')"
-      run: |
-        cd tests/test_boostodeint
-        run_test_boostodeint_default_noparams.sh
-        run_test_boostodeint_default_params.sh
-        run_test_boostodeint_implicit_noparams.sh
-        run_test_boostodeint_implicit_params.sh
         cd ../..
