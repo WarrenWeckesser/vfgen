@@ -58,6 +58,12 @@ jobs:
         bash run_test_linearosc.sh
         bash run_test_pidecay.sh
         cd ../..
+    - name: test_octave
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test octave]')"
+      run: |
+        cd tests/test_octave
+        bash run_test.sh
+        cd ../..
     - name: test_scilab
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test scilab]')"
       run: |
