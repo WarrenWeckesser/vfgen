@@ -35,6 +35,18 @@ jobs:
         cd tests/test_dde_solver
         sudo bash run_test.sh
         cd ../..
+    - name: test_evf
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test evf]')"
+      run: |
+        cd tests/test_evf
+        sudo bash run_test.sh
+        cd ../..
+    - name: test_gsl
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test gsl]')"
+      run: |
+        cd tests/test_gsl
+        sudo bash run_test.sh
+        cd ../..
     - name: test_help
       run: |
         vfgen help help
@@ -44,9 +56,3 @@ jobs:
         cd tests/test_scilab
         sudo bash test_scilab.sh
         cd ..
-    - name: test_evf
-      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test evf]')"
-      run: |
-        cd tests/test_evf
-        sudo bash run_test.sh
-        cd ../..
