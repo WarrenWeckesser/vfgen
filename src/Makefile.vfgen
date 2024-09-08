@@ -36,7 +36,7 @@
 #
 
 OBJ_FILES = vfgen.o vf.o MyVec.o vf_adolc.o vf_auto.o vf_boostodeint.o         \
-            vf_cvode.o vf_dde23.o vf_ddebiftool.o vf_dde_solver.o              \
+            vf_cvode.o vf_cvode7.o vf_dde23.o vf_ddebiftool.o vf_dde_solver.o  \
             vf_delay2ode.o vf_differentials.o vf_dstool.o vf_evf.o vf_gsl.o    \
             vf_javamath.o vf_javascript.o vf_julia.o vf_latex.o vf_lsoda.o     \
             vf_matcont.o vf_matlab.o vf_octave.o                               \

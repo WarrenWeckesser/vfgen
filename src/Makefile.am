@@ -1,6 +1,6 @@
 bin_PROGRAMS = vfgen
 vfgen_SOURCES = vfgen.cpp vf.cpp vf_adolc.cpp vf_auto.cpp vf_boostodeint.cpp \
-                vf_cvode.cpp vf_dde23.cpp vf_dde_solver.cpp                  \
+                vf_cvode.cpp vf_cvode7.cpp vf_dde23.cpp vf_dde_solver.cpp    \
                 vf_ddebiftool.cpp vf_delay2ode.cpp vf_differentials.cpp      \
                 vf_dstool.cpp vf_evf.cpp vf_gsl.cpp                          \
                 vf_javamath.cpp vf_javascript.cpp vf_julia.cpp               \

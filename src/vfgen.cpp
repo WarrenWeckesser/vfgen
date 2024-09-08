@@ -95,6 +95,9 @@ map<string, command_info> commands = {
     {"cvode",
         {{"demo", "func", "version"},
          help_cvode}},
+    {"cvode7",
+        {{"demo", "func"},
+         help_cvode7}},
     {"dde23",
         {{"demo", "parstyle"},
          help_dde23}},
@@ -465,6 +468,14 @@ int main(int argc, char **argv)
     else if (commandstr == "cvode") {
         if (vf.IsDelay == false) {
             vf.PrintCVODE(options);
+        }
+        else {
+            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
+        }
+    }
+    else if (commandstr == "cvode7") {
+        if (vf.IsDelay == false) {
+            vf.PrintCVODE7(options);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
