@@ -11,7 +11,7 @@ vfgen_SOURCES = vfgen.cpp vf.cpp vf_adolc.cpp vf_auto.cpp vf_boostodeint.cpp \
                 strutils.cpp codegen_utils.cpp MyVec.cpp vf.h vf_help_text.h \
                 vf_utils.h codegen_utils.h ginac_aux_functions.h             \
                 ginac_declare_funcs.h strutils.h MyVec.h
-vfgen_CPPFLAGS = -std=c++11 $(MXML_CFLAGS) $(GINAC_CFLAGS)
+vfgen_CPPFLAGS = -std=c++17 $(MXML_CFLAGS) $(GINAC_CFLAGS)
 vfgen_LDADD = $(MXML_LIBS) $(GINAC_LIBS)
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = CMakeLists.txt Makefile.vfgen LICENSE-GPL2

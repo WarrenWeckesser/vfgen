@@ -54,7 +54,7 @@ vfgen:	$(OBJ_FILES)
 	$(CXX) $(OBJ_FILES) `pkg-config --libs ginac mxml` -o vfgen
 
 %.o: %.cpp $(HEADERS)
-	$(CXX) -std=c++11 -c -O2 -o $@ `pkg-config --cflags ginac mxml` -DVERSION=\"$(shell cat ../version.txt)\" $<
+	$(CXX) -std=c++17 -c -O2 -o $@ `pkg-config --cflags ginac mxml` -DVERSION=\"$(shell cat ../version.txt)\" $<
 
 clean:
 	rm -f *.o
