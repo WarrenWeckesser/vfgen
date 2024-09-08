@@ -32,7 +32,7 @@ jobs:
     - name: test_evf
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test evf]')"
       run: |
-        cd tests/evf
+        cd tests/test_evf
         sudo bash run_test.sh
         cd ../..
     - name: test_boostodeint
