@@ -80,11 +80,11 @@ jobs:
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test scilab]')"
       run: |
         cd tests/test_scilab
-        sudo bash test_scilab.sh
+        sudo bash run_test.sh
         cd ..
     - name: test_scipy
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test scipy]')"
       run: |
         cd tests/test_scipy
-        sudo bash test_scipy.sh
+        sudo bash run_test.sh
         cd ..
