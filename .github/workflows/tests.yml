@@ -108,3 +108,21 @@ jobs:
         cd tests/test_r
         bash run_test.sh
         cd ../..
+
+  macos_latest:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: install
+      run: |
+        echo "Installing ginac and libmxml"
+        brew install ginac libmxml
+        echo "Installing vfgen"
+        cd cmake_build
+        cmake ../src
+        make
+        make install
+        cd ..
+    - name: test_help
+      run: |
+        vfgen help help
