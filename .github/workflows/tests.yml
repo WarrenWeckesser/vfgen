@@ -126,14 +126,14 @@ jobs:
         cd mxml-3.3.1
         ./configure
         make
-        make install
+        sudo make install
         cd ..
         #
         echo "Installing vfgen"
         cd cmake_build
         cmake ../src
         make
-        make install
+        sudo make install
         cd ..
     - name: test_help
       run: |
