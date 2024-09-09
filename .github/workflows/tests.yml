@@ -19,7 +19,6 @@ jobs:
         make
         make install
         cd ..
-        # sudo bash run_ci_tests.sh
     - name: test_boostodeint
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test boostodeint]')"
       run: |
@@ -50,6 +49,12 @@ jobs:
     - name: test_help
       run: |
         vfgen help help
+    - name: test_julia
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test julia]')"
+      run: |
+        cd tests/test_julia
+        bash run_test.sh
+        cd ../..
     - name: test_lsoda
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test lsoda]')"
       run: |
