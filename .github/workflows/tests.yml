@@ -116,7 +116,7 @@ jobs:
     - name: install
       run: |
         echo "Installing ginac and libmxml"
-        brew install ginac libmxml
+        brew install ginac libmxml@3.3.1
         echo "Installing vfgen"
         cd cmake_build
         cmake ../src
