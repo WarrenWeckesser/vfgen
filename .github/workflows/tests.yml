@@ -27,6 +27,13 @@ jobs:
         run_test_boostodeint_implicit_noparams.sh
         run_test_boostodeint_implicit_params.sh
         cd ../..
+    - name: test_cvode7
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test cvode7]')"
+      run: |
+        cd tests/test_cvode7
+        bash install_cvode7.sh
+        bash run_test.sh
+        cd ../..
     - name: test_dde_solver
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test dde_solver]')"
       run: |
