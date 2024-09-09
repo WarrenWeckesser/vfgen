@@ -1,7 +1,7 @@
 set -e
 
 echo "Installing Julia"
-curl -fsSL https://install.julialang.org | sh
+curl -fsSL https://install.julialang.org | sh -y
 
 echo "Installing Julia DifferentialEquations package"
 julia -e 'import Pkg; Pkg.add("DifferentialEquations")'
