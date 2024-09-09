@@ -127,7 +127,7 @@ jobs:
         ./configure
         make
         sudo make install
-        cd ..
+        cd ../..
         #
         echo "Installing vfgen"
         cd cmake_build
