@@ -74,13 +74,6 @@ jobs:
         cd tests/test_pygsl
         sudo bash run_test.sh
         cd ../..
-    - name: test_r
-      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test r]')"
-      uses: r-lib/actions/setup-r@v2
-      run: |
-        cd tests/test_r
-        bash run_test.sh
-        cd ../..
     - name: test_scilab
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test scilab]')"
       run: |
@@ -93,3 +86,12 @@ jobs:
         cd tests/test_scipy
         sudo bash run_test.sh
         cd ..
+    - name: setup_r
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test r]')"
+      uses: r-lib/actions/setup-r@v2
+    - name: test_r
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test r]')"
+      run: |
+        cd tests/test_r
+        bash run_test.sh
+        cd ../..
