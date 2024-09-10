@@ -33,18 +33,36 @@
 using namespace std;
 using namespace GiNaC;
 
+
+void VectorField::PrintJuliaFuncStart(ofstream &fout)
+{
+    size_t np = parname_list.nops();
+
+    if (HasPi) {
+        fout << "    Pi = pi\n";
+    }
+    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
+    GetFromVector(fout, "    ", varname_list, "=", "u_", "[]", 1, "");
+    fout << endl;
+    if (np > 0) {
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 1, "");
+        fout << endl;
+    }
+    AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, "");
+}
+
 //
 // PrintJulia -- The Julia Code Generator.
 //
 
 void VectorField::PrintJulia(map<string,string> options)
 {
-    int nv, np;   // currently na and nf are not used.
+    size_t nv, np, nf;   // currently na is not used.
 
     nv = varname_list.nops();
     np = parname_list.nops();
     // na = exprname_list.nops();
-    // nf = funcname_list.nops();
+    nf = funcname_list.nops();
 
     string filename = Name() + ".jl";
     ofstream fout;
@@ -62,26 +80,37 @@ void VectorField::PrintJulia(map<string,string> options)
     PrintVFGENComment(fout,"# ");
     fout << "#\n";
 
+    fout << endl;
+    fout << "# In case atan2 is used in any expressions..." << endl;
+    fout << "atan2(y, x) = atan(y, x)" << endl;
+    fout << endl;
+
     //
     //  Print the vector field function.
     //
     fout << endl;
     fout << "function " << Name() << "!(du_, u_, p_, " << IndependentVariable << ")" << endl;
-    if (HasPi) {
-        fout << "    Pi = pi\n";
-    }
-    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
-    GetFromVector(fout, "    ", varname_list, "=", "u_", "[]", 1, "");
+    PrintJuliaFuncStart(fout);
     fout << endl;
-    if (np > 0) {
-        GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 1, "");
-        fout << endl;
-    }
-    AssignNameValueLists(fout, "    ", exprname_list, "=", exprformula_list, "");
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         fout << "    du_[" << i+1 << "] = " << varvecfield_list[i] << endl;
     }
     fout << "end" << endl;
+
+    if (options["func"] == "yes" && nf > 0) {
+        // Generate functions...
+        fout << endl;
+        fout << "# Functions..." << endl;
+        fout << endl;
+        for (size_t n = 0; n < nf; ++n) {
+            fout << "function " << Name() << "_" << funcname_list[n] << "(u_, p_, t)" << endl;
+            PrintJuliaFuncStart(fout);
+            fout << endl;
+            fout << "    " << funcformula_list[n] << endl;
+            fout << "end" << endl;
+            fout << endl;
+        }
+    }
     fout.close();
 
     if (options["demo"] == "yes") {

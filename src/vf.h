@@ -263,7 +263,10 @@ class VectorField : public Symbol
     void PrintEVF(std::map<std::string,std::string> options);
     void PrintJavaMath(std::map<std::string,std::string> options);
     void PrintJavascript(std::map<std::string,std::string> options);
+
+    void PrintJuliaFuncStart(std::ofstream &fout);
     void PrintJulia(std::map<std::string,std::string> options);
+
     void PrintMATCONT(/* std::map<std::string,std::string> options */);
     void PrintMATLAB(std::map<std::string,std::string> options);
     void PrintOctave(std::map<std::string,std::string> options);

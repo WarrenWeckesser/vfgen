@@ -129,7 +129,7 @@ map<string, command_info> commands = {
         {{"order", "demo"},
          help_javascript}},
     {"julia",
-        {{"demo"},
+        {{"demo", "func"},
          help_julia}},
     {"latex",
         {{},
