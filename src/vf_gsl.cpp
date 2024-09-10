@@ -40,11 +40,10 @@ using namespace GiNaC;
 
 void VectorField::PrintGSL(map<string,string> options)
 {
-    int nc, np, nv, na, nf;
+    size_t np, nv, na, nf;
     string include_guard_name;
 
     symbol t(IndependentVariable);
-    nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
     na = exprname_list.nops();
@@ -103,9 +102,7 @@ void VectorField::PrintGSL(map<string,string> options)
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
     CDeclare_double(fout, varname_list);
     CDeclare_double(fout, parname_list);
     CDeclare_double(fout, exprname_list);
@@ -117,13 +114,13 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << endl;
     GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
     fout << endl;
-    for (int i = 0; i < na; ++i) {
+    for (size_t i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
     }
     if (na > 0) {
         fout << endl;
     }
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "]" << " = " << varvecfield_list[i] << ";" << endl;
     }
     fout << endl;
@@ -143,9 +140,7 @@ void VectorField::PrintGSL(map<string,string> options)
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
     CDeclare_double(fout, varname_list);
     CDeclare_double(fout, parname_list);
     fout << "    double *p_;" << endl;
@@ -159,15 +154,15 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "    gsl_matrix_view dfdy_mat = gsl_matrix_view_array(jac_, " << nv << ", " << nv << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdy_mat.matrix;" << endl;
     fout << endl;
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < nv; ++j) {
+        for (size_t j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             fout << "    gsl_matrix_set(m_, " << i << ", " << j << ", " << f.diff(v) << ");" << endl;
         }
     }
     fout << endl;
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
         fout << "    dfdt_[" << i << "] = " << f.diff(t) << ";" << endl;
     }
@@ -189,9 +184,7 @@ void VectorField::PrintGSL(map<string,string> options)
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
     CDeclare_double(fout, varname_list);
     CDeclare_double(fout, parname_list);
     fout << "    double *p_;" << endl;
@@ -205,9 +198,9 @@ void VectorField::PrintGSL(map<string,string> options)
     fout << "    gsl_matrix_view dfdp_mat = gsl_matrix_view_array(jacp_, " << nv << ", " << np << ");" << endl;
     fout << "    gsl_matrix *m_ = &dfdp_mat.matrix;" << endl;
     fout << endl;
-    for (int i = 0; i < nv; ++i) {
+    for (size_t i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
-        for (int j = 0; j < np; ++j) {
+        for (size_t j = 0; j < np; ++j) {
             symbol p = ex_to<symbol>(parname_list[j]);
             fout << "    gsl_matrix_set(m_, " << i << ", " << j << ", " << f.diff(p) << ");" << endl;
         }
@@ -220,7 +213,7 @@ void VectorField::PrintGSL(map<string,string> options)
         //
         // Print the user-defined functions.
         //
-        for (int n = 0; n < nf; ++n) {
+        for (size_t n = 0; n < nf; ++n) {
             fout << endl;
             fout << "/*" << endl;
             fout << " *  User function: " << funcname_list[n] << endl;
@@ -232,9 +225,7 @@ void VectorField::PrintGSL(map<string,string> options)
             if (HasPi) {
                 fout << "    const double Pi = M_PI;\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
             CDeclare_double(fout, varname_list);
             CDeclare_double(fout, parname_list);
             CDeclare_double(fout, exprname_list);
@@ -246,7 +237,7 @@ void VectorField::PrintGSL(map<string,string> options)
             fout << endl;
             GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
             fout << endl;
-            for (int i = 0; i < na; ++i) {
+            for (size_t i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
             }
             if (na > 0) {
@@ -255,6 +246,55 @@ void VectorField::PrintGSL(map<string,string> options)
             fout << "    return " << funcformula_list[n] << ";" << endl;
             fout << "}" << endl;
         }
+        pout << endl;
+        pout << "enum " << Name() << "_functions {";
+        for (size_t n = 0; n < nf; ++n) {
+            if (n > 0) {
+                pout << ", ";
+            }
+            pout << Name() << "_function_" << funcname_list[n];
+        }
+        pout << "};\n";
+        pout << "typedef enum " << Name() << "_functions " << Name() << "_functions_t;\n";
+        pout << endl;
+        //
+        // Also generate a function that combines all the 'Function's into
+        // a single C function that fills in an array given as a parameter.
+        //
+        fout << endl;
+        fout << "int " << Name() << "_functions(double t, const double y_[], void *params, double f_[])" << endl;
+        pout << "int " << Name() << "_functions(double t, const double y_[], void *params, double f_[]);" << endl;
+        fout << "{" << endl;
+        if (IsAutonomous) {
+            fout << "    (void) t;  /* Hack to avoid 'unused parameter' compiler warnings. */\n";
+        }
+        if (HasPi) {
+            fout << "    const double Pi = M_PI;\n";
+        }
+        AssignNameValueLists(fout, "    const double ", conname_list, " = ", convalue_list, ";");
+        CDeclare(fout, "double", varname_list);
+        CDeclare(fout, "double", parname_list);
+        CDeclare(fout, "double", exprname_list);
+        fout << "    double *p_;" << endl;
+        fout << endl;
+        fout << "    p_ = (double *) params;" << endl;
+        fout << endl;
+        GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, ";");
+        GetFromVector(fout, "    ", parname_list, "=", "p_", "[]", 0, ";");
+        fout << endl;
+        for (size_t i = 0; i < na; ++i) {
+            fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
+        }
+        if (na > 0) {
+            fout << endl;
+        }
+        for (size_t n = 0; n < nf; ++n) {
+            fout << "    /* " << funcname_list[n] << ":  */" << endl;
+            fout << "    f_[" << n << "] = " << funcformula_list[n] << ";" << endl;
+        }
+        fout << endl;
+        fout << "    return GSL_SUCCESS;\n";
+        fout << "}" << endl;
     }
 
     fout.close();
@@ -348,13 +388,11 @@ void VectorField::PrintGSL(map<string,string> options)
         if (HasPi) {
             tout << "    const double Pi = M_PI;\n";
         }
-        for (int i = 0; i < nc; ++i) {
-            tout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+        AssignNameValueLists(tout, "    const double ", conname_list, " = ", convalue_list, ";");
         CDeclare_double(tout, parname_list);
         tout << "    const int P_ = " << np << ";\n" ;
         tout << "    double def_p_[" << np << "] = {" ;
-        for (int i = 0; i < np; ++i) {
+        for (size_t i = 0; i < np; ++i) {
             tout << pardefval_list[i] ;
             if (i != np-1) {
                 tout << ", " ;
@@ -365,7 +403,7 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "    double p_[" << np << "];\n" ;
         tout << "    const int N_ = " << nv << ";\n" ;
         tout << "    double def_y_[" << nv << "] = {";
-        for (int i = 0; i < nv; ++i) {
+        for (size_t i = 0; i < nv; ++i) {
             // tout << def_var_value.at(i) ;
             // tout << "0.0" ;
             tout << vardefic_list[i];
@@ -435,7 +473,7 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "            printf(\" %.8e\", y_[j_]);\n" ;
         tout << "        }\n";
         if (options["func"] == "yes") {
-            for (int i = 0; i < nf; ++i) {
+            for (size_t i = 0; i < nf; ++i) {
                 tout << "        printf(\" %.8e\", " << Name() << "_" << funcname_list[i] << "(t_, y_, p_));\n";
             }
         }

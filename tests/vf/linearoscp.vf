@@ -20,4 +20,8 @@
     Name="func"
     Description="squared magnitude"
     Formula="x^2 + y^2" />
+<Function
+    Name="theta"
+    Description="angle in radians"
+    Formula="atan2(y, x)" />
 </VectorField>
