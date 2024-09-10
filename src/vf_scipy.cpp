@@ -139,14 +139,11 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "\"\"\"\n";
     fout << endl;
     fout << "from math import *" << endl;
-    fout << "import numpy" << endl;
+    fout << "import numpy as np" << endl;
     fout << endl;
     //
     //  Print the vector field function.
     //
-    fout << "#" << endl;
-    fout << "# The vector field." << endl;
-    fout << "#" << endl;
     fout << endl;
     fout << "def vectorfield(";
     if (options["tfirst"] == "yes") {
@@ -179,7 +176,7 @@ void VectorField::PrintSciPy(map<string,string> options)
     if (na > 0) {
         fout << endl;
     }
-    fout << "    f_ = numpy.zeros((" << nv << ",))" << endl;
+    fout << "    f_ = np.zeros((" << nv << ",))" << endl;
     for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "] = " << varvecfield_list[i] << endl;
     }
@@ -191,9 +188,6 @@ void VectorField::PrintSciPy(map<string,string> options)
     //
     // Print the Jacobian function.
     //
-    fout << "#" << endl;
-    fout << "#  The Jacobian." << endl;
-    fout << "#" << endl;
     fout << endl;
     fout << "def jacobian(";
     if (options["tfirst"] == "yes") {
@@ -221,19 +215,18 @@ void VectorField::PrintSciPy(map<string,string> options)
     }
     fout << endl;
     fout << "    # Create the Jacobian matrix:" << endl; 
-    fout << "    jac_ = numpy.zeros((" << nv << "," << nv << "))" << endl; 
+    fout << "    jac_ = np.zeros((" << nv << ", " << nv << "))" << endl;
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
             if (df != 0) {
-                fout << "    jac_[" << i << "," << j << "] = " << df << endl;
+                fout << "    jac_[" << i << ", " << j << "] = " << df << endl;
             }
         }
     }
     fout << "    return jac_\n";
-    fout << endl;
 
     if (options["func"] == "yes") {
         //
