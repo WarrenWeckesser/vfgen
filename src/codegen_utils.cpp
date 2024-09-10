@@ -32,6 +32,15 @@
 using namespace std;
 using namespace GiNaC;
 
+
+string to_upper(string s)
+{
+    string t = s;
+    transform(t.begin(), t.end(), t.begin(), ::toupper);
+    return t;
+}
+
+
 static const char *datetimefmt = "Generated on %2d-%3s-%04d at %02d:%02d";
 static char datetimebuf[48]; // Must be enough space to hold a copy of datetimefmt
 

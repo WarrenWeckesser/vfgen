@@ -35,13 +35,6 @@ using namespace std;
 using namespace GiNaC;
 
 
-string to_upper(string s)
-{
-    string t = s;
-    transform(t.begin(), t.end(), t.begin(), ::toupper);
-    return t;
-}
-
 //
 // PrintCVODE -- The CVODE Code Generator
 //

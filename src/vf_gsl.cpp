@@ -41,6 +41,7 @@ using namespace GiNaC;
 void VectorField::PrintGSL(map<string,string> options)
 {
     int nc, np, nv, na, nf;
+    string include_guard_name;
 
     symbol t(IndependentVariable);
     nc = conname_list.nops();
@@ -78,6 +79,11 @@ void VectorField::PrintGSL(map<string,string> options)
     pout << " *" << endl;
     PrintVFGENComment(pout," *  ");
     pout << " */" << endl;
+    pout << endl;
+    include_guard_name = to_upper(Name());
+    include_guard_name.append("_GVF_H");
+    pout << "#ifndef " << include_guard_name << endl;
+    pout << "#define " << include_guard_name << endl;
     pout << endl;
 
     fout << "#include <math.h>" << endl;
@@ -252,6 +258,8 @@ void VectorField::PrintGSL(map<string,string> options)
     }
 
     fout.close();
+    pout << endl;
+    pout << "#endif /* " << include_guard_name << " */" << endl;
     pout.close();
 
     if (options["demo"] == "yes") {

@@ -22,9 +22,10 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef CODEGEN_UTILS
-#define CODEGEN_UTILS 1
+#ifndef CODEGEN_UTILS_H
+#define CODEGEN_UTILS_H 1
 
+std::string to_upper(std::string s);
 char *DateTimeMsg();
 void PrintVFGENComment(std::ofstream &fout, const char *prefix);
 void Declare(std::ofstream &fout, std::string prefixstr, std::string typestr, GiNaC::lst name, std::string termstr);
