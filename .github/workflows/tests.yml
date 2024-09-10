@@ -1,9 +1,9 @@
-name: Test commands
+name: test
 
 on: [push, pull_request]
 
 jobs:
-  test_vfgen:
+  test_commands:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -109,7 +109,7 @@ jobs:
         bash run_test.sh
         cd ../..
 
-  macos_latest:
+  build_on_macos_latest:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
