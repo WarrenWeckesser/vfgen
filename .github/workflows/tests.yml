@@ -61,6 +61,7 @@ jobs:
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test julia]')"
       run: |
         cd tests/test_julia
+        bash install_julia.sh
         bash run_test.sh
         cd ../..
     - name: test_lsoda
