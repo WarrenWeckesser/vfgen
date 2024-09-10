@@ -63,10 +63,9 @@ using namespace GiNaC;
 
 void VectorField::PrintBoostOdeint(map<string,string> options)
 {
-    int nc, np, nv, na, nf;
+    int np, nv, na, nf;
 
     np = parname_list.nops();
-    nc = conname_list.nops();
     nv = varname_list.nops();
     na = exprname_list.nops();
     nf = funcname_list.nops();
@@ -131,9 +130,7 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     if (HasPi) {
         fout << "    const double Pi = M_PI;\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
 
     CDeclare(fout, "double", varname_list);
     GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, ";");
@@ -167,9 +164,7 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
             if (HasPi) {
                 fout << "    const double Pi = M_PI;\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    const double ", conname_list, "=", convalue_list, ";");
             CDeclare(fout, "double", varname_list);
             CDeclare(fout, "double", exprname_list);
             fout << endl;
