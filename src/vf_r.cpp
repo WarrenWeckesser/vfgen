@@ -98,18 +98,16 @@ void VectorField::PrintRode(map<string,string> options)
     if (HasPi) {
         fout << "    Pi <- pi\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "        " << conname_list[i] << " <- " << convalue_list[i] << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
     GetFromVector(fout, "    ", varname_list, "<-", "state", "[]", 1, "");
     GetFromVector(fout, "    ", parname_list, "<-", "parameters", "[]", 1, "");
     fout << endl;
     for (int i = 0; i < na; ++i) {
-        fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << ";" << endl;
+        fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << endl;
     }
     fout << "    vf_ <- vector(len = " << nv << ")" << endl;
     for (int i = 0; i < nv; ++i) {
-        fout << "    vf_[" << (i+1) << "]" << " = " << varvecfield_list[i] << ";" << endl;
+        fout << "    vf_[" << (i+1) << "]" << " = " << varvecfield_list[i] << endl;
     }
     fout << "    return(list(vf_))\n";
     fout << "}" << endl;
@@ -121,11 +119,9 @@ void VectorField::PrintRode(map<string,string> options)
 
     fout << Name() << "_jac <- function(" << t << ", state, parameters) {\n";
     if (HasPi) {
-        fout << "    Pi <- pi;\n";
+        fout << "    Pi <- pi\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
     GetFromVector(fout,"    ",varname_list, "<-", "state", "[]", 1, "");
     GetFromVector(fout,"    ",parname_list, "<-", "parameters", "[]", 1, "");
     fout << "    jac_ = matrix(nrow = " << nv << ", ncol = " << nv << ")" << endl;
@@ -161,18 +157,16 @@ void VectorField::PrintRode(map<string,string> options)
             fout << "#" << endl;
             fout << funcname << " <- function(sol, parameters) {\n";
             if (HasPi) {
-                fout << "    Pi <- pi;\n";
+                fout << "    Pi <- pi\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    " << conname_list[i] << " <- " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
             fout << "    " << t << " <- sol[, 1]\n";
             GetFromVector2(fout, "    ", varname_list, "<-", "sol", "[, ", "]", 2, "");
             GetFromVector(fout, "    ", parname_list, "<-", "parameters", "[]", 1, "");
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << endl;
             }
-            fout << "    r_ <- " << funcformula_list[n] << ";" << endl;
+            fout << "    r_ <- " << funcformula_list[n] << endl;
             fout << "    return(r_)" << endl;
             fout << "}" << endl;
             fout << endl;
@@ -185,17 +179,15 @@ void VectorField::PrintRode(map<string,string> options)
             fout << "#" << endl;
             fout << funcname2 << " <- function(" << t << ", state, parameters) {\n";
             if (HasPi) {
-                fout << "    Pi <- pi;\n";
+                fout << "    Pi <- pi\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    " << conname_list[i] << " <- " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
             GetFromVector(fout, "    ", varname_list, "<-", "state", "[]", 1, "");
             GetFromVector(fout, "    ", parname_list, "<-", "parameters", "[]", 1, "");
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << endl;
             }
-            fout << "    r_ <- " << funcformula_list[n] << ";" << endl;
+            fout << "    r_ <- " << funcformula_list[n] << endl;
             fout << "    return(r_)" << endl;
             fout << "}" << endl;
         }
@@ -228,11 +220,9 @@ void VectorField::PrintRode(map<string,string> options)
             fout << "# Constants.  The names of these constants can be used in the x_mdialog." << endl;
         }
         if (HasPi) {
-            fout << "Pi = pi;\n";
+            fout << "Pi = pi\n";
         }
-        for (int i = 0; i < nc; ++i) {
-            fout << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+        AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
         fout << endl;
         if (np > 0) {
             fout << "# --- Parameters ---\n";
@@ -410,7 +400,7 @@ void VectorField::PrintRdede(map<string,string> options)
             }
         }
 
-        fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << ";" << endl;
+        fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << endl;
     }
 
     for (int i = na; i < na + nv; ++i) {
@@ -426,7 +416,7 @@ void VectorField::PrintRdede(map<string,string> options)
 
     fout << "    vf_ <- vector(len = " << nv << ")" << endl;
     for (int i = 0; i < nv; ++i) {
-        fout << "    vf_[" << (i+1) << "]" << " = " << varvecfield_list[i] << ";" << endl;
+        fout << "    vf_[" << (i+1) << "]" << " = " << varvecfield_list[i] << endl;
     }
     fout << "    return(list(vf_))\n";
     fout << "}" << endl;
@@ -452,18 +442,16 @@ void VectorField::PrintRdede(map<string,string> options)
             fout << "#" << endl;
             fout << funcname << " <- function(sol, parameters) {\n";
             if (HasPi) {
-                fout << "    Pi <- pi;\n";
+                fout << "    Pi <- pi\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    " << conname_list[i] << " <- " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
             fout << "    " << t << " <- sol[, 1]\n";
             GetFromVector2(fout, "    ", varname_list, "<-", "sol", "[, ", "]", 2, "");
             GetFromVector(fout, "    ", parname_list, "<-", "parameters", "[]", 1, "");
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << endl;
             }
-            fout << "    r_ <- " << funcformula_list[n] << ";" << endl;
+            fout << "    r_ <- " << funcformula_list[n] << endl;
             fout << "    return(r_)" << endl;
             fout << "}" << endl;
             fout << endl;
@@ -486,7 +474,7 @@ void VectorField::PrintRdede(map<string,string> options)
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " <- " << exprformula_list[i] << endl;
             }
-            fout << "    r_ <- " << funcformula_list[n] << ";" << endl;
+            fout << "    r_ <- " << funcformula_list[n] << endl;
             fout << "    return(r_)" << endl;
             fout << "}" << endl;
         }
@@ -519,11 +507,9 @@ void VectorField::PrintRdede(map<string,string> options)
             fout << "# Constants.  The names of these constants can be used in the x_mdialog." << endl;
         }
         if (HasPi) {
-            fout << "Pi = pi;\n";
+            fout << "Pi = pi\n";
         }
-        for (int i = 0; i < nc; ++i) {
-            fout << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-        }
+        AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
         fout << endl;
         if (np > 0) {
             fout << "# --- Parameters ---\n";
