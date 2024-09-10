@@ -65,21 +65,18 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << "#" << endl;
     fout << endl;
     fout << "from math import *" << endl;
-    fout << "import numpy" << endl;
-    fout << endl << endl;
+    fout << "import numpy as np" << endl;
+    fout << endl;
     //
     //  Print the vector field function.
     //
-    fout << "#" << endl;
-    fout << "# The vector field." << endl;
-    fout << "#" << endl;
     fout << endl;
     fout << "def " << "vectorfield(" << IndependentVariable << ", x_, args):" << endl;
     fout << "    \"\"\"\n";
     fout << "    The vector field function for the vector field \"" << Name() << "\"\n";
     fout << "    \"\"\"\n";
     if (HasPi) {
-        fout << "    Pi = numpy.pi\n";
+        fout << "    Pi = np.pi\n";
     }
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
@@ -90,27 +87,24 @@ void VectorField::PrintPyGSL(map<string,string> options)
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << endl;
     }
     fout << endl;
-    fout << "    f_ = numpy.zeros((" << nv << ",))" << endl;
+    fout << "    f_ = np.zeros((" << nv << ",))" << endl;
     for (int i = 0; i < nv; ++i) {
         fout << "    f_[" << i << "] = " << varvecfield_list[i] << endl;
     }
     fout << endl;
     fout << "    return f_" << endl;
-    fout << endl << endl;
+    fout << endl;
 
     //
     // Print the Jacobian function.
     //
-    fout << "#" << endl;
-    fout << "#  The Jacobian." << endl;
-    fout << "#" << endl;
     fout << endl;
     fout << "def " << "jacobian(t_, y_, args):" << endl;
     fout << "    \"\"\"\n";
     fout << "    The Jacobian of the vector field \"" << Name() << "\"\n";
     fout << "    \"\"\"\n";
     if (HasPi) {
-        fout << "    Pi = numpy.pi\n";
+        fout << "    Pi = np.pi\n";
     }
     for (int i = 0; i < nc; ++i) {
         fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
@@ -122,7 +116,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     }
     fout << endl;
     fout << "    # Create the Jacobian matrix, initialized with zeros." << endl; 
-    fout << "    jac_ = numpy.zeros((" << nv << ", " << nv << "))" << endl;
+    fout << "    jac_ = np.zeros((" << nv << ", " << nv << "))" << endl;
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
         for (int j = 0; j < nv; ++j) {
@@ -134,7 +128,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         }
     }
     fout << endl;
-    fout << "    dfdt_ = numpy.zeros((2,), dtype=numpy.float)" << endl;
+    fout << "    dfdt_ = np.zeros((2,), dtype=np.float)" << endl;
     symbol t(IndependentVariable);
     for (int i = 0; i < nv; ++i) {
         ex f = iterated_subs(varvecfield_list[i],expreqn_list);
@@ -161,7 +155,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
             fout << "    The user-defined function \"" << funcname_list[n] << "\" for the vector field \"" << Name() << "\"\n";
             fout << "    \"\"\"\n";
             if (HasPi) {
-                fout << "    Pi = numpy.pi\n";
+                fout << "    Pi = np.pi\n";
             }
             for (int i = 0; i < nc; ++i) {
                 fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
