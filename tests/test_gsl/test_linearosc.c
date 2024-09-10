@@ -1,14 +1,11 @@
 /*
- *  test_gsl.c
- *
- *
- *  GSL ODE solver for the vector field named: linearosc
+ *  test_linearosc.c
  *
  *  To compile and run this program:
  *      gcc -c linearosc_gvf.c
- *      gcc -c test_gsl.c
- *      gcc -o test_gsl test_gsl.o linearosc_gvf.o -lgsl -lgslcblas -lm
- *  This creates an executable file called test_gsl.
+ *      gcc -c test_linearosc.c
+ *      gcc -o test_linearosc test_linearosc.o linearosc_gvf.o -lgsl -lgslcblas -lm
+ *  This creates an executable file called test_linearosc.
  */
 
 #include <string.h>
