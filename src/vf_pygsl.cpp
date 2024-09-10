@@ -39,9 +39,9 @@ using namespace GiNaC;
 
 void VectorField::PrintPyGSL(map<string,string> options)
 {
-    int nc, nv, np, na, nf;
+    int nv, np, na, nf;
 
-    nc = conname_list.nops();
+    // nc = conname_list.nops();
     nv = varname_list.nops();
     np = parname_list.nops();
     na = exprname_list.nops();
@@ -78,9 +78,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     if (HasPi) {
         fout << "    Pi = np.pi\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
     GetFromVector(fout, "    ", varname_list, "=", "x_", "[]", 0, "");
     GetFromVector(fout, "    ", parname_list, "=", "args", "[]", 0, "");
     for (int i = 0; i < na; ++i) {
@@ -106,9 +104,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     if (HasPi) {
         fout << "    Pi = np.pi\n";
     }
-    for (int i = 0; i < nc; ++i) {
-        fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-    }
+    AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
     GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
     GetFromVector(fout, "    ", parname_list, "=", "args", "[]", 0, "");
     for (int i = 0; i < na; ++i) {
@@ -157,9 +153,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
             if (HasPi) {
                 fout << "    Pi = np.pi\n";
             }
-            for (int i = 0; i < nc; ++i) {
-                fout << "    " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
-            }
+            AssignNameValueLists(fout, "    ", conname_list, "=", convalue_list, "");
             GetFromVector(fout, "    ", varname_list, "=", "y_", "[]", 0, "");
             GetFromVector(fout, "    ", parname_list, "=", "args", "[]", 0, "");
             for (int i = 0; i < na; ++i) {
@@ -219,12 +213,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "# Main script begins here..." << endl;
         tout << "#" << endl;
 
-        // if (HasPi) {
-        //     tout << "Pi = " << numstr << ".pi\n";
-        // }
-        for (int i = 0; i < nc; ++i) {
-            tout << conname_list[i] << " = " << convalue_list[i] << endl;
-        }
+        AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
         tout << "N_ = " << nv << "\n" ;
 
         MakePythonListOfStrings(tout,"varnames_",varname_list,"");
