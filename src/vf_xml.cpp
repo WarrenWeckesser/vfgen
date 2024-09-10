@@ -136,6 +136,19 @@ void VectorField::PrintXML(string cmdstr)
 
 }
 
+void check_bad_name(string value, string attr, string element)
+{
+    if (value == "I") {
+        cerr << "Error: bad symbol for '" << attr << "' of '" << element << "'." << endl;
+        cerr << "The symbol 'I' is not allowed.  It conflicts with a predefined" << endl;
+        cerr << "constant of the symbolic processor used by VFGEN, and it will" << endl;
+        cerr << "conflict with a predefined constant when used in C code that also " << endl;
+        cerr << "includes <complex.h>." << endl;
+        exit(-1);
+    }
+}
+
+
 //
 // ReadXML
 //
@@ -214,6 +227,7 @@ int VectorField::ReadXML(string xmlfilename)
                 exit(-1);
             }
             string s(attr);
+            check_bad_name(s, "IndependentVariable", "VectorField");
             IndependentVariable = s;
         }
     }
@@ -252,6 +266,7 @@ int VectorField::ReadXML(string xmlfilename)
                 exit(-1);
             }
             string name(attr);
+            check_bad_name(name, "Name", "Constant");
             Constant *c = new Constant(name);
             AddConstant(c);
             attr = mxmlElementGetAttr(node,"Description");
@@ -312,6 +327,7 @@ int VectorField::ReadXML(string xmlfilename)
                 exit(-1);
             }
             string name(attr);
+            check_bad_name(name, "Name", "Parameter");
             Parameter *p = new Parameter(name);
             AddParameter(p);
             attr = mxmlElementGetAttr(node,"Description");
@@ -366,6 +382,7 @@ int VectorField::ReadXML(string xmlfilename)
                 exit(-1);
             }
             string name(attr);
+            check_bad_name(name, "Name", "Expression");
             Expression *e = new Expression(name);
             AddExpression(e);
             attr = mxmlElementGetAttr(node,"Description");
@@ -427,6 +444,7 @@ int VectorField::ReadXML(string xmlfilename)
                 exit(-1);
             }
             string name(attr);
+            check_bad_name(name, "Name", "StateVariable");
             StateVariable *sv = new StateVariable(name);
             AddStateVariable(sv);
             attr = mxmlElementGetAttr(node,"Description");
@@ -516,6 +534,7 @@ int VectorField::ReadXML(string xmlfilename)
                 exit(-1);
             }
             string name(attr);
+            check_bad_name(name, "Name", "Function");
             Function *func = new Function(name);
             AddFunction(func);
             attr = mxmlElementGetAttr(node,"Description");
