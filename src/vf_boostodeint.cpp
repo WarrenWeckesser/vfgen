@@ -5,7 +5,7 @@
 //  This file defines the VectorField::PrintBoostOdeint method.
 //
 //
-//  Copyright (C) 2019 Warren Weckesser
+//  Copyright (C) 2019, 2024 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License, Version 2, as
@@ -160,15 +160,15 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
         fout << "//" << endl;
         fout << "//  User-defined functions. " << endl;
         fout << "//" << endl;
-        fout << endl;
         for (int n = 0; n < nf; ++n) {
+            fout << endl;
             fout << "double " << Name() << "_vf::" << funcname_list[n] << "(const state_type &x_, double t_)" << endl;
             fout << "{" << endl;
             if (HasPi) {
                 fout << "    const double Pi = M_PI;\n";
             }
             for (int i = 0; i < nc; ++i) {
-                fout << "    const double " << conname_list[i]  << convalue_list[i] << ";" << endl;
+                fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
             }
             CDeclare(fout, "double", varname_list);
             CDeclare(fout, "double", exprname_list);
