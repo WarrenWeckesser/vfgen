@@ -21,6 +21,7 @@ jobs:
     - name: test_boostodeint
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test boostodeint]')"
       run: |
+        sudo apt-get -y install libboost-math-dev
         cd tests/test_boostodeint
         bash run_test_boostodeint_default_noparams.sh
         bash run_test_boostodeint_default_params.sh
