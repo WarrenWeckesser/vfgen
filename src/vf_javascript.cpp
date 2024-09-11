@@ -129,7 +129,7 @@ void VectorField::PrintJavascript(map<string,string> options)
     GetFromVector(fout, "    var ", parname_list, "=", "params", "[]", 0, ";");
     fout << endl;
     for (int i = 0; i < na; ++i) {
-        fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
+        fout << "    var " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
     }
     if (na > 0) {
         fout << endl;
