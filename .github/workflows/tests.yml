@@ -94,7 +94,8 @@ jobs:
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test scilab]')"
       run: |
         cd tests/test_scilab
-        sudo bash run_test.sh
+        sudo bash install_scilab.sh
+        bash run_test.sh
         cd ..
     - name: test_scipy
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test scipy]')"
