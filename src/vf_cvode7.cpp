@@ -480,16 +480,27 @@ void VectorField::PrintCVODE7(map<string,string> options)
         tout << "    if (check_int_status(retval, \"CVodeSetJacFn()\")) {return 1;}\n";
         tout << endl;
         tout << "    sunrealtype t1 = solver_param_[2];\n" ;
+        tout << "    printf(\"";
+        tout << IndependentVariable;
+        for (auto &name: varname_list) {
+            tout << ", " << name;
+        }
+        if ((options["func"] == "yes") && (nf > 0)) {
+            for (auto &name: funcname_list) {
+                tout << ", " << name;
+            }
+        }
+        tout << "\\n\");\n";
         tout << "    /* Print the initial condition  */\n";
         tout << "    printf(\"%.8e\", t);\n" ;
         tout << "    for (j = 0; j < N_; ++j) {\n" ;
-        tout << "        printf(\" %.8e\", NV_Ith_S(y0_, j));\n";
+        tout << "        printf(\", %.8e\", NV_Ith_S(y0_, j));\n";
         tout << "    }\n";
         if ((options["func"] == "yes") && (nf > 0)) {
             tout << "    sunrealtype funcval[" << nf << "];\n";
             tout << "    " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
             for (size_t i = 0; i < nf; ++i) {
-                 tout << "    printf(\" %.8e\",funcval[" << i << "]);\n";
+                 tout << "    printf(\", %.8e\",funcval[" << i << "]);\n";
             }
         }
         tout << "    printf(\"\\n\");\n";
@@ -511,13 +522,13 @@ void VectorField::PrintCVODE7(map<string,string> options)
         tout << "        /* Print the solution at the current time */\n";
         tout << "        printf(\"%.8e\", t);\n" ;
         tout << "        for (j = 0; j < N_; ++j) {\n" ;
-        tout << "            printf(\" %.8e\", NV_Ith_S(y0_,j));\n" ;
+        tout << "            printf(\", %.8e\", NV_Ith_S(y0_,j));\n" ;
         tout << "        }\n";
 
         if ((options["func"] == "yes") && (nf > 0)) {
             tout << "        " << Name() << "_func(t, y0_, funcval, (void *) p_);\n";
             for (size_t i = 0; i < nf; ++i) {
-                 tout << "        printf(\" %.8e\", funcval[" << i << "]);\n";
+                 tout << "        printf(\", %.8e\", funcval[" << i << "]);\n";
             }
         }
         tout << "        printf(\"\\n\");\n";
