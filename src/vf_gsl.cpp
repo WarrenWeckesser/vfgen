@@ -461,6 +461,27 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "    double t1_ = solver_param_[2];\n" ;
         tout << "    double h_ = 1e-6;\n" ;
         tout << endl;
+        tout << "        printf(\"" << IndependentVariable;
+        for (auto &name: varname_list) {
+            tout << ", " << name;
+        }
+        if (options["func"] == "yes") {
+            for (auto &name: funcname_list) {
+                tout << ", " << name;
+            }
+        }
+        tout << "\\n\");\n";
+        tout << "        printf(\"%.10e\", t_);\n" ;
+        tout << "        for (int j_ = 0; j_ < N_; ++j_) {\n" ;
+        tout << "            printf(\", %.10e\", y_[j_]);\n" ;
+        tout << "        }\n";
+        if (options["func"] == "yes") {
+            for (size_t i = 0; i < nf; ++i) {
+                tout << "        printf(\", %.10e\", " << Name() << "_" << funcname_list[i] << "(t_, y_, p_));\n";
+            }
+        }
+        tout << "        printf(\"\\n\");\n";
+
         tout << "    while (t_ < t1_) {\n" ;
         tout << "        int j_;\n" ;
         tout << "        int status_ = gsl_odeiv2_evolve_apply(evolve_, control_, step_, &sys_, &t_, t1_, &h_, y_);\n" ;
@@ -468,13 +489,13 @@ void VectorField::PrintGSL(map<string,string> options)
         tout << "            fprintf(stderr, \"status=%d\\n\", status_);\n" ;
         tout << "            break;\n" ;
         tout << "        }\n" ;
-        tout << "        printf(\"%.8e\", t_);\n" ;
+        tout << "        printf(\"%.10e\", t_);\n" ;
         tout << "        for (j_ = 0; j_ < N_; ++j_) {\n" ;
-        tout << "            printf(\" %.8e\", y_[j_]);\n" ;
+        tout << "            printf(\", %.10e\", y_[j_]);\n" ;
         tout << "        }\n";
         if (options["func"] == "yes") {
             for (size_t i = 0; i < nf; ++i) {
-                tout << "        printf(\" %.8e\", " << Name() << "_" << funcname_list[i] << "(t_, y_, p_));\n";
+                tout << "        printf(\", %.10e\", " << Name() << "_" << funcname_list[i] << "(t_, y_, p_));\n";
             }
         }
         tout << "        printf(\"\\n\");\n";
