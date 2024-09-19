@@ -152,12 +152,17 @@ void VectorField::PrintJavaMath(map<string,string> options)
         tout << endl;
         tout << "public class " << classname << " {" << endl;
         tout << endl;
+        tout << "    static void printHeader() {" << endl;
+        tout << "        System.out.println(\"" << IndependentVariable << ", ";
+        PrintList(tout, varname_list);
+        tout << "\");" << endl;
+        tout << "    }" << endl;
+        tout << endl;
         tout << "    static void printState(double t, double[] state) {" << endl;
-        // GetFromVector(tout, "        double ", varname_list, "=", "state", "[]", 0, ";");
         tout << "        String s = String.format(\"%14.6f\", t);" << endl;
         tout << "        System.out.print(s);" << endl;
         tout << "        for (int i = 0; i < " << nv << "; ++i) {" << endl;
-        tout << "            s = String.format(\" %20.15f\", state[i]);" << endl;
+        tout << "            s = String.format(\", %20.15f\", state[i]);" << endl;
         tout << "            System.out.print(s);" << endl;
         tout << "        }" << endl;
         tout << "        System.out.println();" << endl;
@@ -187,6 +192,7 @@ void VectorField::PrintJavaMath(map<string,string> options)
         tout << "        double t1 = 10.0;  // End time." << endl;
         tout << "        double stepsize = 0.05;" << endl;
         tout << endl;
+        tout << "        printHeader();" << endl;
         tout << "        printState(t, state);" << endl;
         tout << "        while (t < t1) {" << endl;
         tout << "            double ts = t + stepsize;" << endl;
