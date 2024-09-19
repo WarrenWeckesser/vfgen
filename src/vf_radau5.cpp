@@ -181,7 +181,7 @@ void VectorField::PrintRadau5(map<string,string> options)
     fout << "      dimension y(" << nv << "), rpar(" << np << ")\n";
     fout << endl;
     fout << "      write (6,99) t, (y(i), i = 1," << nv << ")\n";
-    fout << "99    format(1x,f10.5," << nv << "E18.10)\n";
+    fout << "99    format(1x, *(g0,:,\", \"))\n";
     fout << "      return\n";
     fout << "      end\n";
     fout.close();
@@ -283,6 +283,9 @@ void VectorField::PrintRadau5(map<string,string> options)
         fout << "          iwork_(i_) = 0\n";
         fout << "          work_(i_) = 0.0D0\n";
         fout << "      end do\n";
+        fout << "      write(6, *) \"t, ";
+        PrintList(fout, varname_list);
+        fout << "\"\n";
         fout << "c     --- Call RADAU5 ---\n";
         fout << "      call radau5(n_," << Name() << "_rhs, t_, y_, tstop_, h_,\n";
         fout << "     &           rtol_, atol_, itol_,\n";
@@ -290,8 +293,6 @@ void VectorField::PrintRadau5(map<string,string> options)
         fout << "     &           " << Name() << "_rhs, imas_, mlmas_, mumas_,\n";
         fout << "     &           " << Name() << "_out, iout_,\n";
         fout << "     &           work_, lwork_, iwork_, liwork_, rpar_, ipar_, idid_)\n";
-        // fout << "      write (6,99) t_, (y_(i_), i_ = 1," << nv << ")\n";
-        // fout << "99    format(1x,f10.5," << nv << "E18.10)\n";
         fout << "      stop\n";
         fout << "      end\n";
         fout << endl;

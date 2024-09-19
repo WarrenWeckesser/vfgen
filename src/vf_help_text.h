@@ -486,9 +486,9 @@ constexpr char help_radau5[] =
 "Options: (default is listed first)\n"
 "demo=no|yes\n"
 "    If the option demo=yes is given, the file [name]_dr5.f is also created.\n"
-"    This program provides a driver that will generated a solution to equations\n"
-"    by calling RADAU5.  The initial conditions and parameters of the solution\n"
-"    are the default values given in the vector field file.\n";
+"    This program provides a driver that will generate a solution to the\n"
+"    equations by calling RADAU5.  The initial conditions and parameters of\n"
+"    the solution are the default values given in the vector field file.\n";
 
 constexpr char help_scilab[] =
 "use: vfgen scilab vector_field_file.vf\n"
