@@ -1,8 +1,5 @@
 set -e
 
-echo "Installing libgsl"
-apt-get -yq install libgsl-dev
-
 echo "Running vfgen evf ../vf/rossler.vf > rossler_evf.vf"
 vfgen evf ../vf/rossler.vf > rossler_evf.vf
 

@@ -52,7 +52,8 @@ jobs:
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test evf]')"
       run: |
         cd tests/test_evf
-        sudo bash run_test.sh
+        sudo bash install_gsl.sh
+        bash run_test.sh
         cd ../..
     - name: test_gsl
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test gsl]')"
