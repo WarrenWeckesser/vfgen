@@ -18,6 +18,13 @@ jobs:
         make
         make install
         cd ..
+    - name: test_adolc
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test adolc]')"
+      run: |
+        cd tests/test_adolc
+        sudo bash install_adolc.sh
+        bash run_test.sh
+        cd ../..
     - name: test_boostodeint
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test boostodeint]')"
       run: |
