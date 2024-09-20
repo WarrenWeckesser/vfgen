@@ -46,7 +46,7 @@ jobs:
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test dde_solver]')"
       run: |
         cd tests/test_dde_solver
-        sudo bash run_test.sh
+        bash run_test.sh
         cd ../..
     - name: test_evf
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test evf]')"
