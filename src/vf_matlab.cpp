@@ -5,7 +5,7 @@
 //  This file defines the VectorField::PrintMATLAB method.
 //
 //
-//  Copyright (C) 2008 Warren Weckesser
+//  Copyright (C) 2008-2024 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License, Version 2, as
@@ -50,7 +50,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
     //
     //  Create the vector field function.
     //
-    string vf_filename = Name()+"_vf.m";
+    string vf_filename = Name() + "_vf.m";
     ofstream fout;
     fout.open(vf_filename.c_str());
     fout << left;
@@ -60,14 +60,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
     fout << "%" << endl;
     fout << "% MATLAB vector field function for: " << Name() << endl;
     fout << "%" << endl;
-    PrintVFGENComment(fout,"% ");
+    PrintVFGENComment(fout, "% ");
     fout << "%" << endl;
     fout << "%" << endl;
-    fout << "function vf_ = " << Name() << "_vf(" << IndependentVariable << ",x_";
+    fout << "function vf_ = " << Name() << "_vf(" << IndependentVariable << ", x_";
     if (np > 0) {
-        fout << ",";
+        fout << ", ";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -87,7 +87,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
     for (int i = 0; i < na; ++i) {
         fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
     }
-    fout << "    vf_ = zeros(" << nv << ",1);" << endl;
+    fout << "    vf_ = zeros(" << nv << ", 1);" << endl;
     for (int i = 0; i < nv; ++i) {
         fout << "    vf_(" << (i+1) << ")" << " = " << varvecfield_list[i] << ";" << endl;
     }
@@ -96,7 +96,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
     //
     //  Create the Jacobian function.
     //
-    string jac_filename = Name()+"_jac.m";
+    string jac_filename = Name() + "_jac.m";
     fout.open(jac_filename.c_str());
     fout << left;
 
@@ -106,14 +106,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
     fout << "% This MATLAB function computes the Jacobian of the vector field" << endl;
     fout << "% defined in " << vf_filename << "." << endl;
     fout << "%" << endl;
-    PrintVFGENComment(fout,"% ");
+    PrintVFGENComment(fout, "% ");
     fout << "%" << endl;
     fout << "%" << endl;
-    fout << "function jac_ = " << Name() << "_jac(" << IndependentVariable << ",x_";
+    fout << "function jac_ = " << Name() << "_jac(" << IndependentVariable << ", x_";
     if (np > 0) {
-        fout << ",";
+        fout << ", ";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -130,14 +130,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
     if (options["parstyle"] != "list") {
         GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
-    fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
+    fout << "    jac_ = zeros(" << nv << ", " << nv << ");" << endl;
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
             if (df != 0) {
-                fout << "    jac_(" << (i+1) << "," << (j+1) << ")" << " = " << df << ";" << endl;
+                fout << "    jac_(" << (i+1) << ", " << (j+1) << ")" << " = " << df << ";" << endl;
             }
         }
     }
@@ -148,7 +148,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
     //  Create the function that computes the Jacobian with respect
     //  to the parameters.
     //
-    string jacp_filename = Name()+"_jacp.m";
+    string jacp_filename = Name() + "_jacp.m";
     fout.open(jacp_filename.c_str());
     fout << left;
 
@@ -158,14 +158,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
     fout << "% This MATLAB function computes the Jacobian with respect to the parameters" << endl;
     fout << "% of the vector field defined in " << vf_filename << "." << endl;
     fout << "%" << endl;
-    PrintVFGENComment(fout,"% ");
+    PrintVFGENComment(fout, "% ");
     fout << "%" << endl;
     fout << "%" << endl;
-    fout << "function jacp_ = " << Name() << "_jacp(" << IndependentVariable << ",x_";
+    fout << "function jacp_ = " << Name() << "_jacp(" << IndependentVariable << ", x_";
     if (np > 0) {
-        fout << ",";
+        fout << ", ";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -182,14 +182,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
     if (options["parstyle"] != "list") {
         GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
-    fout << "    jacp_ = zeros(" << nv << "," << np << ");" << endl;
+    fout << "    jacp_ = zeros(" << nv << ", " << np << ");" << endl;
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int j = 0; j < np; ++j) {
             symbol p = ex_to<symbol>(parname_list[j]);
             ex df = f.diff(p);
             if (df != 0) {
-                fout << "    jacp_(" << (i+1) << "," << (j+1) << ")" << " = " << df << ";" << endl;
+                fout << "    jacp_(" << (i+1) << ", " << (j+1) << ")" << " = " << df << ";" << endl;
             }
         }
     }
@@ -199,7 +199,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
     //
     //  Create the Hessian function.
     //
-    string hess_filename = Name()+"_hess.m";
+    string hess_filename = Name() + "_hess.m";
     fout.open(hess_filename.c_str());
     fout << left;
 
@@ -212,14 +212,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
     fout << "% hess_(n,i,j) is the second partial derivative of the n-th component" << endl;
     fout << "% of the vector field, taken with respect to the i-th and j-th variables." << endl;
     fout << "%" << endl;
-    PrintVFGENComment(fout,"% ");
+    PrintVFGENComment(fout, "% ");
     fout << "%" << endl;
     fout << "%" << endl;
-    fout << "function hess_ = " << Name() << "_hess(" << IndependentVariable << ",x_";
+    fout << "function hess_ = " << Name() << "_hess(" << IndependentVariable << ", x_";
     if (np > 0) {
-        fout << ",";
+        fout << ", ";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -237,11 +237,11 @@ void VectorField::PrintMATLAB(map<string,string> options)
         GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     fout << endl;
-    fout << "    hess_ = zeros(" << nv << "," << nv << "," << nv << ");" << endl;
+    fout << "    hess_ = zeros(" << nv << ", " << nv << ", " << nv << ");" << endl;
     for (int n = 0; n < nv; ++n) {
         fout << endl;
         // Get the n-th component of the vector field.
-        ex f = iterated_subs(varvecfield_list[n],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[n], expreqn_list);
         for (int i = 0; i < nv; ++i) {
             // Get the i-th variable
             symbol x_i = ex_to<symbol>(varname_list[i]);
@@ -253,9 +253,9 @@ void VectorField::PrintMATLAB(map<string,string> options)
                 // Differentiate again
                 ex df_ij = df_i.diff(x_j);
                 if (df_ij != 0) {
-                    fout << "    hess_(" << (n+1) << "," << (i+1) << "," << (j+1) << ")" << " = " << df_ij << ";" << endl;
+                    fout << "    hess_(" << (n+1) << ", " << (i+1) << ", " << (j+1) << ")" << " = " << df_ij << ";" << endl;
                     if (j > i) {
-                        fout << "    hess_(" << (n+1) << "," << (j+1) << "," << (i+1) << ") = hess_(" << (n+1) << "," << (i+1) << "," << (j+1) << ");" << endl;
+                        fout << "    hess_(" << (n+1) << ", " << (j+1) << ", " << (i+1) << ") = hess_(" << (n+1) << ", " << (i+1) << ", " << (j+1) << ");" << endl;
                     }
                 }
             }
@@ -267,7 +267,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
     //
     //  Create the third derivatives function function.
     //
-    string d3_filename = Name()+"_der3.m";
+    string d3_filename = Name() + "_der3.m";
     fout.open(d3_filename.c_str());
     fout << left;
 
@@ -280,14 +280,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
     fout << "% der3_(n,i,j,k) is the third partial derivative of the n-th component" << endl;
     fout << "% of the vector field, taken with respect to the i-th, j-th and k-th variables." << endl;
     fout << "%" << endl;
-    PrintVFGENComment(fout,"% ");
+    PrintVFGENComment(fout, "% ");
     fout << "%" << endl;
     fout << "%" << endl;
-    fout << "function der3_ = " << Name() << "_der3(" << IndependentVariable << ",x_";
+    fout << "function der3_ = " << Name() << "_der3(" << IndependentVariable << ", x_";
     if (np > 0) {
-        fout << ",";
+        fout << ", ";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -305,11 +305,11 @@ void VectorField::PrintMATLAB(map<string,string> options)
         GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
     }
     fout << endl;
-    fout << "    der3_ = zeros(" << nv << "," << nv << "," << nv << "," << nv << ");" << endl;
+    fout << "    der3_ = zeros(" << nv << ", " << nv << ", " << nv << ", " << nv << ");" << endl;
     for (int n = 0; n < nv; ++n) {
         fout << endl;
         // Get the n-th component of the vector field.
-        ex f = iterated_subs(varvecfield_list[n],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[n], expreqn_list);
         for (int i = 0; i < nv; ++i) {
             // Get the i-th variable
             symbol x_i = ex_to<symbol>(varname_list[i]);
@@ -326,15 +326,15 @@ void VectorField::PrintMATLAB(map<string,string> options)
                     // Differentiate
                     ex df_ijk = df_ij.diff(x_k);
                     if (df_ijk != 0) {
-                        fout << "    der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ") = " << df_ijk << ";" << endl;
+                        fout << "    der3_(" << (n+1) << ", " << (i+1) << ", " << (j+1) << ", " << (k+1) << ") = " << df_ijk << ";" << endl;
                         if (j < k) {
-                            fout << "    der3_(" << (n+1) << "," << (i+1) << "," << (k+1) << "," << (j+1) << ") = der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ");" << endl;
+                            fout << "    der3_(" << (n+1) << ", " << (i+1) << ", " << (k+1) << ", " << (j+1) << ") = der3_(" << (n+1) << ", " << (i+1) << ", " << (j+1) << ", " << (k+1) << ");" << endl;
                         }
                         if (i < k) {
-                            fout << "    der3_(" << (n+1) << "," << (k+1) << "," << (j+1) << "," << (i+1) << ") = der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ");" << endl;
+                            fout << "    der3_(" << (n+1) << "," << (k+1) << ", " << (j+1) << ", " << (i+1) << ") = der3_(" << (n+1) << ", " << (i+1) << ", " << (j+1) << ", " << (k+1) << ");" << endl;
                         }
                         if (i < j) {
-                            fout << "    der3_(" << (n+1) << "," << (j+1) << "," << (i+1) << "," << (k+1) << ") = der3_(" << (n+1) << "," << (i+1) << "," << (j+1) << "," << (k+1) << ");" << endl;
+                            fout << "    der3_(" << (n+1) << ", " << (j+1) << ", " << (i+1) << ", " << (k+1) << ") = der3_(" << (n+1) << ", " << (i+1) << ", " << (j+1) << ", " << (k+1) << ");" << endl;
                         }
                     }
                 }
@@ -349,7 +349,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
         //  Create the function that computes the derivatives with respect to one
         //  variable and one parameter.
         //
-        string hessp_filename = Name()+"_hessp.m";
+        string hessp_filename = Name() + "_hessp.m";
         fout.open(hessp_filename.c_str());
         fout << left;
     
@@ -363,10 +363,10 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << "% of the vector field, taken with respect to the i-th variable" << endl;
         fout << "% and the j-th parameter." << endl;
         fout << "%" << endl;
-        PrintVFGENComment(fout,"% ");
+        PrintVFGENComment(fout, "% ");
         fout << "%" << endl;
         fout << "%" << endl;
-        fout << "function hessp_ = " << Name() << "_hessp(" << IndependentVariable << ",x_,";
+        fout << "function hessp_ = " << Name() << "_hessp(" << IndependentVariable << ", x_, ";
         if (options["parstyle"] == "list") {
             PrintNameList(fout, parname_list);
         }
@@ -385,11 +385,11 @@ void VectorField::PrintMATLAB(map<string,string> options)
             GetFromVector(fout, "    ", parname_list, "=", "p_", "()", 1, ";");
         }
         fout << endl;
-        fout << "    hessp_ = zeros(" << nv << "," << nv << "," << np << ");" << endl;
+        fout << "    hessp_ = zeros(" << nv << ", " << nv << ", " << np << ");" << endl;
         for (int n = 0; n < nv; ++n) {
             fout << endl;
             // Get the n-th component of the vector field.
-            ex f = iterated_subs(varvecfield_list[n],expreqn_list);
+            ex f = iterated_subs(varvecfield_list[n], expreqn_list);
             for (int i = 0; i < nv; ++i) {
                 // Get the i-th variable
                 symbol x_i = ex_to<symbol>(varname_list[i]);
@@ -401,7 +401,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
                     // Differentiate again
                     ex df_ij = df_i.diff(p_j);
                     if (df_ij != 0) {
-                        fout << "    hessp_(" << (n+1) << "," << (i+1) << "," << (j+1) << ")" << " = " << df_ij << ";" << endl;
+                        fout << "    hessp_(" << (n+1) << ", " << (i+1) << ", " << (j+1) << ")" << " = " << df_ij << ";" << endl;
                     }
                 }
             }
@@ -417,7 +417,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
         for (int n = 0; n < nf; ++n) {
             symbol fn = ex_to<symbol>(funcname_list[n]);
             string funcname = fn.get_name();
-            string filename = Name() + "_" + funcname+".m";
+            string filename = Name() + "_" + funcname + ".m";
             ofstream fout;
             fout.open(filename.c_str());
             fout << left;
@@ -427,12 +427,12 @@ void VectorField::PrintMATLAB(map<string,string> options)
             fout << "%" << endl;
             fout << "% MATLAB user function for the vector field: " << Name() << endl;
             fout << "%" << endl;
-            PrintVFGENComment(fout,"% ");
+            PrintVFGENComment(fout, "% ");
             fout << "%" << endl;
             fout << "%" << endl;
-            fout << "function r_ = " << Name() << "_" << funcname << "(" << IndependentVariable << ",x_";
+            fout << "function r_ = " << Name() << "_" << funcname << "(" << IndependentVariable << ", x_";
             if (np > 0) {
-                fout << ",";
+                fout << ", ";
                 if (options["parstyle"] == "list") {
                     PrintNameList(fout, parname_list);
                 }
@@ -449,7 +449,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
             }
             GetFromVector(fout, "    ", varname_list, "=", "x_", "()", 1, ";");
             if (options["parstyle"] != "list") {
-                GetFromVector(fout,"    ",parname_list, "=", "p_", "()", 1, ";");
+                GetFromVector(fout,"    ", parname_list, "=", "p_", "()", 1, ";");
             }
             for (int i = 0; i < na; ++i) {
                 fout << "    " << exprname_list[i] << " = " << exprformula_list[i] << ";" << endl;
@@ -464,7 +464,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
         //  Create the extended vector field.  This has the vector field
         //  along with variational equations.
         //
-        string evf_filename = Name()+"_evf.m";
+        string evf_filename = Name() + "_evf.m";
         fout.open(evf_filename.c_str());
         fout << left;
  
@@ -473,14 +473,14 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << "%" << endl;
         fout << "% MATLAB vector field and first variation for: " << Name() << endl;
         fout << "%" << endl;
-        PrintVFGENComment(fout,"% ");
+        PrintVFGENComment(fout, "% ");
         fout << "%" << endl;
         fout << "%" << endl;
-        fout << "function evf_ = " << Name() << "_evf(" << IndependentVariable << ",w_";
+        fout << "function evf_ = " << Name() << "_evf(" << IndependentVariable << ", w_";
         if (np > 0) {
-            fout << ",";
+            fout << ", ";
             if (options["parstyle"] == "list") {
-                PrintNameList(fout,parname_list);
+                PrintNameList(fout, parname_list);
             }
             else {
                 fout << "p_";
@@ -489,22 +489,23 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << ")" << endl;
         fout << "    x_ = w_(1:" << nv << ");" << endl;
         fout << "    v_ = w_(" << (nv+1) << ":" << (2*nv) << ");" << endl;
-        fout << "    evf_ = zeros(" << (2*nv) << ",1);" << endl;
-        fout << "    evf_(1:" << nv << ") = " << Name() << "_vf(t,x_";
+        fout << "    evf_ = zeros(" << (2*nv) << ", 1);" << endl;
+        fout << "    evf_(1:" << nv << ") = " << Name() << "_vf(t, x_";
         if (np > 0) {
-            fout << ",";
+            fout << ", ";
             if (options["parstyle"] == "list") {
-                PrintNameList(fout,parname_list);
+                PrintNameList(fout, parname_list);
             }
             else {
                 fout << "p_";
             }
         }
         fout << ");" << endl;
-        fout << "    evf_(" << (nv+1) << ":" << (2*nv) << ") = " << Name() << "_jac(t,x_";
+        fout << "    evf_(" << (nv+1) << ":" << (2*nv) << ") = " << Name() << "_jac(t, x_";
         if (np > 0) {
+            fout << ", ";
             if (options["parstyle"] == "list") {
-                PrintNameList(fout,parname_list);
+                PrintNameList(fout, parname_list);
             }
             else {
                 fout << "p_";
@@ -529,7 +530,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << "%" << endl;
         fout << "% MATLAB demo function for the vector field: " << Name() << endl;
         fout << "%" << endl;
-        PrintVFGENComment(fout,"% ");
+        PrintVFGENComment(fout, "% ");
         fout << "%" << endl;
         fout << "%" << endl;
         fout << endl;
@@ -539,66 +540,66 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << "function " << Name() << "_demo\n";
         fout << "    figure;\n";
         fout << "    clf\n";
-        fout << "    set(gcf,'Position',[0 0 250 " << y << "]);\n";
+        fout << "    set(gcf, 'Position', [0 0 250 " << y << "]);\n";
         fout << "    v = [];\n";
         // Variables -- initial conditions
         symbol pi("pi");
         for (unsigned n = 0; n < varname_list.nops(); ++n) {
             y = y + yinc;
-            fout << "    uicontrol('Style','text','Position',[10 " << y << " " << labelwidth << " " << ht << "],'String','" << varname_list[n] << "(0)');\n";
-            fout << "    ui = uicontrol('Style','edit','Position',[" << labelwidth+15 << " " << y << " 100 " << ht << "],'String','" << vardefic_list[n].subs(Pi==pi) << "');\n";
+            fout << "    uicontrol('Style', 'text', 'Position', [10 " << y << " " << labelwidth << " " << ht << "], 'String', '" << varname_list[n] << "(0)');\n";
+            fout << "    ui = uicontrol('Style', 'edit', 'Position', [" << labelwidth+15 << " " << y << " 100 " << ht << "], 'String', '" << vardefic_list[n].subs(Pi==pi) << "');\n";
             fout << "    v = [v; ui];\n";
         }
         // Parameters
         for (unsigned n = 0; n < parname_list.nops(); ++n) {
             y = y + yinc;
-            fout << "    uicontrol('Style','text','Position',[10 " << y << " " << labelwidth << " " << ht << "],'String','" << parname_list[n] << "');\n";
-            fout << "    ui = uicontrol('Style','edit','Position',[" << labelwidth+15 << " " << y << " 100 " << ht << "],'String','" << pardefval_list[n].subs(Pi==pi) << "');\n";
+            fout << "    uicontrol('Style', 'text', 'Position', [10 " << y << " " << labelwidth << " " << ht << "], 'String', '" << parname_list[n] << "');\n";
+            fout << "    ui = uicontrol('Style', 'edit', 'Position', [" << labelwidth+15 << " " << y << " 100 " << ht << "], 'String', '" << pardefval_list[n].subs(Pi==pi) << "');\n";
             fout << "    v = [v; ui];\n";
         }
         y = y + yinc;
         // Stop Time
-        fout << "    uicontrol('Style','text','Position',[10 " << y << " " << labelwidth << " " << ht << "],'String','Stop Time');\n";
-        fout << "    ui = uicontrol('Style','edit','Position',[" << labelwidth+15 << " " << y << " 100 " << ht << "],'String','10');\n";
+        fout << "    uicontrol('Style', 'text', 'Position',[10 " << y << " " << labelwidth << " " << ht << "], 'String', 'Stop Time');\n";
+        fout << "    ui = uicontrol('Style', 'edit', 'Position', [" << labelwidth+15 << " " << y << " 100 " << ht << "],'String', '10');\n";
         fout << "    v = [v; ui];\n";
         y = y + yinc;
         // Separate Axes checkbox
-        fout << "    ui = uicontrol('Style','checkbox','Position',[10 " << y << " 200 " << ht << "],'String','Separate Axes');\n";
+        fout << "    ui = uicontrol('Style', 'checkbox', 'Position',[10 " << y << " 200 " << ht << "], 'String', 'Separate Axes');\n";
         fout << "    v = [v; ui];\n";
         y = y + yinc;
         // Go button
-        fout << "    uicontrol('Style','pushbutton','Position',[10 " << y << " 40 " << ht << "],'String','Go','Callback',@go_cb,'UserData',v);\n";
+        fout << "    uicontrol('Style', 'pushbutton', 'Position', [10 " << y << " 40 " << ht << "],'String', 'Go', 'Callback',@go_cb, 'UserData', v);\n";
 
         fout << "end\n";
         // Write the callback function for the "Go" button.
         fout << endl;
-        fout << "function go_cb(arg1,arg2)\n";
-        fout << "    v = get(arg1,'UserData');\n";
-        fout << "    ic = zeros(size(v,1)-2,1);\n";
-        fout << "    for k = 1:size(v,1)-2,\n";
+        fout << "function go_cb(arg1, arg2)\n";
+        fout << "    v = get(arg1, 'UserData');\n";
+        fout << "    ic = zeros(size(v, 1) - 2, 1);\n";
+        fout << "    for k = 1:size(v, 1) - 2,\n";
         // fout << "        ic(k) = str2double(get(v(k),'String'));\n";
-        fout << "        ic(k) = eval(get(v(k),'String'));\n";
+        fout << "        ic(k) = eval(get(v(k), 'String'));\n";
         fout << "        if (isnan(ic(k)))\n";
         fout << "            ic(k) = 0.0;\n";
         fout << "        end;\n";
         fout << "    end;\n";
         // fout << "    disp(ic);\n";
-        fout << "    stoptime = str2double(get(v(end-1),'String'));\n";
+        fout << "    stoptime = str2double(get(v(end-1), 'String'));\n";
         fout << "    if (isnan(stoptime))\n";
         fout << "        stoptime = 0.0;\n";
         fout << "    end;\n";
         fout << "    abstol = 1e-9;\n";
         fout << "    reltol = 1e-7;\n";
-        fout << "    opts = odeset('AbsTol',abstol,'RelTol',reltol,'Jacobian',@" << Name() << "_jac" << ");\n";
+        fout << "    opts = odeset('AbsTol', abstol, 'RelTol', reltol, 'Jacobian', @" << Name() << "_jac" << ");\n";
         fout << "    % Change ode45 to ode15s for stiff differential equations.\n";
-        fout << "    [t,z_] = ode45(@" << Name() << "_vf,[0 stoptime],ic(1:" << varname_list.nops() << "),opts";
+        fout << "    [t,z_] = ode45(@" << Name() << "_vf, [0 stoptime], ic(1:" << varname_list.nops() << "), opts";
         if (np > 0) {
             if (options["parstyle"] != "list") {
-                fout << ",ic(" << varname_list.nops()+1 << ":end)";
+                fout << ", ic(" << varname_list.nops()+1 << ":end)";
             }
             else {
                 for (int n = 0; n < np; ++n)
-                    fout << ",ic(" << varname_list.nops()+1+n << ")";
+                    fout << ", ic(" << varname_list.nops()+1+n << ")";
             }
         }
         fout << ");\n";
@@ -606,7 +607,7 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << "    clf;\n";
         fout << "    a = get(v(end),'Value');\n";
         fout << "    if (a == 0),\n";
-        fout << "        plot(t,z_);\n";
+        fout << "        plot(t, z_);\n";
         fout << "        xlabel('t');\n";
         fout << "        legend(";
         for (unsigned n = 0; n < varname_list.nops(); ++n){
@@ -619,8 +620,8 @@ void VectorField::PrintMATLAB(map<string,string> options)
         fout << "    grid on\n";
         fout << "    else\n";
         for (unsigned n = 0; n < varname_list.nops(); ++n) {
-            fout << "        subplot(" << varname_list.nops() << ",1," << n+1 << ");\n";
-            fout << "        plot(t,z_(:," << n+1 << "))\n";
+            fout << "        subplot(" << varname_list.nops() << ", 1, " << n+1 << ");\n";
+            fout << "        plot(t, z_(:," << n+1 << "))\n";
             // fout << "        legend('" << varname_list[n] << "')\n";
             fout << "        xlabel('t');\n";
             fout << "        ylabel('" << varname_list[n] << "')\n";
