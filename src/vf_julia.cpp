@@ -77,7 +77,7 @@ void VectorField::PrintJulia(map<string,string> options)
     fout << "#" << endl;
     fout << "# Function for the vector field named: " << Name() << endl;
     fout << "#\n";
-    PrintVFGENComment(fout,"# ");
+    PrintVFGENComment(fout, "# ");
     fout << "#\n";
 
     fout << endl;
@@ -118,7 +118,7 @@ void VectorField::PrintJulia(map<string,string> options)
         //  Create a self-contained ODE solver for this vector field.
         //
 
-        string tfilename = Name()+"_demo.jl";
+        string tfilename = Name() + "_demo.jl";
         ofstream tout;
         tout.open(tfilename.c_str());
         tout << csrc << left;
@@ -127,7 +127,7 @@ void VectorField::PrintJulia(map<string,string> options)
         tout << "#" << endl;
         tout << "# Demo program for the vector field named: " << Name() << endl;
         tout << "#" << endl;
-        PrintVFGENComment(tout,"# ");
+        PrintVFGENComment(tout, "# ");
         tout << "#\n" ;
         tout << endl;
         tout << "using DifferentialEquations" << endl;
