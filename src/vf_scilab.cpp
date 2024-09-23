@@ -36,7 +36,7 @@ using namespace GiNaC;
 // PrintScilab -- The Scilab Code Generator.
 //
 
-void VectorField::PrintScilab(map<string,string> options)
+void VectorField::PrintScilab(map<string, string> options)
 {
     symbol t(IndependentVariable);
     int nc, np, nv, na, nf;
@@ -50,7 +50,7 @@ void VectorField::PrintScilab(map<string,string> options)
     //
     // The file name is the vector field name with the extension ".sci"
     //
-    string vf_filename = Name()+".sci";
+    string vf_filename = Name() + ".sci";
     ofstream fout;
     fout.open(vf_filename.c_str());
     fout << left;
@@ -62,7 +62,7 @@ void VectorField::PrintScilab(map<string,string> options)
     fout << "//" << endl;
     fout << "// Scilab vector field functions for: " << Name() << endl;
     fout << "//" << endl;
-    PrintVFGENComment(fout,"// ");
+    PrintVFGENComment(fout, "// ");
     fout << "//" << endl;
     fout << endl;
     fout << "//" << endl;
@@ -74,7 +74,7 @@ void VectorField::PrintScilab(map<string,string> options)
     if (np > 0) {
         fout << ",";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -112,7 +112,7 @@ void VectorField::PrintScilab(map<string,string> options)
     if (np > 0) {
         fout << ",";
         if (options["parstyle"] == "list") {
-            PrintNameList(fout,parname_list);
+            PrintNameList(fout, parname_list);
         }
         else {
             fout << "p_";
@@ -131,7 +131,7 @@ void VectorField::PrintScilab(map<string,string> options)
     }
     fout << "    jac_ = zeros(" << nv << "," << nv << ");" << endl;
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
@@ -159,7 +159,7 @@ void VectorField::PrintScilab(map<string,string> options)
             if (np > 0) {
                 fout << ",";
                 if (options["parstyle"] == "list") {
-                    PrintNameList(fout,parname_list);
+                    PrintNameList(fout, parname_list);
                 }
                 else {
                     fout << "p_";
@@ -189,7 +189,7 @@ void VectorField::PrintScilab(map<string,string> options)
         //
         //  Create a demonstration script.
         //
-        string script_filename = Name()+"_demo.sce";
+        string script_filename = Name() + "_demo.sce";
         fout.open(script_filename.c_str());
         fout << left;
 
@@ -199,7 +199,7 @@ void VectorField::PrintScilab(map<string,string> options)
         fout << "// Scilab demonstration script that uses the vector field" << endl;
         fout << "// defined in " << vf_filename << endl;
         fout << "//" << endl;
-        PrintVFGENComment(fout,"// ");
+        PrintVFGENComment(fout, "// ");
         fout << "//" << endl;
         fout << endl;
         fout << "// Load the vector field definition and the jacobian." << endl;
@@ -262,7 +262,7 @@ void VectorField::PrintScilab(map<string,string> options)
         if (np > 0) {
             fout << ",";
             if (options["parstyle"] == "list") {
-                PrintNameList(fout,parname_list);
+                PrintNameList(fout, parname_list);
             }
             else {
                 fout << "params";

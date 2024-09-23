@@ -40,7 +40,7 @@ using namespace GiNaC;
 // PrintRadau5 --
 //
 
-void VectorField::PrintRadau5(map<string,string> options)
+void VectorField::PrintRadau5(map<string, string> options)
 {
     int nc, np, nv, na;
 
@@ -52,14 +52,14 @@ void VectorField::PrintRadau5(map<string,string> options)
     //
     //  Create the vector field function.
     //
-    string vf_filename = Name()+"_rhs.f";
+    string vf_filename = Name() + "_rhs.f";
     ofstream fout;
     fout.open(vf_filename.c_str());
     fout << left;
     fout << csrc;
     // Also override the csrc style for powers.
     // IMPORTANT: This means we can NOT subsequently print C/C++ code!
-    set_print_func<power,print_csrc>(print_power_as_fortran);
+    set_print_func<power, print_csrc>(print_power_as_fortran);
 
     fout << "c\n";
     fout << "c " << vf_filename << endl;
@@ -67,7 +67,7 @@ void VectorField::PrintRadau5(map<string,string> options)
     fout << "c Vector field functions for the vector field '" << Name() << "'\n";
     fout << "c These functions are to be used with the Fortran ODE solver RADAU5.\n";
     fout << "c\n";
-    PrintVFGENComment(fout,"c ");
+    PrintVFGENComment(fout, "c ");
     fout << "c\n";
     // fout << "      subroutine " << Name() << "_rhs(n_,t_,y_,f_,rpar_,ipar_)\n";
     F77Write(fout,"subroutine " + Name() + "_rhs(n_,t_,y_,f_,rpar_,ipar_)");
@@ -76,15 +76,15 @@ void VectorField::PrintRadau5(map<string,string> options)
     fout << "      double precision t_, y_, f_, rpar_\n";
     fout << "      dimension y_(" << nv << "), f_(" << nv << "), rpar_(" << np << ")\n";
     if (nc > 0) {
-        F77Declare(fout,conname_list);
+        F77Declare(fout, conname_list);
     }
     if (np > 0) {
-        F77Declare(fout,parname_list);
+        F77Declare(fout, parname_list);
     }
     if (na > 0) {
-        F77Declare(fout,exprname_list);
+        F77Declare(fout, exprname_list);
     }
-    F77Declare(fout,varname_list);
+    F77Declare(fout, varname_list);
     fout << endl;
     if (nc > 0) {
         fout << "c     --- Constants ---\n";
@@ -108,7 +108,7 @@ void VectorField::PrintRadau5(map<string,string> options)
         ostringstream os;
         os << left << csrc;
         os << exprname_list[i] << " = " << exprformula_list[i];
-        F77Write(fout,os.str());
+        F77Write(fout, os.str());
     }
     fout << "c     --- The vector field ---\n";
     for (int i = 0; i < nv; ++i) {
@@ -116,7 +116,7 @@ void VectorField::PrintRadau5(map<string,string> options)
         ostringstream os;
         os << left << csrc;
         os << "f_(" << (i+1) << ")" << " = " << f;
-        F77Write(fout,os.str());
+        F77Write(fout, os.str());
     }
     fout << endl;
     fout << "      return\n";
@@ -132,12 +132,12 @@ void VectorField::PrintRadau5(map<string,string> options)
     fout << "      double precision t_, y_, dfy_, rpar_\n";
     fout << "      dimension y_(" << nv << "), dfy_(ldfy_," << nv << "), rpar_(" << np << ")\n";
     if (nc > 0) {
-        F77Declare(fout,conname_list);
+        F77Declare(fout, conname_list);
     }
     if (np > 0) {
-        F77Declare(fout,parname_list);
+        F77Declare(fout, parname_list);
     }
-    F77Declare(fout,varname_list);
+    F77Declare(fout, varname_list);
     fout << endl;
     if (nc > 0) {
         fout << "c     --- Constants ---\n";
@@ -146,7 +146,7 @@ void VectorField::PrintRadau5(map<string,string> options)
         ostringstream os;
         os << left << csrc;
         os << conname_list[i] << " = " << convalue_list[i];
-        F77Write(fout,os.str());
+        F77Write(fout, os.str());
     }
     if (np > 0) {
         fout << "c     --- Parameters ---\n";
@@ -162,7 +162,7 @@ void VectorField::PrintRadau5(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << "dfy_(" << i+1 << ", " << j+1 << ") = " << f.diff(v);
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
     }
     fout << endl;
@@ -202,7 +202,7 @@ void VectorField::PrintRadau5(map<string,string> options)
         fout << "c Fortran 77 program that uses RADAU5 to solve the differential equations\n";
         fout << "c defined in the vector field '" << Name() << "'\n";
         fout << "c\n";
-        PrintVFGENComment(fout,"c ");
+        PrintVFGENComment(fout, "c ");
         fout << "c\n";
         fout << "      program " << Name() << endl;
         fout << "      implicit none\n";
@@ -217,7 +217,7 @@ void VectorField::PrintRadau5(map<string,string> options)
         fout << "      double precision t_, tstop_\n";
         fout << "      double precision atol_, rtol_, h_\n";
         if (nc > 0) {
-            F77Declare(fout,conname_list);
+            F77Declare(fout, conname_list);
         }
         if (np > 0) {
             F77Declare(fout,parname_list);
@@ -248,7 +248,7 @@ void VectorField::PrintRadau5(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << conname_list[i] << " = " << convalue_list[i];
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
         if (np > 0) {
             fout << "c     --- Parameters ---\n";
@@ -257,7 +257,7 @@ void VectorField::PrintRadau5(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << parname_list[i] << " = " << pardefval_list[i];
-            F77Write(fout,os.str()); 
+            F77Write(fout, os.str()); 
         }
         for (int i = 0; i < np; ++i) {
             fout << "      rpar_(" << i+1 << ") = " << parname_list[i] << endl;
@@ -267,7 +267,7 @@ void VectorField::PrintRadau5(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << varname_list[i] << " = " << vardefic_list[i];
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
         for (int i = 0; i < nv; ++i) {
             fout << "      y_(" << i+1 << ") = " << varname_list[i] << endl;

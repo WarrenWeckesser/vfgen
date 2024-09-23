@@ -60,7 +60,7 @@ static void jac_header_comment(ofstream& fout, string name, string indvar)
 //    Generate code for the 'ode' function of the 'deSolve' package.
 //
 
-void VectorField::PrintRode(map<string,string> options)
+void VectorField::PrintRode(map<string, string> options)
 {
     symbol t(IndependentVariable);
     int nc, np, nv, na, nf;
@@ -74,7 +74,7 @@ void VectorField::PrintRode(map<string,string> options)
     //
     // The file name is the vector field name with the extension ".R"
     //
-    string vf_filename = Name()+".R";
+    string vf_filename = Name() + ".R";
     ofstream fout;
     fout.open(vf_filename.c_str());
     fout << left;
@@ -126,7 +126,7 @@ void VectorField::PrintRode(map<string,string> options)
     GetFromVector(fout,"    ",parname_list, "<-", "parameters", "[]", 1, "");
     fout << "    jac_ = matrix(nrow = " << nv << ", ncol = " << nv << ")" << endl;
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
@@ -198,7 +198,7 @@ void VectorField::PrintRode(map<string,string> options)
         //
         //  Create a demonstration script.
         //
-        string script_filename = Name()+"_demo.R";
+        string script_filename = Name() + "_demo.R";
         fout.open(script_filename.c_str());
         fout << left;
 
@@ -208,7 +208,7 @@ void VectorField::PrintRode(map<string,string> options)
         fout << "# R demonstration script that uses the vector field" << endl;
         fout << "# defined in " << vf_filename << endl;
         fout << "#" << endl;
-        PrintVFGENComment(fout,"# ");
+        PrintVFGENComment(fout, "# ");
         fout << "#" << endl;
         fout << endl;
         fout << "library(deSolve)" << endl;
@@ -275,7 +275,7 @@ void VectorField::convert_delay_to_lagvalue(ex& f, lst &lags)
 {
     symbol t(IndependentVariable);
     exset dlist;
-    f.find(delay(wild(1),wild(2)),dlist);
+    f.find(delay(wild(1), wild(2)), dlist);
     for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
         ex delayfunc = *iter;
         ex delayexpr = delayfunc.op(0);
@@ -312,7 +312,7 @@ static void generate_lag_assignment(ofstream& fout, const lst& lag,
 //     Generate code for use with the 'dede' function of the deSolve package.
 //
 
-void VectorField::PrintRdede(map<string,string> options)
+void VectorField::PrintRdede(map<string, string> options)
 {
     symbol t(IndependentVariable);
     int nc, np, nv, na, nf;
@@ -356,7 +356,7 @@ void VectorField::PrintRdede(map<string,string> options)
     //
     // The file name is the vector field name with the extension ".R"
     //
-    string vf_filename = Name()+".R";
+    string vf_filename = Name() + ".R";
     ofstream fout;
     fout.open(vf_filename.c_str());
     fout << left;
@@ -485,7 +485,7 @@ void VectorField::PrintRdede(map<string,string> options)
         //
         //  Create a demonstration script.
         //
-        string script_filename = Name()+"_demo.R";
+        string script_filename = Name() + "_demo.R";
         fout.open(script_filename.c_str());
         fout << left;
 
@@ -495,7 +495,7 @@ void VectorField::PrintRdede(map<string,string> options)
         fout << "# R demonstration script that uses the vector field" << endl;
         fout << "# defined in " << vf_filename << endl;
         fout << "#" << endl;
-        PrintVFGENComment(fout,"# ");
+        PrintVFGENComment(fout, "# ");
         fout << "#" << endl;
         fout << endl;
         fout << "library(deSolve)" << endl;

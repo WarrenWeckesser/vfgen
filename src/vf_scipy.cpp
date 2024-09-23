@@ -33,7 +33,7 @@
 using namespace std;
 using namespace GiNaC;
 
-static void PrintArgDescription(ofstream &fout,lst varname_list, lst parname_list,
+static void PrintArgDescription(ofstream &fout, lst varname_list, lst parname_list,
                                 bool tfirst)
 {
     fout << "    Arguments:\n";
@@ -59,7 +59,7 @@ static void PrintArgDescription(ofstream &fout,lst varname_list, lst parname_lis
 // PrintSciPy -- The SciPy Code Generator.
 //
 
-void VectorField::PrintSciPy(map<string,string> options)
+void VectorField::PrintSciPy(map<string, string> options)
 {
     int nv, np, na, nf;
 
@@ -116,7 +116,7 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << endl;
     if (np > 0) {
         fout << "    params = [";
-        PrintNameList(fout,parname_list);
+        PrintNameList(fout, parname_list);
         fout << "]   # Assume the parameters have been set elsewhere\n";
     }
     fout << "    t = [i/10.0 for i in range(0, 101)]\n";
@@ -134,7 +134,7 @@ void VectorField::PrintSciPy(map<string,string> options)
     }
     fout << " Dfun=" << Name() << ".jacobian)\n";
     fout << endl;
-    PrintVFGENComment(fout,"");
+    PrintVFGENComment(fout, "");
     fout << endl;
     fout << "\"\"\"\n";
     fout << endl;
@@ -217,7 +217,7 @@ void VectorField::PrintSciPy(map<string,string> options)
     fout << "    # Create the Jacobian matrix:" << endl; 
     fout << "    jac_ = np.zeros((" << nv << ", " << nv << "))" << endl;
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
@@ -281,7 +281,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         //  on the command line.
         //
 
-        string tfilename = Name()+"_demo.py";
+        string tfilename = Name() + "_demo.py";
         ofstream tout;
         tout.open(tfilename.c_str());
         tout << csrc << left;
@@ -293,7 +293,7 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "#" << endl;
         tout << "# This script uses the scipy odeint function to solve the differential equations." << endl;
         tout << "#" << endl;
-        PrintVFGENComment(tout,"# ");
+        PrintVFGENComment(tout, "# ");
         tout << "#\n" ;
         tout << endl;
         tout << "import sys" << endl;
@@ -360,9 +360,9 @@ void VectorField::PrintSciPy(map<string,string> options)
         tout << "relerr = 1.0e-6\n";
         tout << "stoptime = 10.0\n";
         tout << "numpoints = 250\n";
-        MakePythonListOfStrings(tout,"varnames_",varname_list,"");
+        MakePythonListOfStrings(tout, "varnames_", varname_list, "");
         if (np > 0) {
-            MakePythonListOfStrings(tout,"parnames_",parname_list,"");
+            MakePythonListOfStrings(tout, "parnames_", parname_list, "");
         }
         tout << endl;
         tout << "# Create a dict of all the options that can be given on the command line.\n";
