@@ -410,13 +410,6 @@ constexpr char help_octave[] =
 "    If the option func=yes is given, the file [name].m will define a\n"
 "    function for each user function given in the vector field file.\n";
 
-constexpr char help_pddecont[] =
-"use: vfgen pddecont vector_field_file.vf\n\n"
-"This command creates the file sys-[name].cpp to be used with the PDDE-CONT\n"
-"software package.  PDDE-CONT does continuation and bifurcation computations\n"
-"for delay differential equations.\n\n"
-"Options: none.\n";
-
 constexpr char help_pydstool[] =
 "use: vfgen pydstool vector_field_file.vf\n"
 "     vfgen pydstool:demo=yes vector_field_file.vf\n\n"

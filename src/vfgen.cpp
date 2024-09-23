@@ -146,9 +146,6 @@ map<string, command_info> commands = {
     {"octave",
         {{"demo", "func", "parstyle"},
          help_octave}},
-    {"pddecont",
-        {{},
-         help_pddecont}},
     {"pydstool",
         {{"demo"},
          help_pydstool}},
@@ -391,14 +388,6 @@ int main(int argc, char **argv)
         }
         else {
             cerr << "This system is not a delay equation.\n";
-        }
-    }
-    else if (commandstr == "pddecont") {
-        if (vf.HasNonconstantDelay) {
-            cerr << "This system has nonconstant delays. PDDE-CONT is for systems with constant delays.\n";
-        }
-        else {
-            vf.PrintPDDECONT(/* options */);
         }
     }
     else if (commandstr == "dde_solver") {

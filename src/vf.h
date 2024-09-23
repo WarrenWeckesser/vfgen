@@ -294,12 +294,6 @@ class VectorField : public Symbol
     void DDEBT_PrintXandParJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void DDEBT_PrintHessiansTimesV(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void PrintDDEBIFTOOL(std::map<std::string,std::string> options);
-
-    void PDDEC_PrintParDerivs(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
-    void PDDEC_PrintJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
-    void PDDEC_PrintXandParJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
-    void PDDEC_PrintHessiansTimesV(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
-    void PrintPDDECONT(/* std::map<std::string,std::string> options */);
 };
 
 #endif
