@@ -61,7 +61,7 @@ using namespace GiNaC;
 // PrintBoostOdeint -- The Boost Odeint Code Generator.
 //
 
-void VectorField::PrintBoostOdeint(map<string,string> options)
+void VectorField::PrintBoostOdeint(map<string, string> options)
 {
     int np, nv, na, nf;
 
@@ -70,12 +70,12 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     na = exprname_list.nops();
     nf = funcname_list.nops();
 
-    string filename = Name()+"_vf.cpp";
+    string filename = Name() + "_vf.cpp";
     ofstream fout;
     fout.open(filename.c_str());
     fout << csrc << left;
 
-    string pfilename = Name()+"_vf.h";
+    string pfilename = Name() + "_vf.h";
     ofstream pout;
     pout.open(pfilename.c_str());
     pout << csrc << left;
@@ -191,7 +191,7 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     pout << "//" << endl;
     pout << "//  Header file for the vector field " << Name() << endl;
     pout << "//" << endl;
-    PrintVFGENComment(pout,"//  ");
+    PrintVFGENComment(pout, "//  ");
     pout << "//" << endl;
     pout << endl;
 
@@ -249,7 +249,7 @@ void VectorField::PrintBoostOdeint(map<string,string> options)
     pout.close();
 
     if (options["demo"] == "yes") {
-        string tfilename = Name()+"_demo.cpp";
+        string tfilename = Name() + "_demo.cpp";
         ofstream tout;
         tout.open(tfilename.c_str());
         tout << "#include <iostream>" << endl;
