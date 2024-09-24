@@ -386,6 +386,11 @@ void VectorField::PrintLSODA(map<string, string> options)
         fout << "c     jt_ = 21 for LSODE, stiff (BDF) method\n";
         fout << "c     See the documentation in the Fortran file for more details.\n";
         fout << "      jt_ = 1\n";
+        fout << "\n";
+        fout << "      write(6, 30)\n";
+        fout << "30    format(1X, \"" << IndependentVariable << ", ";
+        PrintList(fout, varname_list);
+        fout << "\")\n";
         fout << "c     --- Print the first point ---\n";
         fout << "      write (6,49) t_, (y_(j_), j_ = 1," << nv << ")\n";
         fout << "c     --- Call DLSODA in a loop to compute the solution ---\n";
@@ -397,7 +402,7 @@ void VectorField::PrintLSODA(map<string, string> options)
         fout << "     &           " << Name() << "_jac, jt_)\n";
         fout << "          if (istate_ .lt. 0) goto 80\n";
         fout << "40        write (6,49) t_, (y_(j_), j_ = 1," << nv << ")\n";
-        fout << "49        format(1X,F10.6," << nv << "E18.10)\n";
+        fout << "49        format(1X, F10.6, " << nv << "(\", \", E18.10))\n";
         fout << "      stop\n";
         fout << "80    write (6,89) istate_\n";
         fout << "89    format(1X,\"Error: istate=\",I3)\n";
