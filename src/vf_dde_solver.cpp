@@ -5,7 +5,7 @@
 //  This file defines the VectorField::PrintDDE_SOLVER method.
 //
 //
-//  Copyright (C) 2008 Warren Weckesser
+//  Copyright (C) 2008-2024 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License, Version 2, as
@@ -63,14 +63,14 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     //
     //  Create the vector field function.
     //
-    string vf_filename = Name()+".f90";
+    string vf_filename = Name() + ".f90";
     ofstream fout;
     fout.open(vf_filename.c_str());
     fout << left;
     fout << csrc;
     // Also override the csrc style for powers.
     // IMPORTANT: This means we can NOT subsequently print C/C++ code!
-    set_print_func<power,print_csrc>(print_power_as_fortran);
+    set_print_func<power, print_csrc>(print_power_as_fortran);
 
     fout << "!" << endl;
     fout << "! " << vf_filename << endl;
@@ -78,7 +78,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     fout << "! Vector field function for: " << Name() << endl;
     fout << "! These functions are to be used with DDE_SOLVER_M.\n";
     fout << "!" << endl;
-    PrintVFGENComment(fout,"! ");
+    PrintVFGENComment(fout, "! ");
     fout << "!" << endl;
     fout << "!" << endl;
     // Include a list of the lags in the comments.
@@ -168,7 +168,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     }
     for (int i = 0; i < na; ++i) {
         ex f = exprformula_list[i];
-        if (f.has(delay(wild(1),wild(2)))) {
+        if (f.has(delay(wild(1), wild(2)))) {
             ConvertDelaysToZlags(f, 1, 1);
         }
         ostringstream os;
@@ -182,7 +182,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
     fout << "    ! The vector field\n";
     for (int i = 0; i < nv; ++i) {
         ex f = varvecfield_list[i];
-        if (f.has(delay(wild(1),wild(2)))) {
+        if (f.has(delay(wild(1), wild(2)))) {
             ConvertDelaysToZlags(f, 1, 1);
         }
         ostringstream os;
@@ -263,7 +263,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         }
         for (int i = 0; i < na; ++i) {
             ex f = exprformula_list[i];
-            if (!f.has(delay(wild(1),wild(2)))) {
+            if (!f.has(delay(wild(1), wild(2)))) {
                 ostringstream os;
                 os << left << csrc;
                 os << "    " << exprname_list[i] << " = " << f << endl;
@@ -298,7 +298,7 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "! Fortran 90 program that will use DDE_SOLVER_M to solve the DDEs defined\n";
         fout << "! in the vector field: " << Name() << endl;
         fout << "!" << endl;
-        PrintVFGENComment(fout,"! ");
+        PrintVFGENComment(fout, "! ");
         fout << "!" << endl;
         fout << "!" << endl;
         fout << endl;
