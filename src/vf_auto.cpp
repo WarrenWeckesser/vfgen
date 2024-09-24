@@ -39,7 +39,7 @@ using namespace GiNaC;
 // PrintAUTO -- The AUTO Code Generator.
 //
 
-void VectorField::PrintAUTO(map<string,string> options)
+void VectorField::PrintAUTO(map<string, string> options)
 {
     int nc, nv, np, na;
 
@@ -52,18 +52,18 @@ void VectorField::PrintAUTO(map<string,string> options)
         //
         // Generate FORTRAN code.
         //
-        string filename = Name()+"_avf.f";
+        string filename = Name() + "_avf.f";
         ofstream fout;
         fout.open(filename.c_str());
         fout << csrc << left;
         // Also override the csrc style for powers.
         // IMPORTANT: This means we can NOT subsequently print C/C++ code!
-        set_print_func<power,print_csrc>(print_power_as_fortran);
+        set_print_func<power, print_csrc>(print_power_as_fortran);
 
         fout << "c\n";
         fout << "c  AUTO FORTRAN file for the vector field named: " << Name() << endl;
         fout << "c\n";
-        PrintVFGENComment(fout,"c  ");
+        PrintVFGENComment(fout, "c  ");
         fout << "c\n";
         fout << "      subroutine func(n_,u_,icp_,par_,ijac_,F_,DFDU_,DFDP_)\n"; 
         fout << "      implicit none\n";
@@ -73,15 +73,15 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "      dimension par_(" << np << ")\n";
         fout << "      dimension DFDU_(" << nv << "," << nv << "), DFDP_(" << nv << "," << np << ")\n";
         if (nc > 0) {
-            F77Declare(fout,conname_list);
+            F77Declare(fout, conname_list);
         }
         if (np > 0) {
-            F77Declare(fout,parname_list);
+            F77Declare(fout, parname_list);
         }
         if (na > 0) {
-            F77Declare(fout,exprname_list);
+            F77Declare(fout, exprname_list);
         }
-        F77Declare(fout,varname_list);
+        F77Declare(fout, varname_list);
         fout << endl;
         if (nc > 0) {
             fout << "c     --- Constants ---\n";
@@ -105,7 +105,7 @@ void VectorField::PrintAUTO(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << exprname_list[i] << " = " << exprformula_list[i];
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
         fout << endl;
         fout << "c     --- The vector field ---\n";
@@ -114,21 +114,21 @@ void VectorField::PrintAUTO(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << "f_(" << (i+1) << ")" << " = " << f;
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
         fout << endl;
         fout << "      if (ijac_ .eq. 0) return\n";
         fout << endl;
         fout << "c     --- Jacobian ---\n";
         for (int i = 0; i < nv; ++i) {
-            ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+            ex f = iterated_subs(varvecfield_list[i], expreqn_list);
             for (int j = 0; j < nv; ++j) {
                 symbol v = ex_to<symbol>(varname_list[j]);
                 ostringstream os;
                 os << left << csrc;
                 ex df = f.diff(v);
                 os << "DFDU_(" << i+1 << ", " << j+1 << ") = " << df;
-                F77Write(fout,os.str());
+                F77Write(fout, os.str());
             }
         }
         fout << endl;
@@ -136,14 +136,14 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << endl;
         fout << "c     --- Derivatives with respect to the parameters ---\n";
         for (int i = 0; i < nv; ++i) {
-            ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+            ex f = iterated_subs(varvecfield_list[i], expreqn_list);
             for (int j = 0; j < np; ++j) {
                 symbol p = ex_to<symbol>(parname_list[j]);
                 ostringstream os;
                 os << left << csrc;
                 ex df = f.diff(p);
                 os << "DFDP_(" << i+1 << ", " << j+1 << ") = " << df;
-                F77Write(fout,os.str());
+                F77Write(fout, os.str());
             }
         }
         fout << endl;
@@ -157,15 +157,15 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "      dimension u_(" << nv << "), par_(" << np << ")\n";
 
         if (nc > 0) {
-            F77Declare(fout,conname_list);
+            F77Declare(fout, conname_list);
         }
         if (np > 0) {
-            F77Declare(fout,parname_list);
+            F77Declare(fout, parname_list);
         }
         if (na > 0) {
-            F77Declare(fout,exprname_list);
+            F77Declare(fout, exprname_list);
         }
-        F77Declare(fout,varname_list);
+        F77Declare(fout, varname_list);
         if (HasPi) {
             fout << "      double precision Pi\n";
             fout << "      Pi = ";
@@ -189,7 +189,7 @@ void VectorField::PrintAUTO(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << exprname_list[i] << " = " << exprformula_list[i];
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
         */
         fout << endl;
@@ -198,14 +198,14 @@ void VectorField::PrintAUTO(map<string,string> options)
             ostringstream os;
             os << left << csrc;
             os << parname_list[i] << " = " << pardefval_list[i];
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
         fout << "c\n";
         for (int i = 0; i < nv; ++i) {
             ostringstream os;
             os << left << csrc;
             os << varname_list[i] << " = " << vardefic_list[i];
-            F77Write(fout,os.str());
+            F77Write(fout, os.str());
         }
         fout << endl;
         for (int i = 0; i < np; ++i) {
@@ -242,7 +242,7 @@ void VectorField::PrintAUTO(map<string,string> options)
         //
         // Generate C code.
         //
-        string filename = Name()+"_avf.c";
+        string filename = Name() + "_avf.c";
         ofstream fout;
         fout.open(filename.c_str());
         fout << csrc << left;
@@ -255,7 +255,7 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << " *" << endl;
         fout << " *  AUTO C file for the vector field named: " << Name() << endl;
         fout << " *" << endl;
-        PrintVFGENComment(fout," *  ");
+        PrintVFGENComment(fout, " *  ");
         fout << " */" << endl;
         fout << endl;
         fout << "#include <math.h>\n";
@@ -279,9 +279,9 @@ void VectorField::PrintAUTO(map<string,string> options)
         for (int i = 0; i < nc; ++i) {
             fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-        CDeclare_double(fout,varname_list);
-        CDeclare_double(fout,parname_list);
-        CDeclare_double(fout,exprname_list);
+        CDeclare_double(fout, varname_list);
+        CDeclare_double(fout, parname_list);
+        CDeclare_double(fout, exprname_list);
         fout << endl;
         fout << "    dfdu__dim1 = ndim_;" << endl;
         fout << "    dfdp__dim1 = ndim_;" << endl;
@@ -314,7 +314,7 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "     */" << endl;
         fout << endl;
         for (int i = 0; i < nv; ++i) {
-            ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+            ex f = iterated_subs(varvecfield_list[i], expreqn_list);
             for (int j = 0; j < nv; ++j) {
                 symbol v = ex_to<symbol>(varname_list[j]);
 
@@ -334,7 +334,7 @@ void VectorField::PrintAUTO(map<string,string> options)
         fout << "     */" << endl;
         fout << endl;
         for (int i = 0; i < nv; ++i) {
-            ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+            ex f = iterated_subs(varvecfield_list[i], expreqn_list);
             for (int j = 0; j < np; ++j) {
                 symbol p = ex_to<symbol>(parname_list[j]);
                 fout << "    ARRAY2D(dfdp_," << i << "," << j << ") = " << f.diff(p) << ";" << endl;
@@ -356,8 +356,8 @@ void VectorField::PrintAUTO(map<string,string> options)
         for (int i = 0; i < nc; ++i) {
             fout << "    const double " << conname_list[i] << " = " << convalue_list[i] << ";" << endl;
         }
-        CDeclare_double(fout,varname_list);
-        CDeclare_double(fout,parname_list);
+        CDeclare_double(fout, varname_list);
+        CDeclare_double(fout, parname_list);
         fout << endl;
         fout << "    /* Change the parameter values and the starting point to correct values! */" << endl;
         fout << endl;
