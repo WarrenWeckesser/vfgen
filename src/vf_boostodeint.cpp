@@ -252,6 +252,15 @@ void VectorField::PrintBoostOdeint(map<string, string> options)
         string tfilename = Name() + "_demo.cpp";
         ofstream tout;
         tout.open(tfilename.c_str());
+        tout << "//" << endl;
+        tout << "//  " << tfilename << endl;
+        tout << "//" << endl;
+        tout << "//  Demo program file for the vector field " << Name() << endl;
+        tout << "//  for the boost/odeint library." << endl;
+        tout << "//" << endl;
+        PrintVFGENComment(tout, "//  ");
+        tout << "//" << endl;
+        tout << endl;
         tout << "#include <iostream>" << endl;
         tout << "#include <vector>" << endl;
         tout << "#include <cmath>" << endl;
@@ -269,7 +278,7 @@ void VectorField::PrintBoostOdeint(map<string, string> options)
         tout << "{" << endl;
         tout << "    cout << t;" << endl;
         tout << "    for (auto v : y) {" << endl;
-        tout << "        cout << \" \" << v;" << endl;
+        tout << "        cout << \", \" << v;" << endl;
         tout << "    }" << endl;
         tout << "    cout << endl;" << endl;
         tout << "}" << endl;
@@ -302,6 +311,9 @@ void VectorField::PrintBoostOdeint(map<string, string> options)
         PrintList(tout, pardefval_list);
         tout << ");" << endl;
 
+        tout << "    cout << \"" << IndependentVariable << ", ";
+        PrintNameList(tout, varname_list);
+        tout << "\" << endl;" << endl;
         if (options["system"] == "implicit") {
             tout << "    integrate_const(make_dense_output<rosenbrock4<double>>(1e-9, 1e-9), ";
         }
