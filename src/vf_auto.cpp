@@ -72,15 +72,9 @@ void VectorField::PrintAUTO(map<string, string> options)
         fout << "      dimension u_(" << nv << "), F_(" << nv << ")\n";
         fout << "      dimension par_(" << np << ")\n";
         fout << "      dimension DFDU_(" << nv << "," << nv << "), DFDP_(" << nv << "," << np << ")\n";
-        if (nc > 0) {
-            F77Declare(fout, conname_list);
-        }
-        if (np > 0) {
-            F77Declare(fout, parname_list);
-        }
-        if (na > 0) {
-            F77Declare(fout, exprname_list);
-        }
+        F77Declare(fout, conname_list);
+        F77Declare(fout, parname_list);
+        F77Declare(fout, exprname_list);
         F77Declare(fout, varname_list);
         fout << endl;
         if (nc > 0) {
@@ -156,15 +150,9 @@ void VectorField::PrintAUTO(map<string, string> options)
         fout << "      double precision u_, par_\n";
         fout << "      dimension u_(" << nv << "), par_(" << np << ")\n";
 
-        if (nc > 0) {
-            F77Declare(fout, conname_list);
-        }
-        if (np > 0) {
-            F77Declare(fout, parname_list);
-        }
-        if (na > 0) {
-            F77Declare(fout, exprname_list);
-        }
+        F77Declare(fout, conname_list);
+        F77Declare(fout, parname_list);
+        F77Declare(fout, exprname_list);
         F77Declare(fout, varname_list);
         if (HasPi) {
             fout << "      double precision Pi\n";

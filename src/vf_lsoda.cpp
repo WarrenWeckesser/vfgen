@@ -84,15 +84,9 @@ void VectorField::PrintLSODA(map<string, string> options)
         fout << "      dimension rpar_(" << np << ")\n";
         fout << "      common /" << Name() << "_parameters/ rpar_\n";
     }
-    if (nc > 0) {
-        F77Declare(fout, conname_list);
-    }
-    if (np > 0) {
-        F77Declare(fout, parname_list);
-    }
-    if (na > 0) {
-        F77Declare(fout, exprname_list);
-    }
+    F77Declare(fout, conname_list);
+    F77Declare(fout, parname_list);
+    F77Declare(fout, exprname_list);
     F77Declare(fout, varname_list);
     if (HasPi) {
         fout << "      double precision Pi\n";
@@ -160,12 +154,8 @@ void VectorField::PrintLSODA(map<string, string> options)
         fout << "      dimension rpar_(" << np << ")\n";
         fout << "      common /" << Name() << "_parameters/ rpar_\n";
     }
-    if (nc > 0) {
-        F77Declare(fout, conname_list);
-    }
-    if (np > 0) {
-        F77Declare(fout, parname_list);
-    }
+    F77Declare(fout, conname_list);
+    F77Declare(fout, parname_list);
     F77Declare(fout, varname_list);
     if (HasPi) {
         fout << "      double precision Pi\n";
@@ -238,15 +228,9 @@ void VectorField::PrintLSODA(map<string, string> options)
             fout << "      dimension rpar_(" << np << ")\n";
             fout << "      common /" << Name() << "_parameters/ rpar_\n";
         }
-        if (nc > 0) {
-            F77Declare(fout, conname_list);
-        }
-        if (np > 0) {
-            F77Declare(fout, parname_list);
-        }
-        if (na > 0) {
-            F77Declare(fout, exprname_list);
-        }
+        F77Declare(fout, conname_list);
+        F77Declare(fout, parname_list);
+        F77Declare(fout, exprname_list);
         F77Declare(fout, varname_list);
         fout << endl;
         if (HasPi) {
@@ -336,12 +320,8 @@ void VectorField::PrintLSODA(map<string, string> options)
         }
         fout << "      integer neq_, i_, j_, nsteps_\n";
         fout << "      integer itol_, iopt_, itask_, istate_, jt_, lrw_, liw_\n";
-        if (nc > 0) {
-            F77Declare(fout, conname_list);
-        }
-        if (np > 0) {
-            F77Declare(fout, parname_list);
-        }
+        F77Declare(fout, conname_list);
+        F77Declare(fout, parname_list);
         F77Declare(fout, varname_list);
         if (HasPi) {
             fout << "      double precision Pi\n";

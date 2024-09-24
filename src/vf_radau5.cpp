@@ -75,15 +75,9 @@ void VectorField::PrintRadau5(map<string, string> options)
     fout << "      integer n_, ipar_\n";
     fout << "      double precision t_, y_, f_, rpar_\n";
     fout << "      dimension y_(" << nv << "), f_(" << nv << "), rpar_(" << np << ")\n";
-    if (nc > 0) {
-        F77Declare(fout, conname_list);
-    }
-    if (np > 0) {
-        F77Declare(fout, parname_list);
-    }
-    if (na > 0) {
-        F77Declare(fout, exprname_list);
-    }
+    F77Declare(fout, conname_list);
+    F77Declare(fout, parname_list);
+    F77Declare(fout, exprname_list);
     F77Declare(fout, varname_list);
     fout << endl;
     if (nc > 0) {
@@ -131,12 +125,8 @@ void VectorField::PrintRadau5(map<string, string> options)
     fout << "      integer n_, ldfy_, ipar_\n";
     fout << "      double precision t_, y_, dfy_, rpar_\n";
     fout << "      dimension y_(" << nv << "), dfy_(ldfy_," << nv << "), rpar_(" << np << ")\n";
-    if (nc > 0) {
-        F77Declare(fout, conname_list);
-    }
-    if (np > 0) {
-        F77Declare(fout, parname_list);
-    }
+    F77Declare(fout, conname_list);
+    F77Declare(fout, parname_list);
     F77Declare(fout, varname_list);
     fout << endl;
     if (nc > 0) {
@@ -216,12 +206,8 @@ void VectorField::PrintRadau5(map<string, string> options)
         fout << "      integer i_\n";
         fout << "      double precision t_, tstop_\n";
         fout << "      double precision atol_, rtol_, h_\n";
-        if (nc > 0) {
-            F77Declare(fout, conname_list);
-        }
-        if (np > 0) {
-            F77Declare(fout,parname_list);
-        }
+        F77Declare(fout, conname_list);
+        F77Declare(fout,parname_list);
         F77Declare(fout,varname_list);
         if (HasPi) {
             fout << "      double precision Pi\n";
