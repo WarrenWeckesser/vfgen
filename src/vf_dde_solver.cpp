@@ -392,10 +392,13 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "sol = dde_solver(NVAR, " << Name() << "_ddes, " << lags_arg <<
              ", " << Name() << "_history, tspan, options=opts)\n";
         fout << endl;
-        fout << "f = \"(E17.8\"//REPEAT(\",E17.8\",NEQN)//\")\"\n";
-        fout << "do I = 1, sol%npts\n";
-        fout << "    write(*, fmt=f) sol%t(i), (sol%y(i,j), j=1,NEQN)\n";
+        fout << "write(*,*) \"" << IndependentVariable << ", ";
+        PrintNameList(fout, varname_list);
+        fout << "\"\n";
+        fout << "do i = 1, sol%npts\n";
+        fout << "    write (*, 99) sol%t(i), (sol%y(i,j), j = 1, 1)\n";
         fout << "end do\n";
+        fout << "99  format(1x, *(g0,:,\", \"))\n";
         fout << endl;
         fout << "call release_arrays(sol, opts)\n";
         fout << endl;
