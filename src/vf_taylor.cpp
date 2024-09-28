@@ -287,6 +287,47 @@ void VectorField::PrintTaylor(map<string,string> options)
     }
     fout << "}\n";
 
+    fout << "/*\n";
+    fout << " *  " << Name() << "_evaltaylor" << Order << "n" << endl;
+    fout << " *\n";
+    fout << " *  Use the Taylor method to approximate X(t+h) given X(t).\n";
+    fout << " *  This function uses a Taylor polynomial of order n.\n";
+    fout << " *  n must not be greater than " << Order << ".\n";
+    fout << " *  " << Name() << "_derivs" << Order << "(...) must be called first to fill in the array Xderiv.\n";
+    fout << " *  The function returns -1 when n is out of range.  Otherwise it returns 0.\n";
+    fout << " */\n";
+    fout << endl;
+    fout << "int " << Name() << "_evaltaylor" << Order << "n(double Xnew[], int n, double h, double X[], double Xderiv[" << Order << "][" << nv << "])\n";
+    pout << "int " << Name() << "_evaltaylor" << Order << "n(double Xnew[], int n, double h, double X[], double Xderiv[" << Order << "][" << nv << "]);\n";
+    fout << "{\n";
+    fout << "    int i;\n";
+    fout << "    double s;\n";
+    fout << endl;
+    fout << "    if (n < 0 || n > " << Order << ") {\n";
+    fout << "        return -1;\n";
+    fout << "    }\n";
+    fout << endl;
+    fout << "    /*  Xnew = X  */\n";
+    fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
+    fout << "        Xnew[i] = X[i];\n";
+    fout << "    }\n";
+    for (int k = 1; k <= Order; ++k) {
+        fout << "    if (n == " << k - 1 << ") {\n";
+        fout << "        return 0;\n";
+        fout << "    }\n";
+        if (k == 1) {
+            fout << "    s = h;\n";
+        }
+        else {
+            fout << "    s = s * h;\n";
+        }
+        fout << "    /* Add order " << k << " term to Xnew */\n";
+        fout << "    for (i = 0; i < " << nv << "; ++i) {\n";
+        fout << "        Xnew[i] += (1.0/" << factorial(k) << ")*Xderiv[" << k-1 << "][i]*s;" << endl;
+        fout << "    }\n";
+    }
+    fout << "}\n";
+
     fout.close();
     pout.close();
 }
