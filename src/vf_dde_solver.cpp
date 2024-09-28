@@ -347,6 +347,11 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
             Declare(fout, "", "double precision ::", conname_list, "");
         }
         fout << endl;
+        fout << "character(len=100) :: name_arg\n";
+        fout << "character(len=100) :: value_arg\n";
+        fout << "integer :: readstatus\n";
+        fout << "double precision :: value\n";
+        fout << endl;
 
         if (HasPi) {
             fout << "Pi = 3.1415926535897932385D0\n";
@@ -367,6 +372,50 @@ void VectorField::PrintDDE_SOLVER(map<string,string> options)
         fout << "relerr = 1D-7\n";
         fout << "abserr = 1D-9\n";
         fout << "stoptime = 10.0\n";
+        fout << endl;
+        fout << "! - - - - - - - - - - - - - - - - - - - - - - - - - - -\n";
+        fout << "! Handle command line arguments.\n";
+        fout << "! abserr, relerr, stoptime, and the parameter values\n";
+        fout << "! may be given on the command line.\n";
+        fout << "! - - - - - - - - - - - - - - - - - - - - - - - - - - -\n";
+        fout << "i = 1\n";
+        fout << "do\n";
+        fout << "    call get_command_argument(i, name_arg)\n";
+        fout << "    if (len(trim(name_arg)) == 0) then\n";
+        fout << "        exit\n";
+        fout << "    end if\n";
+        fout << "    i = i + 1\n";
+        fout << "    call get_command_argument(i, value_arg)\n";
+        fout << "    if (len(trim(value_arg)) == 0) then\n";
+        fout << "        write(*, *) \"ERROR: Missing command line value for \", name_arg\n";
+        fout << "        stop -1\n";
+        fout << "    end if\n";
+        fout << "    i = i + 1\n";
+        fout << "    read(value_arg, *, iostat=readstatus) value\n";
+        fout << "    if (readstatus .ne. 0) then\n";
+        fout << "        write(*, *) \"ERROR: Unable to read the numerical value given for parameter \", name_arg\n";
+        fout << "        write(*, *) \"       The value given was \", value_arg\n";
+        fout << "        stop -1\n";
+        fout << "    end if\n";
+        fout << "    if (name_arg .eq. \"abserr\") then\n";
+        fout << "        abserr = value\n";
+        fout << "    else if (name_arg .eq. \"relerr\") then\n";
+        fout << "        relerr = value\n";
+        fout << "    else if (name_arg .eq. \"stoptime\") then\n";
+        fout << "        stoptime = value\n";
+        for (unsigned k = 0; k < parname_list.nops(); ++k) {
+            fout << "    else if (name_arg .eq. \"" << parname_list[k] << "\") then\n";
+            fout << "        " << parname_list[k] << " = value\n";
+        }
+        fout << "    else\n";
+        fout << "        write(*, *) \"ERROR: Unknown parameter given on the command line: \", name_arg\n";
+        fout << "        stop -1\n";
+        fout << "    end if\n";
+        fout << "end do\n";
+        fout << "! - - - - - - - - - - - - - - - - - - - - - - - -\n";
+        fout << "! Finished handling command line arguments.\n";
+        fout << "! - - - - - - - - - - - - - - - - - - - - - - - -\n";
+        fout << endl;
         for (unsigned k = 0; k < parname_list.nops(); ++k) { 
             fout << "p_(" << k+1 << ") = " << parname_list[k] << "\n";
         }
