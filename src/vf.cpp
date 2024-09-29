@@ -372,7 +372,7 @@ int VectorField::AddDelay(ex &del)
 void VectorField::CheckForDelay(const ex& f)
 {
     exset occurrences;
-    if (f.find(delay(wild(1),wild(2)),occurrences)) {
+    if (f.find(delay(wild(1), wild(2)), occurrences)) {
         IsDelay = true;
         for (exset::const_iterator iter = occurrences.begin(); iter != occurrences.end(); ++iter) {
             ex del = iter->op(1);
@@ -400,7 +400,7 @@ void VectorField::CheckForDelay(const ex& f)
 void VectorField::ConvertDelaysToZlags(ex& f, int i_offset, int j_offset)
 {
     exset dlist;
-    f.find(delay(wild(1),wild(2)),dlist);
+    f.find(delay(wild(1), wild(2)), dlist);
     for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
         ex delayfunc = *iter;
         ex delayexpr = delayfunc.op(0);
@@ -426,7 +426,7 @@ void VectorField::ConvertDelaysToZlags(ex& f, int i_offset, int j_offset)
 void VectorField::ConvertStateToZlags(ex& f, int offset)
 {
     exset dlist;
-    f.find(delay(wild(1),wild(2)),dlist);
+    f.find(delay(wild(1), wild(2)), dlist);
     for (exset::const_iterator iter = dlist.begin(); iter != dlist.end(); ++iter) {
         ex delayfunc = *iter;
         ex delayexpr = delayfunc.op(0);
@@ -464,9 +464,9 @@ int VectorField::ProcessSymbols(void)
         allsymbols.append(con);
         string val = (*c)->Value();
         try {
-            ex e(val,allsymbols);
+            ex e(val, allsymbols);
             convalue_list.append(e);
-            if (has(e,Pi)) {
+            if (has(e, Pi)) {
                 HasPi = true;
             }
         }
@@ -491,9 +491,9 @@ int VectorField::ProcessSymbols(void)
             defval = "0";
         }
         try {
-            ex e(defval,allsymbols);
+            ex e(defval, allsymbols);
             pardefval_list.append(e);
-            if (has(e,Pi)) {
+            if (has(e, Pi)) {
                 HasPi = true;
             }
         }
@@ -528,9 +528,9 @@ int VectorField::ProcessSymbols(void)
             defic = "0";
         }
         try {
-            ex e(defic,allsymbols);
+            ex e(defic, allsymbols);
             vardefic_list.append(e);
-            if (has(e,Pi)) {
+            if (has(e, Pi)) {
                 HasPi = true;
             }
         }
@@ -545,9 +545,9 @@ int VectorField::ProcessSymbols(void)
                             // (And only be 0 if DefaultInitialCondition was also not given.)
         }
         try {
-            ex e(defhist,allsymbols);
+            ex e(defhist, allsymbols);
             vardefhist_list.append(e);
-            if (has(e,Pi)) {
+            if (has(e, Pi)) {
                 HasPi = true;
             }
         }
@@ -580,11 +580,11 @@ int VectorField::ProcessSymbols(void)
         exprname_list.append(auxe);
         allsymbols.append(auxe);
         try {
-            ex f((*e)->Formula(),allsymbols);
+            ex f((*e)->Formula(), allsymbols);
             exprformula_list.append(f);
             expreqn_list.append( auxe==f );
             CheckForDelay(f);
-            if (has(f,Pi)) {
+            if (has(f, Pi)) {
                 HasPi = true;
             }
         }
@@ -613,13 +613,13 @@ int VectorField::ProcessSymbols(void)
     // Process the vector field formulas
     for (sv = StateVariables.begin(); sv != StateVariables.end(); ++sv) {
         try {
-            ex f((*sv)->Formula(),allsymbols);
+            ex f((*sv)->Formula(), allsymbols);
             varvecfield_list.append(f);
             CheckForDelay(f);
-            if (has(f,Pi)) {
+            if (has(f, Pi)) {
                 HasPi = true;
             }
-            if (has(f,IndVar)) {
+            if (has(f, IndVar)) {
                 IsAutonomous = false;
             }
         }
@@ -636,9 +636,9 @@ int VectorField::ProcessSymbols(void)
         symbol funcname((*f)->Name());
         funcname_list.append(funcname);
         try {
-            ex funcexpr((*f)->Formula(),allsymbols);
+            ex funcexpr((*f)->Formula(), allsymbols);
             funcformula_list.append(funcexpr);
-            if (has(funcexpr,Pi)) {
+            if (has(funcexpr, Pi)) {
                 HasPi = true;
             }
         }
