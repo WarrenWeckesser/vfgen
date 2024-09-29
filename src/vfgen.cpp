@@ -4,7 +4,7 @@
 //  by Warren Weckesser
 //
 //
-//  Copyright (C) 2008-2022 Warren Weckesser
+//  Copyright (C) 2008-2024 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License, Version 2, as
@@ -92,9 +92,6 @@ map<string, command_info> commands = {
     {"check",
         {{},
          help_check}},
-    {"cvode",
-        {{"demo", "func", "version"},
-         help_cvode}},
     {"cvode7",
         {{"demo", "func"},
          help_cvode7}},
@@ -449,14 +446,6 @@ int main(int argc, char **argv)
     else if (commandstr == "gsl") {
         if (vf.IsDelay == false) {
             vf.PrintGSL(options);
-        }
-        else {
-            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-        }
-    }
-    else if (commandstr == "cvode") {
-        if (vf.IsDelay == false) {
-            vf.PrintCVODE(options);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";

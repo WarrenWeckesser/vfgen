@@ -49,37 +49,6 @@ constexpr char help_check[] =
 "to check for errors before using another command.\n\n"
 "Options: none.\n";
 
-constexpr char help_cvode[] =
-"use: vfgen cvode vector_field_file.vf\n"
-"     vfgen cvode:option=value,...,option=value vector_field_file.vf\n\n"
-"This command generates code to be used with the CVODE library (which is part\n"
-"of the SUNDIALS suite).\n"
-"With no options, two files are created:\n"
-"    [name]_cv.c\n"
-"    [name]_cv.h\n"
-"where [name] is the Name attribute of the VectorField entity in the vector\n"
-"field file.  The file [name]_cv.c will define the C functions [name]_vf() and\n"
-"[name]_jac().\n\n"
-"Options: (default is listed first)\n"
-"version=2.7.0|2.6.0|2.5.0|2.4.0|2.3.0\n"
-"    This option determines of version of CVODE for which code is generated.\n"
-"func=no|yes\n"
-"    By default, any user function defined in the vector field file is not\n"
-"    defined in [name]_cv.c.  If the option func=yes is given, the function\n"
-"    [name]_func() will be defined.  This function will fill in an array with\n"
-"    values that are the user defined functions.\n"
-"demo=no|yes\n"
-"    If the option demo=yes is given, two more files are created:\n"
-"        [name]_cvdemo.c\n"
-"        Makefile-[name]_cvdemo\n"
-"    where [name] is the Name attribute of the VectorField entity in the\n"
-"    vector field file.  This program provides a simple command-line solver.\n"
-"    It takes arguments in the form name=value, where name can be a state\n"
-"    variable (to give an initial condition), a parameter (to give the value\n"
-"    of a parameter), or one of abserr, relerr or stoptime, to control the ODE\n"
-"    solver.  The output of the program consists of columns of numbers; the\n"
-"    first column is the time, and the rest are the state variables.\n";
-
 constexpr char help_cvode7[] =
 "use: vfgen cvode7 vector_field_file.vf\n"
 "     vfgen cvode7:option=value,...,option=value vector_field_file.vf\n\n"
@@ -237,8 +206,8 @@ constexpr char help_help[] =
 "use: vfgen help <command>\n\n"
 "The help command will print a short description of the given <command>.\n"
 "For example,\n"
-"    vfgen help cvode\n"
-"prints a description of the cvode command.\n";
+"    vfgen help cvode7\n"
+"prints a description of the cvode7 command.\n";
 
 constexpr char help_javamath[] =
 "use: vfgen javamath vector_field_file.vf\n"

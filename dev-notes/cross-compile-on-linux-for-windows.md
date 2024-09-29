@@ -69,7 +69,7 @@ Use: vfgen command  vector-field-file.vf
 or:  vfgen command:option=value,...,option=value vector-field-file.vf
 or:  vfgen help command
 where command is one of:
-    adolc, auto, boostodeint, check, cvode, dde23, dde_solver, ddebiftool,
+    adolc, auto, boostodeint, check, dde23, dde_solver, ddebiftool,
     delay2ode, dstool, evf, gsl, help, javamath, javascript, latex,
     lsoda, matcont, matlab, octave, pddecont, pydstool, pygsl, r,
     radau5, scilab, scipy, taylor, xml, xpp
