@@ -61,12 +61,12 @@ ex delay_vars(const ex& e, const ex& lag, const lst& vars)
 //    1+ a+b*delay(x,tau)*sin(delay(y,tau)) - delay(x,2*delta)^2
 //
 ex delay_transform(const ex& f, const lst& vars) {
-    if (f.has( delay(wild(1),wild(2)) ) ) {
+    if (f.has(delay(wild(1), wild(2)))) {
         exset dlist;
-        f.find( delay(wild(1),wild(2)) , dlist);
+        f.find(delay(wild(1), wild(2)), dlist);
         ex g = f;
         for (exset::const_iterator i = dlist.begin(); i != dlist.end(); ++i) {
-            g = g.subs( *i == delay_vars(i->op(0),i->op(1),vars) );
+            g = g.subs(*i == delay_vars(i->op(0), i->op(1),vars));
         }
         return g;
     }
