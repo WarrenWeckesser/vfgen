@@ -551,11 +551,11 @@ int main(int argc, char **argv)
         }
     }
     else if (commandstr == "julia") {
-        if (vf.IsDelay == false) {
-            vf.PrintJulia(options);
+        if (vf.IsDelay) {
+            vf.PrintJuliaDelay(options);
         }
         else {
-            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
+            vf.PrintJulia(options);
         }
     }
     else {

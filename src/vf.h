@@ -266,6 +266,7 @@ class VectorField : public Symbol
 
     void PrintJuliaFuncStart(std::ofstream &fout);
     void PrintJulia(std::map<std::string,std::string> options);
+    void PrintJuliaDelay(std::map<std::string,std::string> options);
 
     void PrintMATCONT(/* std::map<std::string,std::string> options */);
     void PrintMATLAB(std::map<std::string,std::string> options);

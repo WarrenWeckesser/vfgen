@@ -11,3 +11,9 @@ vfgen julia:func=yes ../vf/linearoscp.vf
 
 echo "Running test_linearoscp.jl"
 julia test_linearoscp.jl
+
+echo "Generating from sdd.vf"
+vfgen julia ../vf/sdd.vf
+
+echo "Running test_sdd.jl"
+julia test_sdd.jl
