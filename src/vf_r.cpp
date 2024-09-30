@@ -57,6 +57,64 @@ jac_header_comment(ofstream& fout, string name, string indvar)
     return;
 }
 
+static void
+generate_demo_common(ofstream& out, string &vf_filename, bool HasPi,
+                     lst& conname_list, lst& convalue_list,
+                     lst& parname_list, lst& pardefval_list,
+                     lst& varname_list, lst& vardefic_list)
+{
+    int nc = conname_list.nops();
+    int nv = varname_list.nops();
+    int np = parname_list.nops();
+
+    out << "#" << endl;
+    PrintVFGENComment(out, "# ");
+    out << "#" << endl;
+    out << endl;
+    out << "library(deSolve)" << endl;
+    out << endl;
+    out << "# Load the vector field definition and the jacobian." << endl;
+    out << "source(\"" << vf_filename << "\")" << endl;
+    out << endl;
+    if (nc > 0) {
+        out << "# Constants.  The names of these constants can be used in the x_mdialog." << endl;
+    }
+    if (HasPi) {
+        out << "Pi = pi\n";
+    }
+    AssignNameValueLists(out, "", conname_list, "<-", convalue_list, "");
+    out << endl;
+    out << "# Default parameter values" << endl;
+    AssignNameValueLists(out, "", parname_list, "<-", pardefval_list, "");
+    out << endl;
+    if (np > 0) {
+        out << "# Parameters list\n";
+        out << "parameters = c(\n";
+        for (int i = 0; i < np; ++i) {
+            out << "    " << parname_list[i] << " = " << parname_list[i];
+            if (i < np - 1) {
+                out << ",";
+            }
+            out << "\n";
+        }
+        out << ")\n\n";
+    }
+    out << "# Initial conditions\n";
+    out << "state = c(\n";
+    for (int i = 0; i < nv; ++i) {
+        out << "    " << varname_list[i] << " = " << vardefic_list[i];
+        if (i < nv - 1) {
+            out << ",";
+        }
+        out << "\n";
+    }
+    out << ")\n";
+    out << endl;
+    out << "# Time values\n";
+    out << "times = seq(0, 10, by = 0.02)\n";
+    out << endl;
+}
+
 //
 // PrintRode -- The R Code Generator
 //    Generate code for the 'ode' function of the 'deSolve' package.
@@ -65,11 +123,9 @@ jac_header_comment(ofstream& fout, string name, string indvar)
 void VectorField::PrintRode(map<string, string> options)
 {
     symbol t(IndependentVariable);
-    int nc, np, nv, na, nf;
+    int nv, na, nf;
 
-    nc = conname_list.nops();
     nv = varname_list.nops();
-    np = parname_list.nops();
     na = exprname_list.nops();
     nf = funcname_list.nops();
 
@@ -210,55 +266,14 @@ void VectorField::PrintRode(map<string, string> options)
         fout << "# R demonstration script that uses the vector field" << endl;
         fout << "# defined in " << vf_filename << endl;
         fout << "#" << endl;
-        PrintVFGENComment(fout, "# ");
-        fout << "#" << endl;
-        fout << endl;
-        fout << "library(deSolve)" << endl;
-        fout << endl;
-        fout << "# Load the vector field definition and the jacobian." << endl;
-        fout << "source(\"" << vf_filename << "\")" << endl;
-        fout << endl;
-        if (nc > 0) {
-            fout << "# Constants.  The names of these constants can be used in the x_mdialog." << endl;
-        }
-        if (HasPi) {
-            fout << "Pi = pi\n";
-        }
-        AssignNameValueLists(fout, "", conname_list, "<-", convalue_list, "");
-        fout << endl;
-        fout << "# Default parameter values" << endl;
-        AssignNameValueLists(fout, "", parname_list, "<-", pardefval_list, "");
-        fout << endl;
-        if (np > 0) {
-            fout << "# Parameters list\n";
-            fout << "parameters = c(\n";
-            for (int i = 0; i < np; ++i) {
-                fout << "    " << parname_list[i] << " = " << parname_list[i];
-                if (i < np - 1) {
-                    fout << ",";
-                }
-                fout << "\n";
-            }
-            fout << ")\n\n";
-        }
-        fout << "# Initial conditions\n";
-        fout << "state = c(\n";
-        for (int i = 0; i < nv; ++i) {
-            fout << "    " << varname_list[i] << " = " << vardefic_list[i];
-            if (i < nv - 1) {
-                fout << ",";
-            }
-            fout << "\n";
-        }
-        fout << ")\n";
-        fout << endl;
-        fout << "# Time values\n";
-        fout << "times = seq(0, 10, by = 0.02)\n";
-        fout << endl;
+        generate_demo_common(fout, vf_filename, HasPi,
+                             conname_list, convalue_list,
+                             parname_list, pardefval_list,
+                             varname_list, vardefic_list);
         fout << "# Call the ODE solver" << endl;
         fout << "sol = ode(y = state, times = times, func = " << Name() << ", parms = parameters,\n";
         fout << "          jactype = \"fullusr\", jacfunc = " << Name() << "_jac,\n";
-        fout << "          atol = 1e-8, rtol = 1e-6)\n";
+        fout << "          atol = 1e-12, rtol = 1e-8)\n";
         fout << endl;
         fout << "# Plot the solution" << endl;
         fout << "par(mfcol = c(" << nv  << ", 1))" << endl;
@@ -320,11 +335,10 @@ static void generate_lag_assignment(ofstream& fout, const lst& lag,
 void VectorField::PrintRdede(map<string, string> options)
 {
     symbol t(IndependentVariable);
-    int nc, np, nv, na, nf;
+    int nc, nv, na, nf;
 
     nc = conname_list.nops();
     nv = varname_list.nops();
-    np = parname_list.nops();
     na = exprname_list.nops();
     nf = funcname_list.nops();
 
@@ -500,51 +514,10 @@ void VectorField::PrintRdede(map<string, string> options)
         fout << "# R demonstration script that uses the vector field" << endl;
         fout << "# defined in " << vf_filename << endl;
         fout << "#" << endl;
-        PrintVFGENComment(fout, "# ");
-        fout << "#" << endl;
-        fout << endl;
-        fout << "library(deSolve)" << endl;
-        fout << endl;
-        fout << "# Load the vector field definition." << endl;
-        fout << "source(\"" << vf_filename << "\")" << endl;
-        fout << endl;
-        if (nc > 0) {
-            fout << "# Constants.  The names of these constants can be used in the x_mdialog." << endl;
-        }
-        if (HasPi) {
-            fout << "Pi = pi\n";
-        }
-        AssignNameValueLists(fout, "", conname_list, "<-", convalue_list, "");
-        fout << endl;
-        fout << "# Default parameter values" << endl;
-        AssignNameValueLists(fout, "", parname_list, "<-", pardefval_list, "");
-        fout << endl;
-        if (np > 0) {
-            fout << "# Parameters list\n";
-            fout << "parameters = c(\n";
-            for (int i = 0; i < np; ++i) {
-                fout << "    " << parname_list[i] << " = " << parname_list[i];
-                if (i < np - 1) {
-                    fout << ",";
-                }
-                fout << "\n";
-            }
-            fout << ")\n\n";
-        }
-        fout << "# Initial conditions\n";
-        fout << "state = c(\n";
-        for (int i = 0; i < nv; ++i) {
-            fout << "    " << varname_list[i] << " = " << vardefic_list[i];
-            if (i < nv - 1) {
-                fout << ",";
-            }
-            fout << "\n";
-        }
-        fout << ")\n";
-        fout << endl;
-        fout << "# Time values\n";
-        fout << "times = seq(0, 10, by = 0.02)\n";
-        fout << endl;
+        generate_demo_common(fout, vf_filename, HasPi,
+                             conname_list, convalue_list,
+                             parname_list, pardefval_list,
+                             varname_list, vardefic_list);
         fout << "# Call the DDE solver" << endl;
         fout << "sol = dede(y = state, times = times, func = " << Name() << ", parms = parameters,\n";
         fout << "           atol = 1e-12, rtol = 1e-8)\n";
