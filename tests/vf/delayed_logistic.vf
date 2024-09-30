@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<VectorField Name="delayed_logistic">
+<Parameter Name="r" DefaultValue="1" Description="Small population growth constant" />
+<Parameter Name="K" DefaultValue="1" Description="Carrying capacity" />
+<Parameter Name="tau" DefaultValue="1" Description="Delay time" />
+<Parameter Name="x0" DefaultValue="1e-4" />
+<Expression Name="delayedx" Formula="delay(x, tau)" Description="x(t-tau)" />
+<StateVariable Name="x" Formula="r*x*(1 - delayedx/K)"
+               DefaultInitialCondition="x0" DefaultHistory="x0*exp(r*t)" />
+</VectorField>
