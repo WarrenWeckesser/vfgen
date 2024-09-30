@@ -35,7 +35,8 @@ using namespace std;
 using namespace GiNaC;
 
 
-static void vf_header_comment(ofstream& fout, string name, string indvar)
+static void
+vf_header_comment(ofstream& fout, string name, string indvar)
 {
     fout << "#" << endl;
     fout << "# " << name << "(" << indvar << ", state, parameters)" << endl;
@@ -45,7 +46,8 @@ static void vf_header_comment(ofstream& fout, string name, string indvar)
     return;
 }
 
-static void jac_header_comment(ofstream& fout, string name, string indvar)
+static void
+jac_header_comment(ofstream& fout, string name, string indvar)
 {
     fout << "#" << endl;
     fout << "# " << name << "_jac(" << indvar << ", state, parameters)" << endl;
@@ -222,13 +224,16 @@ void VectorField::PrintRode(map<string, string> options)
         if (HasPi) {
             fout << "Pi = pi\n";
         }
-        AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
+        AssignNameValueLists(fout, "", conname_list, "<-", convalue_list, "");
+        fout << endl;
+        fout << "# Default parameter values" << endl;
+        AssignNameValueLists(fout, "", parname_list, "<-", pardefval_list, "");
         fout << endl;
         if (np > 0) {
-            fout << "# --- Parameters ---\n";
+            fout << "# Parameters list\n";
             fout << "parameters = c(\n";
             for (int i = 0; i < np; ++i) {
-                fout << "    " << parname_list[i] << " = " << pardefval_list[i];
+                fout << "    " << parname_list[i] << " = " << parname_list[i];
                 if (i < np - 1) {
                     fout << ",";
                 }
@@ -236,7 +241,7 @@ void VectorField::PrintRode(map<string, string> options)
             }
             fout << ")\n\n";
         }
-        fout << "# --- Initial conditions ---\n";
+        fout << "# Initial conditions\n";
         fout << "state = c(\n";
         for (int i = 0; i < nv; ++i) {
             fout << "    " << varname_list[i] << " = " << vardefic_list[i];
@@ -245,17 +250,17 @@ void VectorField::PrintRode(map<string, string> options)
             }
             fout << "\n";
         }
-        fout << ")\n\n";
+        fout << ")\n";
         fout << endl;
-        fout << "# --- Time values ---\n";
+        fout << "# Time values\n";
         fout << "times = seq(0, 10, by = 0.02)\n";
         fout << endl;
-        fout << "# --- Call the ODE solver ---" << endl;
+        fout << "# Call the ODE solver" << endl;
         fout << "sol = ode(y = state, times = times, func = " << Name() << ", parms = parameters,\n";
         fout << "          jactype = \"fullusr\", jacfunc = " << Name() << "_jac,\n";
         fout << "          atol = 1e-8, rtol = 1e-6)\n";
         fout << endl;
-        fout << "# --- Plot the solution ---" << endl;
+        fout << "# Plot the solution" << endl;
         fout << "par(mfcol = c(" << nv  << ", 1))" << endl;
         fout << "t <- sol[, \"time\"]" << endl;
         for (int i = 0; i < nv; ++i) {
@@ -509,13 +514,16 @@ void VectorField::PrintRdede(map<string, string> options)
         if (HasPi) {
             fout << "Pi = pi\n";
         }
-        AssignNameValueLists(fout, "    ", conname_list, "<-", convalue_list, "");
+        AssignNameValueLists(fout, "", conname_list, "<-", convalue_list, "");
+        fout << endl;
+        fout << "# Default parameter values" << endl;
+        AssignNameValueLists(fout, "", parname_list, "<-", pardefval_list, "");
         fout << endl;
         if (np > 0) {
-            fout << "# --- Parameters ---\n";
+            fout << "# Parameters list\n";
             fout << "parameters = c(\n";
             for (int i = 0; i < np; ++i) {
-                fout << "    " << parname_list[i] << " = " << pardefval_list[i];
+                fout << "    " << parname_list[i] << " = " << parname_list[i];
                 if (i < np - 1) {
                     fout << ",";
                 }
@@ -523,7 +531,7 @@ void VectorField::PrintRdede(map<string, string> options)
             }
             fout << ")\n\n";
         }
-        fout << "# --- Initial conditions ---\n";
+        fout << "# Initial conditions\n";
         fout << "state = c(\n";
         for (int i = 0; i < nv; ++i) {
             fout << "    " << varname_list[i] << " = " << vardefic_list[i];
@@ -534,13 +542,14 @@ void VectorField::PrintRdede(map<string, string> options)
         }
         fout << ")\n";
         fout << endl;
-        fout << "# --- Time values ---\n";
+        fout << "# Time values\n";
         fout << "times = seq(0, 10, by = 0.02)\n";
         fout << endl;
-        fout << "# --- Call the DDE solver ---" << endl;
-        fout << "sol = dede(y = state, times = times, func = " << Name() << ", parms = parameters)\n";
+        fout << "# Call the DDE solver" << endl;
+        fout << "sol = dede(y = state, times = times, func = " << Name() << ", parms = parameters,\n";
+        fout << "           atol = 1e-12, rtol = 1e-8)\n";
         fout << endl;
-        fout << "# --- Plot the solution ---" << endl;
+        fout << "# Plot the solution" << endl;
         fout << "par(mfcol = c(" << nv  << ", 1))" << endl;
         fout << "t <- sol[, \"time\"]" << endl;
         for (int i = 0; i < nv; ++i) {
