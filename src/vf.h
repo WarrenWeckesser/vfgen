@@ -259,7 +259,6 @@ class VectorField : public Symbol
     void PrintScilab(std::map<std::string,std::string> options);
     void PrintADOLC(/* std::map<std::string,std::string> options */);
     void PrintAUTO(std::map<std::string,std::string> options);
-    void PrintDSTool(void);
     void PrintEVF(std::map<std::string,std::string> options);
     void PrintJavaMath(std::map<std::string,std::string> options);
     void PrintJavascript(std::map<std::string,std::string> options);

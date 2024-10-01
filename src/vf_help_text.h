@@ -147,12 +147,6 @@ constexpr char help_delay2ode[] =
 "    The number of fractional delay steps into which each delay is split.\n"
 "    The default is N=10.\n";
 
-constexpr char help_dstool[] =
-"use: vfgen dstool vector_field_file.vf\n\n"
-"This command creates a C definition file for the vector field to be used\n"
-"with DSTOOL. The name of the file is [name]_def.c.\n\n"
-"Options: none.\n";
-
 constexpr char help_evf[] =
 "use: vfgen evf vector_field_file.vf\n\n"
 "This command generates a new vector field file, in which the original vector\n"

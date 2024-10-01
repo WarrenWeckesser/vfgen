@@ -107,9 +107,6 @@ map<string, command_info> commands = {
     {"delay2ode",
         {{"N", "p"},
          help_delay2ode}},
-    {"dstool",
-        {{},
-         help_dstool}},
     {"evf",
         {{"par"},
          help_evf}},
@@ -422,14 +419,6 @@ int main(int argc, char **argv)
     else if (commandstr == "matcont") {
         if (vf.IsDelay == false) {
             vf.PrintMATCONT(/* options */);
-        }
-        else {
-            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-        }
-    }
-    else if (commandstr == "dstool") {
-        if (vf.IsDelay == false) {
-            vf.PrintDSTool();
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
