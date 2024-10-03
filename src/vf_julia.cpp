@@ -45,12 +45,33 @@ generate_solver_struct(ofstream& out)
 }
 
 static void
-generate_solver_options(ofstream& out)
+generate_parameter_struct(ofstream& out, lst& parname_list)
 {
-    out << "function get_solver_options()\n";
+    out << "struct Parameters\n";
+    for (auto& name: parname_list) {
+        out << "    " << name << "::Float64\n";
+    }
+    out << "end\n";
+}
+
+static void
+generate_command_line_options(ofstream& out,
+                              lst& conname_list, lst& convalue_list,
+                              lst& parname_list, lst& pardefval_list)
+{
+    out << "function get_command_line_options()\n";
     out << "    abstol = 1e-12\n";
     out << "    reltol = 1e-8\n";
     out << "    stoptime = 10.0\n";
+    AssignNameValueLists(out, "    ", conname_list, "=", convalue_list, "");
+    out << "    par = Dict(";
+    for (size_t k = 0; k < parname_list.nops(); ++k) {
+        if (k > 0) {
+            out << ",\n               ";
+        }
+        out << "\"" << parname_list[k] << "\"=>" << pardefval_list[k];
+    }
+    out << ")\n";
     out << "    for arg in ARGS\n";
     out << "        fields = split(arg, \"=\")\n";
     out << "        if length(fields) == 1\n";
@@ -68,12 +89,23 @@ generate_solver_options(ofstream& out)
     out << "            reltol = parse(Float64, value)\n";
     out << "        elseif name == \"stoptime\"\n";
     out << "            stoptime = parse(Float64, value)\n";
+    out << "        elseif name in keys(par)\n";
+    out << "            par[name] = parse(Float64, value)\n";
     out << "        else\n";
-    out << "            println(\"Bad argument '\", arg, \"'; only 'abstol', 'reltol' and 'stoptime' are handled.\")\n";
+    out << "            println(\"Unknown command line option '\", arg, \"'\")\n";
     out << "            exit()\n";
     out << "        end\n";
     out << "    end\n";
-    out << "    Solver(abstol, reltol, stoptime)\n";
+    out << "    sol_opts = Solver(abstol, reltol, stoptime)\n";
+    out << "    par_opts = Parameters(";
+    for (size_t k = 0; k < parname_list.nops(); ++k) {
+        if (k > 0) {
+            out << ", ";
+        }
+        out << "par[\"" << parname_list[k] << "\"]";
+    }
+    out << ")\n";
+    out << "    (sol_opts, par_opts)\n";
     out << "end\n";
     out << endl;
 }
@@ -278,35 +310,44 @@ void VectorField::PrintJulia(map<string,string> options)
         tout << endl;
         tout << "include(\"" << Name() << ".jl\")" << endl;
         tout << endl << endl;
+        generate_parameter_struct(tout, parname_list);
+        tout << endl;
         generate_solver_struct(tout);
         tout << endl;
-        generate_solver_options(tout);
+        generate_command_line_options(tout, conname_list, convalue_list,
+                                            parname_list, pardefval_list);
+        //generate_solver_options(tout);
         tout << endl;
         if (HasPi) {
             tout << "Pi = pi\n";
         }
         AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
+
+        tout << endl;
+        tout << "sol_opts, par_opts = get_command_line_options()\n";
+        tout << endl;
         tout << "u0 = [";
         PrintList(tout, vardefic_list);
         tout << "]\n" ;
         if (np > 0) {
             tout << "p = [" ;
-            PrintList(tout, pardefval_list);
+            for (size_t k = 0; k < np; ++k) {
+                if (k > 0) {
+                    tout << ", ";
+                }
+                tout << "par_opts." << parname_list[k];
+            }
             tout << "]\n" ;
         }
         tout << endl;
-        tout << "solver_options = get_solver_options()\n";
-        tout << endl;
-        tout << "tspan = (0.0, solver_options.stoptime)" << endl;
-        tout << endl;
-
+        tout << "tspan = (0.0, sol_opts.stoptime)" << endl;
         tout << endl;
         tout << "prob = ODEProblem(" << Name() << "!, u0, tspan";
         if (np > 0) {
             tout << ", p";
         }
         tout << ")" << endl; 
-        tout << "sol = solve(prob, abstol=solver_options.abstol, reltol=solver_options.reltol)" << endl;
+        tout << "sol = solve(prob, abstol=sol_opts.abstol, reltol=sol_opts.reltol)" << endl;
         tout << endl;
         generate_common_plot_code(tout, Name(), IndependentVariable, varname_list);
         tout.close();
@@ -394,7 +435,10 @@ void VectorField::PrintJuliaDelay(map<string,string> options)
         tout << endl << endl;
         generate_solver_struct(tout);
         tout << endl;
-        generate_solver_options(tout);
+        generate_parameter_struct(tout, parname_list);
+        tout << endl;
+        generate_command_line_options(tout, conname_list, convalue_list,
+                                            parname_list, pardefval_list);
         tout << endl;
         tout << "function history(p_, " << IndependentVariable << "; idxs = nothing)\n";
         AssignNameValueLists(tout, "    ", conname_list, "=", convalue_list, "");
@@ -470,19 +514,30 @@ void VectorField::PrintJuliaDelay(map<string,string> options)
             tout << "Pi = pi\n";
         }
         AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
-        AssignNameValueLists(tout, "", parname_list, "=", pardefval_list, "");
         tout << endl;
+        tout << "sol_opts, par_opts = get_command_line_options()\n";
+        tout << endl;
+        if (np > 0) {
+            for (size_t k = 0; k < np; ++k) {
+                tout <<  parname_list[k] << " = par_opts." << parname_list[k] << "\n";
+            }
+        }
         tout << "u0 = [";
         PrintList(tout, vardefic_list);
         tout << "]\n" ;
+        tout << endl;
         if (np > 0) {
             tout << "p = [" ;
-            PrintList(tout, parname_list);
+            for (size_t k = 0; k < np; ++k) {
+                if (k > 0) {
+                    tout << ", ";
+                }
+                tout << parname_list[k];
+            }
             tout << "]\n" ;
+            tout << endl;
         }
-        tout << endl;
-        tout << "solver_options = get_solver_options()\n";
-        tout << "tspan = (0.0, solver_options.stoptime)" << endl;
+        tout << "tspan = (0.0, sol_opts.stoptime)" << endl;
         tout << endl;
         tout << "prob = DDEProblem(" << Name() << "!, u0, history, tspan";
         if (np > 0) {
@@ -519,7 +574,7 @@ void VectorField::PrintJuliaDelay(map<string,string> options)
             tout << "])" << endl;
         }
         tout << "alg = MethodOfSteps(Tsit5())" << endl;
-        tout << "sol = solve(prob, alg, abstol=solver_options.abstol, reltol=solver_options.reltol)" << endl;
+        tout << "sol = solve(prob, alg, abstol=sol_opts.abstol, reltol=sol_opts.reltol)" << endl;
         tout << endl;
         generate_common_plot_code(tout, Name(), IndependentVariable, varname_list);
         tout.close();
