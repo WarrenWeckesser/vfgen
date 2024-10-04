@@ -72,6 +72,7 @@ generate_command_line_options(ofstream& out,
         out << "\"" << parname_list[k] << "\"=>" << pardefval_list[k];
     }
     out << ")\n";
+    out << "    out =\"svg\"\n";
     out << "    for arg in ARGS\n";
     out << "        fields = split(arg, \"=\")\n";
     out << "        if length(fields) == 1\n";
@@ -91,6 +92,13 @@ generate_command_line_options(ofstream& out,
     out << "            stoptime = parse(Float64, value)\n";
     out << "        elseif name in keys(par)\n";
     out << "            par[name] = parse(Float64, value)\n";
+    out << "        elseif name == \"out\"\n";
+    out << "            if out == \"svg\" || out == \"csv\"\n";
+    out << "                out = value\n";
+    out << "            else\n";
+    out << "                println(\"Unknown value for the 'out' parameter: '\", value, \"'\")\n";
+    out << "                exit()\n";
+    out << "            end\n";
     out << "        else\n";
     out << "            println(\"Unknown command line option '\", arg, \"'\")\n";
     out << "            exit()\n";
@@ -105,9 +113,8 @@ generate_command_line_options(ofstream& out,
         out << "par[\"" << parname_list[k] << "\"]";
     }
     out << ")\n";
-    out << "    (sol_opts, par_opts)\n";
+    out << "    (sol_opts, par_opts, out)\n";
     out << "end\n";
-    out << endl;
 }
 
 static void
@@ -127,29 +134,47 @@ generate_lag_assignment(ofstream& fout, const lst& lag, symbol& indvar)
 }
 
 static void
-generate_common_plot_code(ofstream& out, string name,
-                          string IndependentVariable,
-                          lst &varname_list)
+generate_common_output_code(ofstream& out, string name,
+                            string IndependentVariable,
+                            lst &varname_list)
 {
     size_t nv = varname_list.nops();
     if (nv > 1) {
-        out << "ylabels = ";
-        ListOfStrings(out, varname_list, "[]", " ");
         out << endl;
-        out << "plot(sol, ";
-        out <<      "xaxis=\"" << IndependentVariable << "\", ";
-        out <<      "ylabel=ylabels, ";
-        out <<      "layout=(" << nv << ", 1), ";
-        out <<      "legend=false)" << endl;
+        out << "if out == \"svg\"\n";
+        out << "    ylabels = ";
+        ListOfStrings(out, varname_list, "[]", " ");
+        out << "\n";
+        out << "    plot(sol,\n";
+        out << "         xaxis=\"" << IndependentVariable << "\",\n";
+        out << "         ylabel=ylabels,\n";
+        out << "         layout=(" << nv << ", 1),\n";
+        out << "         legend=false)" << endl;
     }
     else {
-        out << "plot(sol, ";
-        out <<      "xaxis=\"" << IndependentVariable << "\", ";
-        out <<      "ylabel=\"" << varname_list[0] << "\", ";
-        out <<      "legend=false)" << endl;
+        out << "if out == \"svg\"\n";
+        out << "    plot(sol,\n";
+        out << "         xaxis=\"" << IndependentVariable << "\",\n";
+        out << "         ylabel=\"" << varname_list[0] << "\",\n";
+        out << "         legend=false)" << endl;
     }
-
-    out << "savefig(\"" << name << "_plot.svg\")" << endl;
+    out << "    savefig(\"" << name << "_plot.svg\")" << endl;
+    out << "else\n";
+    out << "    open(\"" << name << "_data.csv\", \"w\") do file\n";
+    out << "        println(file, \"" << IndependentVariable;
+    for (size_t k = 0; k < nv; ++k) {
+        out << ", " << varname_list[k];
+    }
+    out << "\")\n";
+    out << "        for (t1, urow) in zip(sol.t, sol.u)\n";
+    out << "            print(file, t1)\n";
+    out << "            for u1 in urow\n";
+    out << "                print(file, \", \", u1)\n";
+    out << "            end\n";
+    out << "            println(file)\n";
+    out << "        end\n";
+    out << "    end\n";
+    out << "end\n";
 }
 
 void VectorField::PrintJuliaFuncStart(ofstream &fout)
@@ -310,9 +335,9 @@ void VectorField::PrintJulia(map<string,string> options)
         tout << endl;
         tout << "include(\"" << Name() << ".jl\")" << endl;
         tout << endl << endl;
-        generate_parameter_struct(tout, parname_list);
-        tout << endl;
         generate_solver_struct(tout);
+        tout << endl;
+        generate_parameter_struct(tout, parname_list);
         tout << endl;
         generate_command_line_options(tout, conname_list, convalue_list,
                                             parname_list, pardefval_list);
@@ -324,20 +349,28 @@ void VectorField::PrintJulia(map<string,string> options)
         AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
 
         tout << endl;
-        tout << "sol_opts, par_opts = get_command_line_options()\n";
+        tout << "sol_opts, par_opts, out = get_command_line_options()\n";
+        tout << endl;
+        if (np > 0) {
+            for (size_t k = 0; k < np; ++k) {
+                tout << parname_list[k] << " = par_opts." << parname_list[k] << "\n";
+            }
+        }
         tout << endl;
         tout << "u0 = [";
         PrintList(tout, vardefic_list);
         tout << "]\n" ;
         if (np > 0) {
             tout << "p = [" ;
-            for (size_t k = 0; k < np; ++k) {
-                if (k > 0) {
-                    tout << ", ";
-                }
-                tout << "par_opts." << parname_list[k];
-            }
-            tout << "]\n" ;
+            PrintNameList(tout, parname_list);
+            tout << "]\n";
+            // for (size_t k = 0; k < np; ++k) {
+            //     if (k > 0) {
+            //         tout << ", ";
+            //     }
+            //     tout << parname_list[k];
+            // }
+            // tout << "]\n" ;
         }
         tout << endl;
         tout << "tspan = (0.0, sol_opts.stoptime)" << endl;
@@ -349,7 +382,7 @@ void VectorField::PrintJulia(map<string,string> options)
         tout << ")" << endl; 
         tout << "sol = solve(prob, abstol=sol_opts.abstol, reltol=sol_opts.reltol)" << endl;
         tout << endl;
-        generate_common_plot_code(tout, Name(), IndependentVariable, varname_list);
+        generate_common_output_code(tout, Name(), IndependentVariable, varname_list);
         tout.close();
     }
 }
@@ -515,17 +548,17 @@ void VectorField::PrintJuliaDelay(map<string,string> options)
         }
         AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
         tout << endl;
-        tout << "sol_opts, par_opts = get_command_line_options()\n";
+        tout << "sol_opts, par_opts, out = get_command_line_options()\n";
         tout << endl;
         if (np > 0) {
             for (size_t k = 0; k < np; ++k) {
                 tout <<  parname_list[k] << " = par_opts." << parname_list[k] << "\n";
             }
         }
+        tout << endl;
         tout << "u0 = [";
         PrintList(tout, vardefic_list);
         tout << "]\n" ;
-        tout << endl;
         if (np > 0) {
             tout << "p = [" ;
             for (size_t k = 0; k < np; ++k) {
@@ -576,7 +609,7 @@ void VectorField::PrintJuliaDelay(map<string,string> options)
         tout << "alg = MethodOfSteps(Tsit5())" << endl;
         tout << "sol = solve(prob, alg, abstol=sol_opts.abstol, reltol=sol_opts.reltol)" << endl;
         tout << endl;
-        generate_common_plot_code(tout, Name(), IndependentVariable, varname_list);
+        generate_common_output_code(tout, Name(), IndependentVariable, varname_list);
         tout.close();
     }
 }
