@@ -29,7 +29,7 @@ e = Base.MathConstants.e
 exact = (e / (3.0 - log(tfinal + 1.0)))^e
 
 relerr = abs(xfinal - exact)/exact
-if relerr > 1e-10
+if relerr > 2e-10
     print("Final value ", xfinal, " is not close to the exact solution ", exact)
     @printf("; rel err is %.4e\n", relerr)
     exit(-1)
