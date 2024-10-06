@@ -73,6 +73,31 @@ generate_demo_common(ofstream& out, string &vf_filename, bool HasPi,
     out << endl;
     out << "library(deSolve)" << endl;
     out << endl;
+    out << "get_command_line_opts <- function(opts) {\n";
+    out << "    args = commandArgs(trailingOnly=TRUE)\n";
+    out << "    k <- 1\n";
+    out << "    while (k <= length(args)) {\n";
+    out << "        arg = args[k]\n";
+    out << "        if (arg %in% names(opts)) {\n";
+    out << "            if (k == length(args)) {\n";
+    out << "                msg = sprintf(\"'%s' missing value.\", arg)\n";
+    out << "                stop(msg)\n";
+    out << "            }\n";
+    out << "            k <- k + 1\n";
+    out << "            opts[[arg]] <- as.double(args[k])\n";
+    out << "        }\n";
+    out << "        else {\n";
+    out << "            msg = sprintf(\"Unknown option '%s'\", arg)\n";
+    out << "            stop(msg)\n";
+    out << "        }\n";
+    out << "        k <- k + 1\n";
+    out << "    }\n";
+    out << "    opts\n";
+    out << "}\n";
+    out << endl;
+    out << "opts <- list(abstol=1e-12, reltol=1e-8, stoptime=10.0)\n";
+    out << "opts <- get_command_line_opts(opts)\n";
+    out << endl;
     out << "# Load the vector field definition and the jacobian." << endl;
     out << "source(\"" << vf_filename << "\")" << endl;
     out << endl;
@@ -111,7 +136,7 @@ generate_demo_common(ofstream& out, string &vf_filename, bool HasPi,
     out << ")\n";
     out << endl;
     out << "# Time values\n";
-    out << "times = seq(0, 10, by = 0.02)\n";
+    out << "times = seq(0, opts$stoptime, by = 0.02)\n";
     out << endl;
 }
 
@@ -273,7 +298,7 @@ void VectorField::PrintRode(map<string, string> options)
         fout << "# Call the ODE solver" << endl;
         fout << "sol = ode(y = state, times = times, func = " << Name() << ", parms = parameters,\n";
         fout << "          jactype = \"fullusr\", jacfunc = " << Name() << "_jac,\n";
-        fout << "          atol = 1e-12, rtol = 1e-8)\n";
+        fout << "          atol = opts$abstol, rtol = opts$reltol)\n";
         fout << endl;
         fout << "# Plot the solution" << endl;
         fout << "par(mfcol = c(" << nv  << ", 1))" << endl;
@@ -520,7 +545,7 @@ void VectorField::PrintRdede(map<string, string> options)
                              varname_list, vardefic_list);
         fout << "# Call the DDE solver" << endl;
         fout << "sol = dede(y = state, times = times, func = " << Name() << ", parms = parameters,\n";
-        fout << "           atol = 1e-12, rtol = 1e-8)\n";
+        fout << "           atol = opts$abstol, rtol = opts$reltol)\n";
         fout << endl;
         fout << "# Plot the solution" << endl;
         fout << "par(mfcol = c(" << nv  << ", 1))" << endl;
