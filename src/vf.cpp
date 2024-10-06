@@ -88,7 +88,7 @@ FormulaSymbol::FormulaSymbol() : Symbol() {}
 
 FormulaSymbol::FormulaSymbol(string name) : Symbol(name) {}
 
-FormulaSymbol::FormulaSymbol(string name, string descr) : Symbol(name,descr) {}
+FormulaSymbol::FormulaSymbol(string name, string descr) : Symbol(name, descr) {}
 
 void FormulaSymbol::Formula(string f)
 {
@@ -110,7 +110,7 @@ Constant::Constant(string name) : Symbol(name)
     value = "";
 }
 
-Constant::Constant(string name, string descr) : Symbol(name,descr)
+Constant::Constant(string name, string descr) : Symbol(name, descr)
 {
     value = "";
 }
@@ -135,7 +135,7 @@ Parameter::Parameter(string name) : Symbol(name)
     defaultvalue = "";
 }
 
-Parameter::Parameter(string name, string descr) : Symbol(name,descr)
+Parameter::Parameter(string name, string descr) : Symbol(name, descr)
 {
     defaultvalue = "";
 }
@@ -155,7 +155,7 @@ string Parameter::DefaultValue(void)
 //
 Expression::Expression(string name) : FormulaSymbol(name) {}
 
-Expression::Expression(string name, string descr) : FormulaSymbol(name,descr) {}
+Expression::Expression(string name, string descr) : FormulaSymbol(name, descr) {}
 
 
 //
@@ -240,13 +240,13 @@ VectorField::VectorField(void)
     IsAutonomous = true;
 }
 
-VectorField::VectorField(string name, string descr) : Symbol(name,descr)
+VectorField::VectorField(string name, string descr) : Symbol(name, descr)
 {
     IndependentVariable = "t";
     IsAutonomous = true;
 }
 
-VectorField::VectorField(string name, string descr, string indvar) : Symbol(name,descr)
+VectorField::VectorField(string name, string descr, string indvar) : Symbol(name, descr)
 {
     IndependentVariable = indvar;
     IsAutonomous = true;
@@ -458,7 +458,7 @@ int VectorField::ProcessSymbols(void)
     vector<Constant *>::iterator c;
     for (c = Constants.begin(); c != Constants.end(); ++c) {
         symbol con( (*c)->Latex() != ""
-               ? symbol( (*c)->Name(),(*c)->Latex() )
+               ? symbol( (*c)->Name(), (*c)->Latex() )
                : symbol( (*c)->Name() ) );
         conname_list.append(con);
         allsymbols.append(con);
@@ -481,7 +481,7 @@ int VectorField::ProcessSymbols(void)
     vector<Parameter *>::iterator p;
     for (p = Parameters.begin(); p != Parameters.end(); ++p) {
         symbol par( (*p)->Latex() != ""
-               ? symbol( (*p)->Name(),(*p)->Latex() )
+               ? symbol( (*p)->Name(), (*p)->Latex() )
                : symbol( (*p)->Name() ) );
         // symbol par((*p)->Name());
         parname_list.append(par);
@@ -520,7 +520,7 @@ int VectorField::ProcessSymbols(void)
     vector<StateVariable *>::iterator sv;
     for (sv = StateVariables.begin(); sv != StateVariables.end(); ++sv, ++nv) {
         symbol var( (*sv)->Latex() != ""
-               ? symbol( (*sv)->Name(),(*sv)->Latex() )
+               ? symbol( (*sv)->Name(), (*sv)->Latex() )
                : symbol( (*sv)->Name() ) );
         varname_list.append(var);
         string defic = (*sv)->DefaultInitialCondition();
@@ -575,7 +575,7 @@ int VectorField::ProcessSymbols(void)
     vector<Expression *>::iterator e;
     for (e = Expressions.begin(); e != Expressions.end(); ++e) {
         symbol auxe( (*e)->Latex() != ""
-               ? symbol( (*e)->Name(),(*e)->Latex() )
+               ? symbol( (*e)->Name(), (*e)->Latex() )
                : symbol( (*e)->Name() ) );
         exprname_list.append(auxe);
         allsymbols.append(auxe);
@@ -682,7 +682,7 @@ void VectorField::Print(void)
     for (unsigned i = 0; i < funcname_list.nops(); ++i) {
         cout << "   " << funcname_list[i] << "=" << funcformula_list[i] << endl;
     }
-    string tf[2] = {"false","true"};
+    string tf[2] = {"false", "true"};
     cout << "IsDelay: " << tf[IsDelay] << endl;
     cout << "HasNonconstantDelay: " << tf[HasNonconstantDelay] << endl;
     cout << "IsAutonomous: " << tf[IsAutonomous] << endl;

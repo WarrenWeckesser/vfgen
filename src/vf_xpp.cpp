@@ -42,7 +42,7 @@ using namespace GiNaC;
 // PrintXPP -- The XPP Code Generator.
 //
 
-void VectorField::PrintXPP(map<string,string> options)
+void VectorField::PrintXPP(map<string, string> options)
 {
     int nc, np, nv, na, nf;
     int i;
@@ -53,7 +53,7 @@ void VectorField::PrintXPP(map<string,string> options)
     na = exprname_list.nops();
     nf = funcname_list.nops();
 
-    string filename = Name()+".ode";
+    string filename = Name() + ".ode";
     ofstream fout;
     fout.open(filename.c_str());
     fout << "#" << endl;
@@ -61,7 +61,7 @@ void VectorField::PrintXPP(map<string,string> options)
     fout << "#" << endl;
     fout << "# XPP ODE file for the vector field: " << Name() << endl;
     fout << "#" << endl;
-    PrintVFGENComment(fout,"# ");
+    PrintVFGENComment(fout, "# ");
     fout << "#" << endl;
     //
     //  Print the constants.
@@ -69,7 +69,7 @@ void VectorField::PrintXPP(map<string,string> options)
     for (i = 0; i < nc; ++i) {
         ex val = convalue_list[i];
         for (int j = i-1; j >= 0; j--) {
-            val = val.subs(conname_list[j]==convalue_list[j]);
+            val = val.subs(conname_list[j] == convalue_list[j]);
         }
         val = val.subs(Pi==M_PI);
         fout << "number " << conname_list[i] << "=" << val << endl;
@@ -81,10 +81,10 @@ void VectorField::PrintXPP(map<string,string> options)
     for (i = 0; i < np; ++i) {
         ex val = pardefval_list[i];
         for (int j = i-1; j >= 0; j--) {
-            val = val.subs(parname_list[j]==pardefval_list[j]);
+            val = val.subs(parname_list[j] == pardefval_list[j]);
         }
         for (int j = nc-1; j >= 0; j--) {
-            val = val.subs(conname_list[j]==convalue_list[j]);
+            val = val.subs(conname_list[j] == convalue_list[j]);
         }
         val = val.subs(Pi==M_PI);            
         fout << "par " << parname_list[i] << "=" << val << endl;
@@ -94,7 +94,7 @@ void VectorField::PrintXPP(map<string,string> options)
     //  Print the intermediate/auxiliary formulas.
     //
     for (i = 0; i < na; ++i) {
-        fout << exprname_list[i] << "=" << delay_transform(exprformula_list[i],varname_list)  << endl;
+        fout << exprname_list[i] << "=" << delay_transform(exprformula_list[i], varname_list)  << endl;
     }
     //
     //  Print the vector field expressions.
@@ -103,17 +103,17 @@ void VectorField::PrintXPP(map<string,string> options)
     fout << "# The vector field and initial conditions" << endl;
     fout << "#" << endl;
     for (i = 0; i < nv; ++i) {
-        fout << varname_list[i] << "'=" << delay_transform(varvecfield_list[i],varname_list) << endl;
+        fout << varname_list[i] << "'=" << delay_transform(varvecfield_list[i], varname_list) << endl;
         //
         // Replace Pi, Constants and Parameters in the initial condition expression.
         // Work backwards through the Parameters, then the Constants, then Pi.
         //
         ex ic = vardefic_list[i];
         for (int j = np-1; j >= 0; j--) {
-            ic = ic.subs(parname_list[j]==pardefval_list[j]);
+            ic = ic.subs(parname_list[j] == pardefval_list[j]);
         }
         for (int j = nc-1; j >= 0; j--) {
-            ic = ic.subs(conname_list[j]==convalue_list[j]);
+            ic = ic.subs(conname_list[j] == convalue_list[j]);
         }
         ic = ic.subs(Pi==M_PI);        
         fout << "init " << varname_list[i] << "=" << ic << endl;
@@ -132,7 +132,7 @@ void VectorField::PrintXPP(map<string,string> options)
         string s = options["extra"];
         char delim = ';';
         string::size_type k = 0;
-        while ((k = s.find(delim,k)) != string::npos) {
+        while ((k = s.find(delim, k)) != string::npos) {
             s[k]='\n';
         }
         if (s[s.length()-1] != '\n') {

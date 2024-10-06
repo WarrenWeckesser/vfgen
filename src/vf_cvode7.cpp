@@ -39,7 +39,7 @@ using namespace GiNaC;
 // PrintCVODE -- The CVODE Code Generator
 //
 
-void VectorField::PrintCVODE7(map<string,string> options)
+void VectorField::PrintCVODE7(map<string, string> options)
 {
     size_t nc, np, nv, na, nf;
     string include_guard_name;
@@ -51,12 +51,12 @@ void VectorField::PrintCVODE7(map<string,string> options)
     na = exprname_list.nops();
     nf = funcname_list.nops();
 
-    string filename = Name()+"_cv7.c";
+    string filename = Name() + "_cv7.c";
     ofstream fout;
     fout.open(filename.c_str());
     fout << csrc << left;
 
-    string pfilename = Name()+"_cv7.h";
+    string pfilename = Name() + "_cv7.h";
     ofstream pout;
     pout.open(pfilename.c_str());
     pout << csrc << left;
@@ -69,7 +69,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
     fout << " *" << endl;
     fout << " *  CVODE C file for the vector field named: " << Name() << endl;
     fout << " *" << endl;
-    PrintVFGENComment(fout," *  ");
+    PrintVFGENComment(fout, " *  ");
     fout << " */" << endl;
     fout << endl;
 
@@ -78,7 +78,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
     pout << " *" << endl;
     pout << " *  CVODE C prototype file for the functions defined in " << filename << endl;
     pout << " *" << endl;
-    PrintVFGENComment(pout," *  ");
+    PrintVFGENComment(pout, " *  ");
     pout << " */" << endl;
     pout << endl;
     include_guard_name = to_upper(Name());
@@ -126,7 +126,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
         fout.width(width);
         fout << varname_list[i];
         fout.width(0);
-        fout << " = NV_Ith_S(y_," << i << ");" << endl;
+        fout << " = NV_Ith_S(y_, " << i << ");" << endl;
     }
 
     fout << endl;
@@ -139,7 +139,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
         fout << endl;
     }
     for (size_t i = 0; i < nv; ++i) {
-        fout << "    NV_Ith_S(f_," << i << ") = " << varvecfield_list[i] << ";" << endl;
+        fout << "    NV_Ith_S(f_, " << i << ") = " << varvecfield_list[i] << ";" << endl;
     }
     fout << "    return 0;\n";
     fout << "}" << endl;
@@ -172,8 +172,8 @@ void VectorField::PrintCVODE7(map<string,string> options)
     for (size_t i = 0; i < nc; ++i) {
         fout << "    const sunrealtype " << conname_list[i] << " = SUN_RCONST(" << convalue_list[i] << ");" << endl;
     }
-    CDeclare(fout,"sunrealtype",varname_list);
-    CDeclare(fout,"sunrealtype",parname_list);
+    CDeclare(fout, "sunrealtype", varname_list);
+    CDeclare(fout, "sunrealtype", parname_list);
     fout << "    sunrealtype *p_;" << endl;
     fout << endl;
     fout << "    p_ = (sunrealtype *) params;" << endl;
@@ -226,9 +226,9 @@ void VectorField::PrintCVODE7(map<string,string> options)
         for (size_t i = 0; i < nc; ++i) {
             fout << "    const sunrealtype " << conname_list[i] << " = SUN_RCONST(" << convalue_list[i] << ");" << endl;
         }
-        CDeclare(fout,"sunrealtype",varname_list);
-        CDeclare(fout,"sunrealtype",parname_list);
-        CDeclare(fout,"sunrealtype",exprname_list);
+        CDeclare(fout, "sunrealtype", varname_list);
+        CDeclare(fout, "sunrealtype", parname_list);
+        CDeclare(fout, "sunrealtype", exprname_list);
         fout << "    sunrealtype *p_;" << endl;
         fout << endl;
         fout << "    p_ = (sunrealtype *) params;" << endl;
@@ -279,7 +279,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
         tout << " *" << endl;
         tout << " *  CVODE ODE solver for the vector field named: " << Name() << endl;
         tout << " *" << endl;
-        PrintVFGENComment(tout," *  ");
+        PrintVFGENComment(tout, " *  ");
         tout << " *\n";
         tout << " */" << endl;
         tout << endl;
@@ -402,9 +402,9 @@ void VectorField::PrintCVODE7(map<string,string> options)
 
         tout << "    sunrealtype p_[" << np << "];\n" ;
         tout << "    sunrealtype solver_param_[3] = {SUN_RCONST(1.0e-6), SUN_RCONST(0.0), SUN_RCONST(10.0)};\n" ;
-        MakeCArrayOfStrings(tout,"varnames_",varname_list);
+        MakeCArrayOfStrings(tout, "varnames_", varname_list);
         if (np > 0) {
-            MakeCArrayOfStrings(tout,"parnames_",parname_list);
+            MakeCArrayOfStrings(tout, "parnames_", parname_list);
         }
         else {
             tout << "    char *parnames_[] = {\"\"};\n";
@@ -546,7 +546,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
         //
         // Create a Makefile for the CVODE demo program
         //
-        string mfilename = "Makefile-"+Name()+"_cv7demo";
+        string mfilename = "Makefile-" + Name() + "_cv7demo";
         ofstream mout;
         mout.open(mfilename.c_str());
         mout << "#\n";
@@ -555,7 +555,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
         mout << "# This is the Makefile for the " << Name() << "_cv7demo program.\n";
         mout << "# This file is configured for CVODE 7.x.\n";
         mout << "#\n";
-        PrintVFGENComment(mout,"# ");
+        PrintVFGENComment(mout, "# ");
         mout << "#\n";
         mout << "# This Makefile is not guaranteed to work in all operating systems.\n";
         mout << "# You may have to edit this file to meet the conventions of your operating system.\n";
@@ -601,7 +601,7 @@ void VectorField::PrintCVODE7(map<string,string> options)
         cmout << "# set CMAKE_INCLUDE_PATH and CMAKE_LIBRARY_PATH to the appropriate\n";
         cmout << "# paths.\n";
         cmout << "#\n";
-        PrintVFGENComment(cmout,"# ");
+        PrintVFGENComment(cmout, "# ");
         cmout << "#\n";
         cmout << endl;
         cmout << "cmake_minimum_required(VERSION 3.22.1)\n";

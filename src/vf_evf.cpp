@@ -52,7 +52,7 @@ int findpar(string parname, vector<Parameter *> pars)
 // with its variational equation.
 //
 
-void VectorField::PrintEVF(map<string,string> options)
+void VectorField::PrintEVF(map<string, string> options)
 {
     //                                                            
     // This function adds variables to the vector field.
@@ -74,7 +74,7 @@ void VectorField::PrintEVF(map<string,string> options)
     
     if (options.find("par") != options.end()) {
         // cerr << "The option par=" << options["par"] << " has been given.\n";
-        kpar = findpar(options["par"],Parameters);
+        kpar = findpar(options["par"], Parameters);
         if (kpar == -1) {
             cerr << "Error: Unknown parameter \"" << options["par"] << "\"\n";
             cerr << "The parameters are: ";
@@ -97,7 +97,7 @@ void VectorField::PrintEVF(map<string,string> options)
 
     for (int i = 0; i < nv; ++i) {
         oss.str("");
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         int num_terms_output = 0;
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);

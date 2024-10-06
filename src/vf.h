@@ -252,48 +252,48 @@ class VectorField : public Symbol
     int  ProcessSymbols(void);
 
     void Print(void);
-    void PrintGSL(std::map<std::string,std::string> options);
-    void PrintBoostOdeint(std::map<std::string,std::string> options);
-    void PrintCVODE(std::map<std::string,std::string> options);
-    void PrintCVODE7(std::map<std::string,std::string> options);
-    void PrintScilab(std::map<std::string,std::string> options);
-    void PrintADOLC(/* std::map<std::string,std::string> options */);
-    void PrintAUTO(std::map<std::string,std::string> options);
-    void PrintEVF(std::map<std::string,std::string> options);
-    void PrintJavaMath(std::map<std::string,std::string> options);
-    void PrintJavascript(std::map<std::string,std::string> options);
+    void PrintGSL(std::map<std::string, std::string> options);
+    void PrintBoostOdeint(std::map<std::string, std::string> options);
+    void PrintCVODE(std::map<std::string, std::string> options);
+    void PrintCVODE7(std::map<std::string, std::string> options);
+    void PrintScilab(std::map<std::string, std::string> options);
+    void PrintADOLC(/* std::map<std::string, std::string> options */);
+    void PrintAUTO(std::map<std::string, std::string> options);
+    void PrintEVF(std::map<std::string, std::string> options);
+    void PrintJavaMath(std::map<std::string, std::string> options);
+    void PrintJavascript(std::map<std::string, std::string> options);
 
     void PrintJuliaFuncStart(std::ofstream &fout);
-    void PrintJulia(std::map<std::string,std::string> options);
-    void PrintJuliaDelay(std::map<std::string,std::string> options);
+    void PrintJulia(std::map<std::string, std::string> options);
+    void PrintJuliaDelay(std::map<std::string, std::string> options);
 
-    void PrintMATCONT(/* std::map<std::string,std::string> options */);
-    void PrintMATLAB(std::map<std::string,std::string> options);
-    void PrintOctave(std::map<std::string,std::string> options);
-    void PrintRode(std::map<std::string,std::string> options);
-    void PrintRdede(std::map<std::string,std::string> options);
-    void PrintRadau5(std::map<std::string,std::string> options);
-    void PrintLSODA(std::map<std::string,std::string> options);
-    void PrintSciPy(std::map<std::string,std::string> options);
-    void PrintPyDSTool(std::map<std::string,std::string> options);
-    void PrintTaylor(std::map<std::string,std::string> options);
-    void PrintPyGSL(std::map<std::string,std::string> options);
-    void PrintLatex(/* std::map<std::string,std::string> options */);
-    void PrintXPP(std::map<std::string,std::string> options);
+    void PrintMATCONT(/* std::map<std::string, std::string> options */);
+    void PrintMATLAB(std::map<std::string, std::string> options);
+    void PrintOctave(std::map<std::string, std::string> options);
+    void PrintRode(std::map<std::string, std::string> options);
+    void PrintRdede(std::map<std::string, std::string> options);
+    void PrintRadau5(std::map<std::string, std::string> options);
+    void PrintLSODA(std::map<std::string, std::string> options);
+    void PrintSciPy(std::map<std::string, std::string> options);
+    void PrintPyDSTool(std::map<std::string, std::string> options);
+    void PrintTaylor(std::map<std::string, std::string> options);
+    void PrintPyGSL(std::map<std::string, std::string> options);
+    void PrintLatex(/* std::map<std::string, std::string> options */);
+    void PrintXPP(std::map<std::string, std::string> options);
 
     void Delay2ODE_ConvertExprToDefHist(GiNaC::ex& f);
     void Delay2ODE_ConvertAndExtend(GiNaC::ex& f, int N, int p);
-    void PrintDelay2ODE(std::map<std::string,std::string> options);
+    void PrintDelay2ODE(std::map<std::string, std::string> options);
 
-    void PrintDDE23(std::map<std::string,std::string> options);
+    void PrintDDE23(std::map<std::string, std::string> options);
 
-    void PrintDDE_SOLVER(std::map<std::string,std::string> options);
+    void PrintDDE_SOLVER(std::map<std::string, std::string> options);
 
     void DDEBT_PrintParDerivs(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void DDEBT_PrintJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void DDEBT_PrintXandParJacobians(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
     void DDEBT_PrintHessiansTimesV(std::ofstream &dout, const std::vector<GiNaC::ex> &e);
-    void PrintDDEBIFTOOL(std::map<std::string,std::string> options);
+    void PrintDDEBIFTOOL(std::map<std::string, std::string> options);
 };
 
 #endif

@@ -37,7 +37,7 @@ using namespace GiNaC;
 // PrintPyGSL -- The PyGSL Code Generator.
 //
 
-void VectorField::PrintPyGSL(map<string,string> options)
+void VectorField::PrintPyGSL(map<string, string> options)
 {
     int nv, np, na, nf;
 
@@ -61,7 +61,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << "# Python file for the vector field named: " << Name() << endl;
     fout << "# The functions defined here can be used with the ODEIV routines of PyGSL." << endl;
     fout << "#" << endl;
-    PrintVFGENComment(fout,"# ");
+    PrintVFGENComment(fout, "# ");
     fout << "#" << endl;
     fout << endl;
     fout << "from math import *" << endl;
@@ -114,7 +114,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << "    # Create the Jacobian matrix, initialized with zeros." << endl; 
     fout << "    jac_ = np.zeros((" << nv << ", " << nv << "))" << endl;
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int j = 0; j < nv; ++j) {
             symbol v = ex_to<symbol>(varname_list[j]);
             ex df = f.diff(v);
@@ -127,7 +127,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
     fout << "    dfdt_ = np.zeros((2,), dtype=np.float)" << endl;
     symbol t(IndependentVariable);
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         ex df = f.diff(t);
         if (df != 0) {
             fout << "    dfdt_[" << i << "] = " << df << endl;
@@ -174,7 +174,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         //  on the command line.
         //
 
-        string tfilename = Name()+"_demo.py";
+        string tfilename = Name() + "_demo.py";
         ofstream tout;
         tout.open(tfilename.c_str());
         tout << csrc << left;
@@ -186,7 +186,7 @@ void VectorField::PrintPyGSL(map<string,string> options)
         tout << "#" << endl;
         tout << "# This script uses the PyGSL odeiv functions to solve the differential equations." << endl;
         tout << "#" << endl;
-        PrintVFGENComment(tout,"# ");
+        PrintVFGENComment(tout, "# ");
         tout << "#\n" ;
         tout << endl;
         tout << "import sys" << endl;
@@ -216,8 +216,8 @@ void VectorField::PrintPyGSL(map<string,string> options)
         AssignNameValueLists(tout, "", conname_list, "=", convalue_list, "");
         tout << "N_ = " << nv << "\n" ;
 
-        MakePythonListOfStrings(tout,"varnames_",varname_list,"");
-        MakePythonListOfStrings(tout,"parnames_",parname_list,"");
+        MakePythonListOfStrings(tout, "varnames_", varname_list, "");
+        MakePythonListOfStrings(tout, "parnames_", parname_list, "");
         tout << "solver_param_names_ = [\"abserr\", \"relerr\", \"stoptime\"]\n" ;
         tout << endl;
         tout << "#" << endl;

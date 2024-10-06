@@ -6,7 +6,7 @@
 //  This file defines the VectorField::PrintJavascript method.
 //
 //
-//  Copyright (C) 2008 Warren Weckesser
+//  Copyright (C) 2008-2024 Warren Weckesser
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License, Version 2, as
@@ -44,7 +44,8 @@ using namespace GiNaC;
 #define M_PI 3.14159265358979323846
 #endif
 
-void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, int r, lst vf, lst expreqn, lst vars, lst params);
+void generate_deriv(string lang, ofstream &fout, ofstream &pout,
+                    string name, int r, lst vf, lst expreqn, lst vars, lst params);
 
 
 long int factorial(long int);
@@ -54,7 +55,7 @@ long int factorial(long int);
 // PrintJavascript -- this is the main function that prints the Javascript code.
 //
 
-void VectorField::PrintJavascript(map<string,string> options)
+void VectorField::PrintJavascript(map<string, string> options)
 {
     int nc, np, nv, na;
 
@@ -90,9 +91,10 @@ void VectorField::PrintJavascript(map<string,string> options)
     fout << " *  " << filename << endl;
     fout << " *" << endl;
     PrintMultilineComment(fout,
-        "Javascript code with functions for computing the Taylor series approximate solutions\nfor the vector field named: "+Name()+"\n",
-        ""," *  ");
-    PrintVFGENComment(fout," *  ");
+        "Javascript code with functions for computing the Taylor series approximate solutions\n"
+        "for the vector field named: " + Name() + "\n",
+        "", " *  ");
+    PrintVFGENComment(fout, " *  ");
     fout << " */" << endl;
     fout << endl;
 
@@ -148,8 +150,8 @@ void VectorField::PrintJavascript(map<string,string> options)
     //
 
     for (int i = 1; i < Order; ++i) {
-        generate_deriv("javascript",fout, fout, Name(), i, varvecfield_list, expreqn_list,
-                                       varname_list, parname_list);
+        generate_deriv("javascript", fout, fout, Name(), i, varvecfield_list, expreqn_list,
+                       varname_list, parname_list);
     }
 
     //
@@ -171,7 +173,7 @@ void VectorField::PrintJavascript(map<string,string> options)
             double coeff = v->second;
 
             vector<int> *a1 = new vector<int>;
-            CopyMyVec(a,a1);
+            CopyMyVec(a, a1);
             ++(*a1)[0];
             table[k][a1] = table[k][a1] + coeff;
 
@@ -179,7 +181,7 @@ void VectorField::PrintJavascript(map<string,string> options)
                 int m = (*a)[i];
                 if (m > 0) {
                     vector<int> *a2 = new vector<int>;
-                    CopyMyVec(a,a2);
+                    CopyMyVec(a, a2);
                     --(*a2)[i];
                     if (i == a->size()-1) {
                         a2->push_back(1);
@@ -216,7 +218,7 @@ void VectorField::PrintJavascript(map<string,string> options)
     fout << "    var Q = [];\n";
     fout << endl;
     fout << "    var Xderiv = [];\n";
-    fout << "    Xderiv[0] = " << Name() << "_vf(0.0,X,params);\n";
+    fout << "    Xderiv[0] = " << Name() << "_vf(0.0, X, params);\n";
     for (int k  = 0; k < Order-1; ++k) {
         fout << endl;
         fout << "    Xderiv[" << k+1 << "] = []\n";
@@ -227,7 +229,7 @@ void VectorField::PrintJavascript(map<string,string> options)
             vector<int> *a = v->first;
             double coeff = v->second;
             fout << "    /*    [";
-            PrintMyVec(fout,a);
+            PrintMyVec(fout, a);
             fout << "]  coeff = " << coeff << "  */\n";
             // int r = a->size();
             int r = SumVec(a);
@@ -290,7 +292,7 @@ void VectorField::PrintJavascript(map<string,string> options)
         //
         // Create the HTML file.
         //
-        string htmlfilename = Name()+".html";
+        string htmlfilename = Name() + ".html";
         ofstream hout;
         hout.open(htmlfilename.c_str()); // FIXME!  Check for failure.
         hout << "<html>\n";
@@ -315,10 +317,10 @@ void VectorField::PrintJavascript(map<string,string> options)
         for (int i = 0; i < np; ++i) {
             ex val = pardefval_list[i];
             for (int j = i-1; j >= 0; j--) {
-                val = val.subs(parname_list[j]==pardefval_list[j]);
+                val = val.subs(parname_list[j] == pardefval_list[j]);
             }
             for (int j = nc-1; j >= 0; j--) {
-                val = val.subs(conname_list[j]==convalue_list[j]);
+                val = val.subs(conname_list[j] == convalue_list[j]);
             }
             val = val.subs(Pi==M_PI);
 
@@ -336,10 +338,10 @@ void VectorField::PrintJavascript(map<string,string> options)
         for (int i = 0; i < nv; ++i) {
             ex ic = vardefic_list[i];
             for (int j = np-1; j >= 0; j--) {
-                ic = ic.subs(parname_list[j]==pardefval_list[j]);
+                ic = ic.subs(parname_list[j] == pardefval_list[j]);
             }
             for (int j = nc-1; j >= 0; j--) {
-                ic = ic.subs(conname_list[j]==convalue_list[j]);
+                ic = ic.subs(conname_list[j] == convalue_list[j]);
             }
             ic = ic.subs(Pi==M_PI);
             hout << "<tr>\n";
@@ -386,7 +388,7 @@ void VectorField::PrintJavascript(map<string,string> options)
         }
         hout << "<input id=\"yoffset\" type=\"text\" size=\"4\" value=\"0\" />\n";
         hout << "<br />\n";
-        hout << "Display X and Y ranges are (-250,250).\n";
+        hout << "Display X and Y ranges are (-250, 250).\n";
         hout << "</div>\n";
         hout << "<br />\n";
         hout << "Number of steps per display update:\n";
@@ -416,7 +418,7 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "/*\n";
         dout << " *  " << jsdemo_filename << endl;
         dout << " *" << endl;
-        PrintVFGENComment(dout," *  ");
+        PrintVFGENComment(dout, " *  ");
         dout << " */" << endl;
         dout << endl;
         // dout << "var c = 0\n";
@@ -429,13 +431,13 @@ void VectorField::PrintJavascript(map<string,string> options)
         for (int i = 0; i < nv; ++i) {
             ex ic = vardefic_list[i];
             for (int j = np-1; j >= 0; j--) {
-                ic = ic.subs(parname_list[j]==pardefval_list[j]);
+                ic = ic.subs(parname_list[j] == pardefval_list[j]);
             }
             for (int j = nc-1; j >= 0; j--) {
-                ic = ic.subs(conname_list[j]==convalue_list[j]);
+                ic = ic.subs(conname_list[j] == convalue_list[j]);
             }
             ic = ic.subs(Pi==M_PI);
-            dout << ic << ((i == nv-1) ? "]\n" : ",") ;
+            dout << ic << ((i == nv-1) ? "]\n" : ", ") ;
         }
         dout << "var t = 0.0\n";
         dout << "var intervalID = \"none\"\n";
@@ -443,7 +445,7 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "function clear_canvas()\n";
         dout << "{\n";
         dout << "    var ctx = document.getElementById('canvas').getContext('2d')\n";
-        dout << "    ctx.clearRect(0,0,500,500)\n";
+        dout << "    ctx.clearRect(0, 0, 500, 500)\n";
         dout << "}\n";
         dout << endl;
         dout << "function init()\n";
@@ -466,7 +468,7 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "function start_animation()\n";
         dout << "{\n";
         dout << "    if (intervalID == \"none\") {\n";
-        dout << "        intervalID = setInterval(advance,0)\n";
+        dout << "        intervalID = setInterval(advance, 0)\n";
         dout << "    }\n";
         dout << "}\n";
         dout << endl;
@@ -526,7 +528,7 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "    var palette_black_red  = document.getElementById('black+red').checked\n";
         dout << "    var ctx = document.getElementById('canvas').getContext('2d')\n";
         dout << "    ctx.save()\n";
-        dout << "    ctx.translate(250,250)\n";
+        dout << "    ctx.translate(250, 250)\n";
         dout << "    ctx.beginPath()\n";
         dout << "    if (palette_black) {\n";
         dout << "        var red = 0.0\n";
@@ -544,23 +546,23 @@ void VectorField::PrintJavascript(map<string,string> options)
         dout << "        var blue = 0.0\n";
         dout << "    }\n";
         dout << "    ctx.strokeStyle = \"rgb(\"+parseInt(red)+\",\"+parseInt(green)+\",\"+parseInt(blue)+\")\"\n";
-        dout << "    ctx.moveTo(displayX(),displayY())\n";
+        dout << "    ctx.moveTo(displayX(), displayY())\n";
         dout << "    for (var i = 0; i < numsteps; ++i) {\n";
-        dout << "        var Xderiv = " << Name() << "_derivs" << Order << "(state,params)\n";
+        dout << "        var Xderiv = " << Name() << "_derivs" << Order << "(state, params)\n";
         dout << "        var m = 0.0\n";
         dout << "        for (var j = 0; j < " << nv << "; ++j) {\n";
         dout << "            var a = Xderiv[" << Order-1 << "][j]\n";
         dout << "            m += a*a\n";
         dout << "        }\n";
         dout << "        m = Math.sqrt(m)/" << 1.0*factorial(Order) << endl;
-        dout << "        var stepsize = Math.min(hmax,Math.pow(tol/m," << 1.0/(1.0*Order) << "))\n";
+        dout << "        var stepsize = Math.min(hmax, Math.pow(tol/m, " << 1.0/(1.0*Order) << "))\n";
         dout << "        if (t + stepsize > stoptime) {\n";
         dout << "            stepsize = stoptime - t\n";
         dout << "        }\n";
-        dout << "        state = " << Name() << "_evaltaylor" << Order << "(stepsize,state,Xderiv)\n";
+        dout << "        state = " << Name() << "_evaltaylor" << Order << "(stepsize, state, Xderiv)\n";
         dout << "        t += stepsize\n";
 
-        dout << "        ctx.lineTo(displayX(),displayY())\n";
+        dout << "        ctx.lineTo(displayX(), displayY())\n";
         dout << "        if (t >= stoptime) {\n";
         dout << "            stop_animation()\n";
         dout << "            break\n";
