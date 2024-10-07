@@ -37,7 +37,7 @@ using namespace GiNaC;
 // PrintPyDSTool -- The PyDSTool Code Generator.
 //
 
-void VectorField::PrintPyDSTool(map<string,string> options)
+void VectorField::PrintPyDSTool(map<string, string> options)
 {
     int nc, nv, np;
 
@@ -45,7 +45,7 @@ void VectorField::PrintPyDSTool(map<string,string> options)
     nv = varname_list.nops();
     np = parname_list.nops();
 
-    string filename = Name()+".py";
+    string filename = Name() + ".py";
     ofstream fout;
     fout.open(filename.c_str());
     // fout << python << left;
@@ -59,7 +59,7 @@ void VectorField::PrintPyDSTool(map<string,string> options)
     fout << "#" << endl;
     fout << "# PyDSTool Python file for the vector field named: " << Name() << endl;
     fout << "#" << endl;
-    PrintVFGENComment(fout,"# ");
+    PrintVFGENComment(fout, "# ");
     fout << "#" << endl;
     fout << endl;
     fout << "import PyDSTool" << endl;
@@ -125,7 +125,7 @@ void VectorField::PrintPyDSTool(map<string,string> options)
         if (i > 0) {
             fout << ", ";
         }
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int k = 0; k < nc; ++k) {
             f = f.subs(conname_list[k] == convalue_list[k]);
         }
@@ -138,7 +138,7 @@ void VectorField::PrintPyDSTool(map<string,string> options)
     }
     fout << "],\n";
     for (int i = 0; i < nv; ++i) {
-        ex f = iterated_subs(varvecfield_list[i],expreqn_list);
+        ex f = iterated_subs(varvecfield_list[i], expreqn_list);
         for (int k = 0; k < nc; ++k) {
             f = f.subs(conname_list[k] == convalue_list[k]);
         }
@@ -174,13 +174,13 @@ void VectorField::PrintPyDSTool(map<string,string> options)
         fout << "'" << varname_list[i] << "':" << vardefic_list[i];
     }
     fout << "}\n";
-    fout << "    DSargs.tdomain = [0,10]\n";
+    fout << "    DSargs.tdomain = [0, 10]\n";
     fout << "    return DSargs\n";
     fout.close();
 
     if (options["demo"] == "yes") {
         // Create a script that uses Vode_ODEsystem to create and plot a solution.
-        string tfilename = Name()+"_dst.py";
+        string tfilename = Name() + "_dst.py";
         ofstream tout;
         tout.open(tfilename.c_str());
         tout << csrc << left;
@@ -191,7 +191,7 @@ void VectorField::PrintPyDSTool(map<string,string> options)
         tout << "# This script uses PyDSTool to plot a solution to the\n";
         tout << "# differential equations defined in " << Name() << ".py\n";
         tout << "#" << endl;
-        PrintVFGENComment(tout,"# ");
+        PrintVFGENComment(tout, "# ");
         tout << "#\n" ;
         tout << endl;
         // tout << "from math import *" << endl;
@@ -221,7 +221,7 @@ void VectorField::PrintPyDSTool(map<string,string> options)
             }
             tout << "'" << varname_list[i] << "'";
         }
-        // tout << "),prop=FontProperties(size=14))\n";
+        // tout << "), prop=FontProperties(size=14))\n";
         tout << "))\n";
         tout << "plt.grid(True)\n";
         tout << "\n";
