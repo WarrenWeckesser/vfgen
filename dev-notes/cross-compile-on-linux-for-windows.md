@@ -64,13 +64,13 @@ The executable `vfgen.exe` is in the `src/` subdirectory:
 
 ```
 $ wine ./src/vfgen.exe help
-VFGEN (Version:2.6.0.dev3)
+VFGEN (Version:2.6.0.dev6)
 Use: vfgen command  vector-field-file.vf
 or:  vfgen command:option=value,...,option=value vector-field-file.vf
 or:  vfgen help command
 where command is one of:
-    adolc, auto, boostodeint, check, dde23, dde_solver, ddebiftool,
-    delay2ode, dstool, evf, gsl, help, javamath, javascript, latex,
-    lsoda, matcont, matlab, octave, pddecont, pydstool, pygsl, r,
-    radau5, scilab, scipy, taylor, xml, xpp
+    adolc, auto, boostodeint, check, cvode7, dde23, dde_solver, ddebiftool,
+    delay2ode, evf, gsl, help, javamath, javascript, julia, latex,
+    lsoda, matcont, matlab, octave, pygsl, r, radau5, scilab,
+    scipy, taylor, xml, xpp
 ```

@@ -373,18 +373,6 @@ constexpr char help_octave[] =
 "    If the option func=yes is given, the file [name].m will define a\n"
 "    function for each user function given in the vector field file.\n";
 
-constexpr char help_pydstool[] =
-"use: vfgen pydstool vector_field_file.vf\n"
-"     vfgen pydstool:demo=yes vector_field_file.vf\n\n"
-"This command creates a Python file that can be used to define a differential\n"
-"equation for the software package PyDSTool.  The file [name].py defines the\n"
-"function args(), which creates an 'args' object for the vector field.\n\n"
-"Options: (default is list first)\n"
-"demo=no|yes\n"
-"    If the option demo=yes is given, the file [name]_dst.py is also created.\n"
-"    This file contains a script that uses the function defined in [name].py\n"
-"    to generate and plot a solution to the differential equation.\n";
-
 constexpr char help_pygsl[] =
 "use: vfgen pygsl vector_field_file.vf\n"
 "     vfgen pygsl:option=value,...,option=value vector_field_file.vf\n\n"

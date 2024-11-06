@@ -140,9 +140,6 @@ map<string, command_info> commands = {
     {"octave",
         {{"demo", "func", "parstyle"},
          help_octave}},
-    {"pydstool",
-        {{"demo"},
-         help_pydstool}},
     {"pygsl",
         {{"demo", "func"},
          help_pygsl}},
@@ -483,14 +480,6 @@ int main(int argc, char **argv)
     else if (commandstr == "scipy") {
         if (vf.IsDelay == false) {
             vf.PrintSciPy(options);
-        }
-        else {
-            cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
-        }
-    }
-    else if (commandstr == "pydstool") {
-        if (vf.IsDelay == false) {
-            vf.PrintPyDSTool(options);
         }
         else {
             cerr << "Delay equations can not be handled by the " << commandstr << " command.\n";
