@@ -231,8 +231,8 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
     }
     fout << " */\n";
     if (lang == "c") {
-        fout << "void " << name << "_diff" << r << "(double deriv[], double x_[], double p_[],";
-        pout << "void " << name << "_diff" << r << "(double deriv[], double x_[], double p_[],";
+        fout << "void " << name << "_diff" << r << "(double deriv[], double x_[], double p_[], ";
+        pout << "void " << name << "_diff" << r << "(double deriv[], double x_[], double p_[], ";
     }
     else {
         fout << "function " << name << "_diff" << r << "(x_, p_,";
@@ -246,9 +246,9 @@ void generate_deriv(string lang, ofstream &fout, ofstream &pout, string name, in
             fout << "v" << k+1 << "_";
         }
         if (k < r-1) {
-            fout << ",";
+            fout << ", ";
             if (lang == "c") {
-                pout << ",";
+                pout << ", ";
             }
         }
     }
