@@ -119,6 +119,12 @@ jobs:
         sudo bash install_scipy.sh
         bash run_test.sh
         cd ..
+    - name: test_taylor
+      if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test taylor]')"
+      run: |
+        cd tests/test_taylor
+        bash run_test.sh
+        cd ..
     - name: setup_r
       if: "contains(github.event.head_commit.message, '[test all]') || contains(github.event.head_commit.message, '[test r]')"
       uses: r-lib/actions/setup-r@v2

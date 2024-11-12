@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<VectorField
+    Name="one_over_x">
+<StateVariable
+    Name="x"
+    Formula="1/x"
+    DefaultInitialCondition="2.0" />
+</VectorField>
