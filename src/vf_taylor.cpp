@@ -326,6 +326,7 @@ void VectorField::PrintTaylor(map<string,string> options)
         fout << "        Xnew[i] += (1.0/" << factorial(k) << ")*Xderiv[" << k-1 << "][i]*s;" << endl;
         fout << "    }\n";
     }
+    fout << "    return 0;\n";
     fout << "}\n";
 
     fout.close();
