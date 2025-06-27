@@ -22,7 +22,7 @@ tspan = (0.0, tfinal)
 prob = DDEProblem(sdd!, u0, history, tspan;
                   dependent_lags = [dependent_lag])
 alg = MethodOfSteps(Tsit5())
-sol = solve(prob, alg, abstol=5e-15, reltol=1e-13)
+sol = solve(prob, alg, abstol=5e-15, reltol=5e-13)
 xfinal = sol[end][1]
 
 e = Base.MathConstants.e
